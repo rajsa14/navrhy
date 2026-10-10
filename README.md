@@ -15,8 +15,8 @@ Jedenáct návrhů webů od studia WebTix. Vycházejí z referencí na webtix.cz
 | `kvasek/` | Pekárna Kvásek | Fraunces, DM Sans |
 | `lampa/` | Pražírna Lampa | Archivo |
 | `vyska/` | Výška Boulder | Unbounded, DM Sans |
-| `daniel-sveda/` | Portfolio | Inter Tight, Newsreader |
-| `richard-buchnicek/` | Portfolio | Epilogue |
+| `daniel-sveda/` | Portfolio jako technický výkres (obsah z Danielova webu) | Azeret Mono |
+| `richard-buchnicek/` | Portfolio jako štítek z krabice (obsah z Richardova webu) | Big Shoulders Display, Archivo |
 
 - `assets/base.js` je společný pro všechny stránky: odhalování při scrollu, odkaz zpět na přehled a hláška u ukázkových formulářů.
 - `fonts/` obsahuje písma (licence SIL OFL, z balíčků Fontsource), aby se nic nenačítalo z cizích serverů.
