@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>iPhone · jádro</title>
+<meta name="description" content="Detail iPhonu: vyber barvu, kapacitu a stav, cena se přepočítá. Ukázková data." />
+<meta name="robots" content="noindex" />
+<meta name="theme-color" content="#f2f0eb" />
+<link rel="stylesheet" href="../fonts/fonts.css" />
+<link rel="stylesheet" href="css/jadro.css" />
+</head>
+<body data-page="produkt">
+<main id="obsah" class="wrap">
+  <nav class="crumbs mono" style="padding-top:26px;margin-bottom:0" aria-label="Drobečková navigace" id="crumbs"></nav>
+  <div class="pd">
+    <div class="gal"><div class="thumbs" id="thumbs" role="group" aria-label="Pohledy na telefon"></div><div class="stage" id="stage"></div></div>
+    <div class="buy" id="buy"></div>
+  </div>
+  <section class="sec">
+    <div class="sh"><div><p class="mono">Modelová řada</p><h2 class="h2">Technické <em>údaje.</em></h2></div></div>
+    <dl class="specs" id="specs"></dl>
+    <p class="note dark">Orientační údaje výrobce k modelové řadě. U použitých kusů se skutečná výdrž liší podle stavu baterie, který by měl uvést prodejce.</p>
+  </section>
+  <section class="sec" id="rel-sec">
+    <div class="sh"><div><p class="mono">Další kusy</p><h2 class="h2">Mohlo by <em>sednout taky.</em></h2></div><a class="lnk" href="katalog.html">Celý katalog <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a></div>
+    <div class="grid" id="related"></div>
+  </section>
+  <section class="sec" id="seen-sec" hidden>
+    <div class="sh"><div><p class="mono">Naposledy</p><h2 class="h2">Už jsi <em>viděl.</em></h2></div></div>
+    <div class="grid" id="seen"></div>
+  </section>
+</main>
+<div class="mbar" id="mbar"></div>
+<script src="js/data.js"></script>
+<script src="js/store.js"></script>
+<script src="js/phone.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/product.js"></script>
+<script src="../assets/base.js"></script>
+</body>
+</html>

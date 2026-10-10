@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>iPhony · katalog · jádro</title>
+<meta name="description" content="Katalog nových, zánovních a použitých iPhonů. Filtruj podle modelu, stavu, kapacity, barvy a ceny. Ukázková data." />
+<meta name="robots" content="noindex" />
+<meta name="theme-color" content="#f2f0eb" />
+<link rel="stylesheet" href="../fonts/fonts.css" />
+<link rel="stylesheet" href="css/jadro.css" />
+</head>
+<body data-page="katalog">
+<main id="obsah" class="wrap">
+  <div class="pg-head">
+    <div><nav class="crumbs mono" aria-label="Drobečková navigace"><a href="index.html">Úvod</a><span>/</span><span aria-current="page">iPhony</span></nav><h1>iPhony<sup id="total"></sup></h1></div>
+    <p class="lead">Každý kus má svůj stav, barvu a kapacitu. Zužuj výběr vlevo, výsledky se mění hned.</p>
+  </div>
+  <div class="cat-l">
+    <dialog id="filters" aria-label="Filtry">
+      <form class="dw" id="ff" onsubmit="return false">
+        <div class="dw-h"><h2>Filtry</h2><button type="button" class="ib" data-act="close" aria-label="Zavřít filtry"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg></button></div>
+        <div class="dw-b" id="facets"></div>
+        <div class="dw-f"><button type="button" class="btn wide" data-act="close" id="apply"></button></div>
+      </form>
+    </dialog>
+    <section aria-label="Výsledky">
+      <div class="tb">
+        <label class="fld"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.6-3.6" /></svg><span class="sr">Hledat v katalogu</span><input id="q" type="search" placeholder="Model, barva, kapacita…" autocomplete="off" /></label>
+        <label class="fld"><span class="sr">Řazení</span><select id="sort"><option value="doporucene">Doporučené</option><option value="cena-asc">Od nejlevnějšího</option><option value="cena-desc">Od nejdražšího</option><option value="nejnovejsi">Od nejnovějšího</option></select></label>
+        <button class="btn sm only-m" id="open-f" type="button"></button>
+      </div>
+      <div class="chips" id="chips" aria-live="polite"></div>
+      <div class="grid three" id="grid"></div>
+      <div class="more" id="more"></div>
+    </section>
+  </div>
+</main>
+<script src="js/data.js"></script>
+<script src="js/store.js"></script>
+<script src="js/phone.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/catalog.js"></script>
+<script src="../assets/base.js"></script>
+</body>
+</html>

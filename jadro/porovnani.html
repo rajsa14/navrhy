@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Porovnání iPhonů · jádro</title>
+<meta name="description" content="Porovnej až tři iPhony vedle sebe: displej, čip, fotoaparát, výdrž, stav a cenu. Ukázková data." />
+<meta name="robots" content="noindex" />
+<meta name="theme-color" content="#f2f0eb" />
+<link rel="stylesheet" href="../fonts/fonts.css" />
+<link rel="stylesheet" href="css/jadro.css" />
+</head>
+<body data-page="porovnani">
+<main id="obsah" class="wrap">
+  <div class="pg-head">
+    <div><nav class="crumbs mono" aria-label="Drobečková navigace"><a href="index.html">Úvod</a><span>/</span><span aria-current="page">Porovnání</span></nav><h1>Vedle sebe<sup id="n"></sup></h1></div>
+    <p class="lead">Až tři kusy najednou. Nejlepší hodnotu v řádku zvýrazníme, rozhodnutí je na tobě.</p>
+  </div>
+  <div class="cmp" id="cmp" tabindex="0" role="region" aria-label="Tabulka porovnání, dá se posouvat do stran"></div>
+  <p class="note dark" style="margin-top:16px">Displej, čip, fotoaparát a výdrž jsou orientační údaje výrobce k modelové řadě. Ceny a stavy jsou ukázkové.</p>
+  <section class="sec" id="pick">
+    <div class="sh"><div><p class="mono">Výběr</p><h2 class="h2">Přidej <em>další kus.</em></h2></div><button class="lnk" id="clear" type="button">Vymazat porovnání</button></div>
+    <div class="picker" id="picker"></div>
+  </section>
+</main>
+<script src="js/data.js"></script>
+<script src="js/store.js"></script>
+<script src="js/phone.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/compare.js"></script>
+<script src="../assets/base.js"></script>
+</body>
+</html>
