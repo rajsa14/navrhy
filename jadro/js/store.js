@@ -43,10 +43,11 @@ window.Shop = window.Shop || {}
     MAX: MAX_COMPARE,
     has: (id) => state.cmp.includes(id),
     list: () => state.cmp.map(known).filter(Boolean),
-    /** @returns {'added'|'removed'|'full'} */
+    /** Pieces can only be compared within one category. @returns {'added'|'removed'|'full'|'mixed'} */
     toggle(id) {
       if (state.cmp.includes(id)) { write('cmp', state.cmp.filter((x) => x !== id)); return 'removed' }
       if (state.cmp.length >= MAX_COMPARE) return 'full'
+      const first = known(state.cmp[0]); if (first && known(id) && first.cat !== known(id).cat) return 'mixed'
       write('cmp', [...state.cmp, id]); return 'added'
     },
     clear() { write('cmp', []) },

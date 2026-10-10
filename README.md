@@ -6,7 +6,7 @@ Dvanáct návrhů webů od studia WebTix. Vycházejí z referencí na webtix.cz,
 
 | Složka | Návrh | Písma |
 | --- | --- | --- |
-| `jadro/` | **jádro, e‑shop s iPhony (hlavní návrh, 5 stránek)** | Geist, Geist Mono |
+| `jadro/` | **jádro, e‑shop s celým sortimentem Apple (hlavní návrh)** | Geist, Geist Mono |
 | `adastra/` | Café AdAstra, kavárna | Instrument Serif, Instrument Sans |
 | `merkur/` | Restaurace Merkur | Bodoni Moda, Newsreader |
 | `hostinec/` | Hostinec U Kamenné kašny | Zilla Slab, Caveat |
@@ -21,7 +21,13 @@ Dvanáct návrhů webů od studia WebTix. Vycházejí z referencí na webtix.cz,
 
 ## jádro
 
-Ukázkový obchod: úvod, katalog (`katalog.html`), detail (`produkt.html?id=…`), porovnání a prototyp pokladny. Data jsou v `jadro/js/data.js` (modely, stavy, ceny), košík a oblíbené v `jadro/js/store.js` (localStorage), telefony kreslí `jadro/js/phone.js` jako SVG. Ceny, sklad a popisy stavů jsou demonstrační.
+Ukázkový obchod se šesti kategoriemi (iPhone, MacBook, iPad, Apple Watch, AirPods, příslušenství): úvod, katalog (`katalog.html?kat=…`, filtry podle kategorie), detail (`produkt.html?id=…`), porovnání v rámci kategorie a prototyp pokladny.
+
+- `jadro/js/data.js` drží celý katalog: kategorie, řady, barvy, volby s příplatky, stavy. Z nich se generují všechny varianty. Stačí ho nahradit odpovědí z API ve stejném tvaru.
+- `jadro/js/store.js` je košík, oblíbené, porovnání a naposledy zobrazené (localStorage).
+- `jadro/js/art.js` kreslí všechny produkty jako SVG v barvě varianty, žádné fotky.
+
+**Co je ověřené a co ne.** U řad označených `list: true` jsou názvy, barvy, hlavní údaje a cena nového kusu v základní konfiguraci z veřejných stránek apple.com/cz, přečtené 11. 10. 2026 (`SOURCE` v `data.js`). Příplatky za kapacitu, paměť a připojení, ceny starších řad a použitých kusů, příslušenství a sklad jsou ukázková data. Data se sama neaktualizují: při obnově se přepíše `data.js` a datum v `SOURCE.verified`.
 
 - `assets/base.js` je společný pro všechny stránky: odhalování při scrollu, odkaz zpět na přehled a hláška u ukázkových formulářů.
 - `fonts/` obsahuje písma (licence SIL OFL, z balíčků Fontsource), aby se nic nenačítalo z cizích serverů.

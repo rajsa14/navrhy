@@ -22,37 +22,41 @@ window.Shop = window.Shop || {}
     info: svg('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.01"/>'),
   }
   const norm = (s) => String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
-  const hay = (v) => norm(`${v.name} ${v.color.name} ${fmt.gb(v.storage)} ${v.storage}gb ${data.CONDITIONS[v.condition].label} ${v.year}`)
+  const hay = (v) => norm(`${v.name} ${v.color.name} ${v.sub} ${data.CONDITIONS[v.condition].label} ${data.CATEGORIES[v.cat].name} ${data.CATEGORIES[v.cat].title} ${v.year}`)
   const match = (v, q) => norm(q).split(/\s+/).filter(Boolean).every((t) => hay(v).includes(t))
   const url = (v) => `produkt.html?id=${v.id}`
-  const meta = (v) => `<i class="dot" style="--c:${v.color.hex}"></i>${v.color.name} · ${fmt.gb(v.storage)}`
+  const meta = (v) => `<i class="dot" style="--c:${v.color.hex}"></i><span>${v.color.name}${v.sub ? ` · ${v.sub}` : ''}</span>`
+  const label = (v) => [v.name, v.color.name, v.sub].filter(Boolean).join(', ')
   const badge = (cond) => { const c = data.CONDITIONS[cond]; return `<span class="bd ${cond}"><i>${[0, 1, 2, 3].map((n) => `<b class="${n < 4 - c.wear ? 'f' : ''}"></b>`).join('')}</i>${c.short}</span>` }
   const stock = (v) => `<span class="stk ${v.stock}">${fmt.stock[v.stock]}</span>`
-  const thumb = (v, view = 'back') => `<span class="th" style="--t:${Shop.tint(v.color.hex)}"><span class="ph">${Shop.phone(v, view, { shadow: false })}</span></span>`
+  const thumb = (v) => `<span class="th" style="--t:${Shop.tint(v.color.hex)}">${Shop.art(v, 'main', { shadow: false })}</span>`
+  const blank = (type = 'phone') => Shop.art({ draw: type === 'phone' ? { type, cam: 'duo-diag', front: 'island' } : { type }, hex: '#cfcabf' }, 'main', { shadow: false })
 
   const card = (v, n = 0) => `
     <article class="pc ${v.stock === 'neni' ? 'out' : ''}" style="--t:${Shop.tint(v.color.hex)};--n:${n}">
-      <a class="pc-img" href="${url(v)}" tabindex="-1" aria-hidden="true">${Shop.phoneSet(v)}</a>
+      <a class="pc-img" href="${url(v)}" tabindex="-1" aria-hidden="true">${Shop.artSet(v)}</a>
       <div class="pc-top">${badge(v.condition)}<button class="fav" data-act="fav" data-id="${v.id}" aria-pressed="${fav.has(v.id)}" aria-label="Oblíbené: ${v.name}">${I.heart}</button></div>
       <div class="pc-acts"><button data-act="qv" data-id="${v.id}" aria-label="Rychlý náhled: ${v.name}">${I.eye}<span>Náhled</span></button><button data-act="cmp" data-id="${v.id}" aria-pressed="${compare.has(v.id)}" aria-label="Porovnat: ${v.name}">${I.scale}<span>Porovnat</span></button></div>
       <div class="pc-body">
         <h3><a href="${url(v)}">${v.name}</a></h3>
         <p class="pc-meta">${meta(v)}</p>
         <p class="pc-price">${fmt.czk(v.price)} ${v.stock === 'skladem' ? '' : stock(v)}</p>
-        <button class="add" data-act="add" data-id="${v.id}" ${v.stock === 'neni' ? 'disabled' : ''} aria-label="Přidat do košíku: ${v.name}, ${v.color.name}, ${fmt.gb(v.storage)}">${I.plus}</button>
+        <button class="add" data-act="add" data-id="${v.id}" ${v.stock === 'neni' ? 'disabled' : ''} aria-label="Přidat do košíku: ${label(v)}">${I.plus}</button>
       </div>
     </article>`
 
   // ---------- Chrome ----------
   const page = document.body.dataset.page || ''
-  const NAV = [['katalog.html', 'iPhony', 'katalog'], ['katalog.html?stav=novy', 'Nové', ''], ['katalog.html?stav=zanovni', 'Zánovní', ''], ['katalog.html?stav=a,b&razeni=cena-asc', 'Výhodné nabídky', ''], ['porovnani.html', 'Porovnání', 'porovnani']]
+  const qs = new URLSearchParams(location.search)
+  const kat = qs.get('kat') || (page === 'produkt' ? (data.get(qs.get('id')) || {}).cat : '')
+  const NAV = [...Object.entries(data.CATEGORIES).map(([id, c]) => ['katalog.html?kat=' + id, c.name, id]), ['katalog.html?stav=a,b&razeni=cena-asc', 'Výhodné nabídky', '']]
   const annOff = (() => { try { return sessionStorage.getItem('jadro-ann') === '0' } catch { return false } })()
   document.body.insertAdjacentHTML('afterbegin', `
     <a class="sr" href="#obsah">Přeskočit na obsah</a>
-    ${annOff ? '' : `<div class="ann" id="ann"><div class="wrap mono"><b></b><span>Ukázkový obchod. Ceny, dostupnost a popisy stavu jsou demonstrační data.</span><button data-act="ann" aria-label="Zavřít oznámení">${I.x}</button></div></div>`}
+    ${annOff ? '' : `<div class="ann" id="ann"><div class="wrap mono"><b></b><span>Ukázkový obchod. Základní ceny nových kusů podle apple.com/cz k 11. 10. 2026, ostatní ceny a sklad jsou ukázkové.</span><button data-act="ann" aria-label="Zavřít oznámení">${I.x}</button></div></div>`}
     <header class="hd" id="hd"><div class="wrap">
       <a class="logo" href="index.html" aria-label="jádro, úvodní stránka">jádro</a>
-      <nav class="nav" aria-label="Hlavní">${NAV.map(([h, t, p]) => `<a href="${h}" ${p && p === page ? 'aria-current="page"' : ''}>${t}</a>`).join('')}</nav>
+      <nav class="nav" aria-label="Hlavní">${NAV.map(([h, t, p]) => `<a href="${h}" ${p && p === kat ? 'aria-current="page"' : ''}>${t}</a>`).join('')}</nav>
       <div class="acts">
         <button class="ib" data-act="search" aria-label="Hledat">${I.search}</button>
         <a class="ib only-d" href="porovnani.html" aria-label="Porovnání">${I.scale}<span class="cnt" data-count="cmp"></span></a>
@@ -63,9 +67,9 @@ window.Shop = window.Shop || {}
   document.body.insertAdjacentHTML('beforeend', `
     <footer class="ft"><div class="wrap">
       <div class="ft-top">
-        <div><a class="logo" href="index.html">jádro</a><p>Nové, zánovní a použité iPhony na jednom místě, s popsaným stavem u každého kusu.</p></div>
-        <div><h4>Nakupovat</h4><ul><li><a href="katalog.html">Všechny iPhony</a></li><li><a href="katalog.html?stav=novy">Nové</a></li><li><a href="katalog.html?stav=zanovni">Zánovní</a></li><li><a href="katalog.html?stav=a,b">Použité</a></li></ul></div>
-        <div><h4>Průvodce</h4><ul><li><a href="index.html#stav">Jak čteme stav</a></li><li><a href="index.html#pruvodce">Jak vybírat</a></li><li><a href="index.html#faq">Časté otázky</a></li><li><a href="porovnani.html">Porovnání modelů</a></li></ul></div>
+        <div><a class="logo" href="index.html">jádro</a><p>iPhone, Mac, iPad, Apple Watch i AirPody. Nové i použité kusy, každý s popsaným stavem.</p></div>
+        <div><h4>Nakupovat</h4><ul>${Object.entries(data.CATEGORIES).map(([id, c]) => `<li><a href="katalog.html?kat=${id}">${c.name}</a></li>`).join('')}</ul></div>
+        <div><h4>Průvodce</h4><ul><li><a href="index.html#stav">Jak čteme stav</a></li><li><a href="index.html#pruvodce">Jak vybírat</a></li><li><a href="index.html#faq">Časté otázky</a></li><li><a href="porovnani.html">Porovnání</a></li><li><a href="katalog.html?stav=a,b&razeni=cena-asc">Použité kusy</a></li></ul></div>
         <div><h4>Můj výběr</h4><ul><li><a href="katalog.html?oblibene=1">Oblíbené</a></li><li><a href="pokladna.html">Košík a pokladna</a></li></ul></div>
       </div>
       <div class="ft-word" aria-hidden="true">jádro</div>
@@ -77,8 +81,8 @@ window.Shop = window.Shop || {}
     </div></dialog>
     <dialog class="drawer left" id="menu" aria-label="Menu"><div class="dw">
       <div class="dw-h"><a class="logo" href="index.html">jádro</a><button class="ib" data-act="close" aria-label="Zavřít menu">${I.x}</button></div>
-      <nav class="dw-b menu" aria-label="Mobilní">${NAV.map(([h, t]) => `<a href="${h}">${t}${I.arrow}</a>`).join('')}<a href="katalog.html?oblibene=1">Oblíbené${I.arrow}</a></nav>
-      <div class="dw-f"><button class="btn wide" data-act="search">${I.search} Hledat iPhone</button></div>
+      <nav class="dw-b menu" aria-label="Mobilní">${NAV.map(([h, t]) => `<a href="${h}">${t}${I.arrow}</a>`).join('')}<a href="porovnani.html">Porovnání${I.arrow}</a><a href="katalog.html?oblibene=1">Oblíbené${I.arrow}</a></nav>
+      <div class="dw-f"><button class="btn wide" data-act="search">${I.search} Hledat v obchodě</button></div>
     </div></dialog>
     <dialog class="srch" id="search" aria-label="Hledání"><div class="wrap">
       <form class="srch-in" id="search-f" action="katalog.html" role="search">${I.search}<input name="q" id="search-i" type="search" placeholder="Hledat model, barvu, kapacitu…" autocomplete="off" aria-label="Hledat v katalogu" /><button type="button" class="ib" data-act="close" aria-label="Zavřít hledání">${I.x}</button></form>
@@ -106,16 +110,16 @@ window.Shop = window.Shop || {}
           <div class="row"><span class="qty"><button data-act="dec" data-id="${l.id}" aria-label="Ubrat kus">${I.minus}</button><output aria-live="polite">${l.qty}</output><button data-act="inc" data-id="${l.id}" ${l.qty >= cart.MAX_QTY ? 'disabled' : ''} aria-label="Přidat kus">${I.plus}</button></span><b>${fmt.czk(l.item.price * l.qty)}</b></div>
           <div class="row"><span class="pc-meta">${fmt.czk(l.item.price)} za kus</span><button class="rm" data-act="rm" data-id="${l.id}">Odebrat</button></div>
         </div></div>`).join('')
-      : `<div class="empty"><span class="ph">${Shop.phone({ cam: 'duo-diag', front: 'island', hex: '#cfcabf' }, 'back', { shadow: false })}</span><h3>Košík je prázdný</h3><p>Vyber si iPhone a najdeš ho tady.</p><a class="btn" href="katalog.html">Prohlédnout iPhony ${I.arrow}</a></div>`
+      : `<div class="empty">${blank()}<h3>Košík je prázdný</h3><p>Vyber si něco z nabídky a najdeš to tady.</p><a class="btn" href="katalog.html">Prohlédnout nabídku ${I.arrow}</a></div>`
     $('cart-f').innerHTML = lines.length ? `<div class="sum"><span>Mezisoučet</span><b>${fmt.czk(cart.subtotal())}</b></div><a class="btn lime wide" href="pokladna.html">Přejít k pokladně ${I.arrow}</a><button class="btn ghost wide" data-act="close">Pokračovat v nákupu</button>` : ''
     $('cart-f').hidden = !lines.length
   }
 
   // ---------- Search ----------
-  const SUG = ['iPhone 16 Pro', '256 GB', 'Zánovní', 'Titan', 'iPhone 13']
+  const SUG = ['iPhone 18 Pro', 'MacBook Air', 'iPad mini', 'Apple Watch Ultra', 'AirPods Pro', 'Pencil']
   function renderSearch(q) {
     const res = q.trim() ? data.listed.filter((v) => match(v, q)) : []
-    $('search-r').innerHTML = res.slice(0, 6).map((v) => `<a class="sr-item" href="${url(v)}">${thumb(v)}<span><b>${v.name}</b><span>${v.color.name} · ${fmt.gb(v.storage)} · ${data.CONDITIONS[v.condition].short}</span></span><b>${fmt.czk(v.price)}</b></a>`).join('')
+    $('search-r').innerHTML = res.slice(0, 6).map((v) => `<a class="sr-item" href="${url(v)}">${thumb(v)}<span><b>${v.name}</b><span>${[v.color.name, v.sub, data.CONDITIONS[v.condition].short].filter(Boolean).join(' · ')}</span></span><b>${fmt.czk(v.price)}</b></a>`).join('')
     $('search-ft').innerHTML = !q.trim() ? `<span class="mono">Zkus třeba</span><div class="sug">${SUG.map((s) => `<button class="chip" data-act="sug" data-q="${s}">${s}</button>`).join('')}</div>`
       : res.length ? `<span>${res.length} ${fmt.plural(res.length, ['výsledek', 'výsledky', 'výsledků'])}</span><a class="lnk" href="katalog.html?q=${encodeURIComponent(q.trim())}">Zobrazit vše v katalogu ${I.arrow}</a>`
       : `<span>Na „${fmt.esc(q)}“ jsme nic nenašli. Zkus jiný model nebo barvu.</span>`
@@ -126,11 +130,11 @@ window.Shop = window.Shop || {}
   function quickView(id) {
     const v = data.get(id); if (!v) return
     const m = data.model(v.modelId), c = data.CONDITIONS[v.condition]
-    $('qv').innerHTML = `<div class="qv-g"><div class="qv-img" style="--t:${Shop.tint(v.color.hex)}">${Shop.phoneSet(v)}</div>
+    $('qv').innerHTML = `<div class="qv-g"><div class="qv-img" style="--t:${Shop.tint(v.color.hex)}">${Shop.artSet(v)}</div>
       <div class="qv-b"><button class="ib x" data-act="close" aria-label="Zavřít náhled">${I.x}</button>
         <div>${badge(v.condition)}</div><h2>${v.name}</h2><p class="pc-meta">${meta(v)}</p>
         <div class="price">${fmt.czk(v.price)}</div>${stock(v)}
-        <dl class="kv"><dt>Stav</dt><dd>${c.cosmetic}</dd><dt>Displej</dt><dd>${m.display}</dd><dt>Čip</dt><dd>${m.chip}</dd><dt>Fotoaparát</dt><dd>${m.camera}</dd></dl>
+        <dl class="kv"><dt>Stav</dt><dd>${c.cosmetic}</dd>${m.specs.slice(0, 3).map(([k, val]) => `<dt>${k}</dt><dd>${val}</dd>`).join('')}</dl>
         <button class="btn lime wide" data-act="add" data-id="${v.id}" data-open="1" ${v.stock === 'neni' ? 'disabled' : ''}>${v.stock === 'neni' ? 'Vyprodáno' : 'Přidat do košíku'}</button>
         <a class="btn ghost wide" href="${url(v)}">Celý detail ${I.arrow}</a>
       </div></div>`
@@ -156,11 +160,11 @@ window.Shop = window.Shop || {}
     if (act === 'add') {
       if (!cart.add(id, +b.dataset.qty || 1)) return
       if (b.dataset.open) { closeD($('qv')); setTimeout(() => openD($('cart')), 200) }
-      else if (b.classList.contains('add')) { b.classList.add('ok'); b.innerHTML = I.check; setTimeout(() => { b.classList.remove('ok'); b.innerHTML = I.plus }, 1400); toast(`V košíku: ${v.name}, ${fmt.gb(v.storage)}`) }
-      else toast(`V košíku: ${v.name}, ${fmt.gb(v.storage)}`)
+      else if (b.classList.contains('add')) { b.classList.add('ok'); b.innerHTML = I.check; setTimeout(() => { b.classList.remove('ok'); b.innerHTML = I.plus }, 1400); toast(`V košíku: ${v.name}`) }
+      else toast(`V košíku: ${v.name}`)
     }
     else if (act === 'fav') toast(fav.toggle(id) ? 'Uloženo do oblíbených' : 'Odebráno z oblíbených')
-    else if (act === 'cmp') { const r = compare.toggle(id); toast(r === 'full' ? `Porovnat jde nejvýš ${compare.MAX} kusy najednou` : r === 'added' ? 'Přidáno do porovnání' : 'Odebráno z porovnání') }
+    else if (act === 'cmp') { const r = compare.toggle(id); toast(r === 'full' ? `Porovnat jde nejvýš ${compare.MAX} kusy najednou` : r === 'mixed' ? 'Porovnávat jde jen kusy ze stejné kategorie' : r === 'added' ? 'Přidáno do porovnání' : 'Odebráno z porovnání') }
     else if (act === 'qv') quickView(id)
     else if (act === 'cart') openD($('cart'))
     else if (act === 'menu') openD($('menu'))
@@ -176,6 +180,6 @@ window.Shop = window.Shop || {}
   const hd = $('hd'); const onScroll = () => hd.classList.toggle('stuck', scrollY > 8)
   addEventListener('scroll', onScroll, { passive: true }); onScroll()
 
-  Shop.ui = { I, card, badge, stock, meta, thumb, url, match, norm, openD, closeD, toast, sync }
+  Shop.ui = { I, card, badge, stock, meta, label, thumb, blank, url, match, norm, openD, closeD, toast, sync }
   sync()
 })()

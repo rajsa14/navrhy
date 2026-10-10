@@ -4,7 +4,7 @@
   function render() {
     const lines = cart.lines(), n = cart.count()
     document.getElementById('co').innerHTML = !lines.length
-      ? `<div class="empty" style="grid-column:1/-1"><span class="ph">${Shop.phone({ cam: 'duo-pill', front: 'island', hex: '#cfcabf' }, 'back', { shadow: false })}</span><h3>V košíku nic není</h3><p>Pokladna nemá co ukázat. Vyber si nejdřív iPhone.</p><a class="btn" href="katalog.html">Prohlédnout iPhony ${ui.I.arrow}</a></div>`
+      ? `<div class="empty" style="grid-column:1/-1">${ui.blank()}<h3>V košíku nic není</h3><p>Pokladna nemá co ukázat. Vyber si nejdřív něco z nabídky.</p><a class="btn" href="katalog.html">Prohlédnout nabídku ${ui.I.arrow}</a></div>`
       : `<div>
           <ol class="steps">
             <li class="done"><span><b>Košík</b><span>${n} ${fmt.plural(n, ['kus', 'kusy', 'kusů'])} za ${fmt.czk(cart.subtotal())}</span></span><button class="lnk" data-act="cart">Upravit</button></li>
