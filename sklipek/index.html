@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vinárna Sklípek 14 · návrh webu</title>
+<meta name="description" content="Návrh webu pro vinárnu v gotickém sklepě. Světlý vápenec, klenby a etikety. Fiktivní značka, ukázka bez kontaktních údajů." />
+<meta name="robots" content="noindex" />
+<link rel="stylesheet" href="../fonts/fonts.css" />
+<style>
+  :root { --stone: #ebe5d9; --lime: #f6f2ea; --ink: #2a1a1c; --wine: #6e1425; --rose: #c9828c; --ochre: #9a7a3e; --soft: #7a6b66; --line: rgb(42 26 28 / .22); --serif: 'Cormorant Garamond', Georgia, serif; --sans: 'Jost', system-ui, sans-serif; --ease: cubic-bezier(.16, 1, .3, 1); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--stone); color: var(--ink); font: 400 17px/1.65 var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  .wrap { width: min(1320px, 100% - 48px); margin-inline: auto; }
+  .lab { font: 500 11px/1 var(--sans); letter-spacing: .34em; text-transform: uppercase; }
+
+  header { position: absolute; inset: 0 0 auto 0; z-index: 10; padding: 28px 0; }
+  header .wrap { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; }
+  header nav { display: flex; gap: 34px; }
+  header nav:last-child { justify-content: flex-end; }
+  header a { transition: color .4s; } header a:hover { color: var(--wine); }
+  .mark { font: 300 30px/1 var(--serif); letter-spacing: .02em; text-align: center; }
+  .mark b { font-weight: 300; font-style: italic; color: var(--wine); }
+
+  .hero { min-height: 100svh; padding: 130px 0 0; display: grid; grid-template-rows: auto 1fr; }
+  .hero h1 { font: 300 clamp(4.4rem, 15.5vw, 16rem)/.82 var(--serif); letter-spacing: -.035em; text-align: center; position: relative; z-index: 2; mix-blend-mode: multiply; }
+  .hero h1 em { color: var(--wine); font-weight: 300; }
+  .arches { display: grid; grid-template-columns: 1fr 1.25fr 1fr; gap: clamp(12px, 2.4vw, 34px); align-items: end; margin-top: clamp(-90px, -6vw, -30px); }
+  .arch { border-radius: 999px 999px 0 0; border: 1px solid var(--ink); border-bottom: 0; height: clamp(240px, 40vh, 420px); display: grid; place-items: center; text-align: center; padding: 20px; position: relative; overflow: hidden; background: var(--lime); transition: height 1s var(--ease); }
+  .arch:hover { height: clamp(260px, 44vh, 460px); }
+  .arch.mid { height: clamp(320px, 54vh, 560px); background: var(--wine); color: var(--lime); border-color: var(--wine); }
+  .arch.mid:hover { height: clamp(340px, 58vh, 600px); }
+  .arch .n { font: 300 clamp(3.4rem, 8vw, 7.5rem)/.9 var(--serif); letter-spacing: -.03em; }
+  .arch.mid .n { font-size: clamp(5rem, 13vw, 12rem); font-style: italic; }
+  .arch p { margin-top: 12px; }
+  .rings { position: absolute; left: 50%; top: 58%; width: 150%; translate: -50% -50%; pointer-events: none; }
+  .rings circle { fill: none; stroke: var(--rose); stroke-width: .6; opacity: .5; transform-origin: center; animation: breathe 7s ease-in-out infinite; animation-delay: var(--t); }
+  @keyframes breathe { 50% { transform: scale(1.06); opacity: .15; } }
+
+  section { padding: clamp(100px, 13vw, 190px) 0; }
+  h2 { font: 300 clamp(2.8rem, 6.4vw, 6rem)/.95 var(--serif); letter-spacing: -.025em; }
+  h2 em { color: var(--wine); }
+
+  .about { display: grid; grid-template-columns: 1fr 1.3fr; gap: 80px; align-items: start; }
+  .about .big { font: 300 clamp(1.7rem, 3vw, 2.7rem)/1.22 var(--serif); letter-spacing: -.01em; }
+  .about .big em { color: var(--wine); }
+  .about .small { margin-top: 30px; max-width: 460px; color: var(--soft); }
+  .vert { writing-mode: vertical-rl; rotate: 180deg; justify-self: start; display: flex; gap: 22px; align-items: center; }
+  .vert::after { content: ''; width: 1px; height: 120px; background: var(--ink); }
+
+  /* Labels */
+  .cellar { background: var(--lime); border-block: 1px solid var(--line); overflow-x: clip; }
+  .cellar-head { display: flex; justify-content: space-between; align-items: end; gap: 30px; flex-wrap: wrap; }
+  .regions { display: flex; gap: 26px; }
+  .regions button { font: 400 italic 26px/1 var(--serif); padding-bottom: 6px; border-bottom: 1px solid transparent; color: var(--soft); transition: color .4s, border-color .4s; }
+  .regions button[aria-pressed='true'] { color: var(--wine); border-color: var(--wine); }
+  .labels { display: flex; gap: 22px; margin-top: 60px; overflow-x: auto; padding: 10px 24px 34px; scroll-snap-type: x mandatory; scrollbar-width: thin; scrollbar-color: var(--wine) transparent; margin-inline: calc((100vw - min(1320px, 100vw - 48px)) / -2); padding-inline: calc((100vw - min(1320px, 100vw - 48px)) / 2); }
+  .label { flex: 0 0 min(300px, 78vw); scroll-snap-align: center; background: var(--stone); border: 1px solid var(--ink); padding: 14px; transition: transform .8s var(--ease), background .6s; animation: in .9s var(--ease) both; animation-delay: calc(var(--i) * 70ms); }
+  @keyframes in { from { opacity: 0; transform: translateY(30px); } }
+  .label:hover { transform: translateY(-12px); background: #fff; }
+  .label .inner { border: 1px solid var(--line); padding: 28px 22px; text-align: center; min-height: 390px; display: flex; flex-direction: column; align-items: center; }
+  .drop { width: 14px; height: 14px; border-radius: 50%; background: var(--c); border: 1px solid var(--ink); margin: 18px 0; transition: transform .8s var(--ease); }
+  .label:hover .drop { transform: scale(5); }
+  .label h3 { font: 400 34px/1 var(--serif); letter-spacing: -.01em; }
+  .label h3 span { display: block; font-style: italic; font-size: 24px; color: var(--wine); margin-top: 6px; }
+  .label .from { color: var(--soft); font-size: 14px; margin-top: 12px; }
+  .label .notes { font: italic 400 20px/1.25 var(--serif); margin-top: auto; padding-top: 22px; }
+  .label .price { display: flex; justify-content: space-between; width: 100%; border-top: 1px solid var(--ink); margin-top: 20px; padding-top: 14px; font: 400 24px/1 var(--serif); }
+  .label .price small { font: 400 11px var(--sans); letter-spacing: .2em; text-transform: uppercase; color: var(--soft); display: block; margin-top: 6px; }
+  .label .price div:last-child { text-align: right; }
+
+  /* Tastings */
+  .tast { display: grid; grid-template-columns: .7fr 1.3fr; gap: 80px; }
+  .tast aside { position: sticky; top: 60px; align-self: start; }
+  .tast aside p { color: var(--soft); margin-top: 24px; max-width: 340px; }
+  .ev { display: grid; grid-template-columns: 150px 1fr; gap: 34px; padding: 40px 0; border-top: 1px solid var(--ink); }
+  .ev:last-child { border-bottom: 1px solid var(--ink); }
+  .ev .date { font: 300 82px/.8 var(--serif); letter-spacing: -.04em; }
+  .ev .date small { display: block; font: 500 11px var(--sans); letter-spacing: .34em; text-transform: uppercase; margin-top: 14px; color: var(--soft); }
+  .ev h3 { font: 400 38px/1 var(--serif); letter-spacing: -.015em; }
+  .ev p { color: var(--soft); margin-top: 10px; max-width: 500px; }
+  .seats { display: flex; align-items: center; gap: 16px; margin-top: 22px; flex-wrap: wrap; }
+  .dots { display: flex; gap: 5px; }
+  .dots i { width: 9px; height: 9px; border-radius: 50%; border: 1px solid var(--wine); }
+  .dots i.t { background: var(--wine); }
+  .seats b { font: italic 400 24px/1 var(--serif); color: var(--wine); margin-left: auto; }
+
+  /* Visit */
+  .visit { background: var(--wine); color: var(--lime); border-radius: clamp(120px, 26vw, 400px) clamp(120px, 26vw, 400px) 0 0; padding-top: clamp(140px, 18vw, 260px); text-align: center; }
+  .visit h2 em { color: var(--rose); }
+  .visit .hours { display: flex; justify-content: center; gap: clamp(24px, 6vw, 90px); margin-top: 50px; flex-wrap: wrap; }
+  .visit .hours div { font: 300 34px/1 var(--serif); }
+  .visit .hours small { display: block; font: 500 11px var(--sans); letter-spacing: .34em; text-transform: uppercase; opacity: .65; margin-bottom: 14px; }
+  form { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; max-width: 980px; margin: 70px auto 0; border: 1px solid rgb(246 242 234 / .5); }
+  label { display: grid; gap: 10px; padding: 20px 22px; text-align: left; border-right: 1px solid rgb(246 242 234 / .5); }
+  input, select { font: 400 24px var(--serif); background: transparent; border: 0; color: var(--lime); outline: 0; width: 100%; color-scheme: dark; }
+  select option { color: #2a1a1c; }
+  form button { background: var(--lime); color: var(--wine); font: 500 12px var(--sans); letter-spacing: .3em; text-transform: uppercase; transition: background .4s, color .4s; }
+  form button:hover { background: var(--ink); color: var(--lime); }
+  footer { background: var(--wine); color: rgb(246 242 234 / .6); padding: 30px 0 90px; font-size: 13px; text-align: center; }
+
+  @media (max-width: 900px) {
+    header nav { display: none; } header .wrap { grid-template-columns: 1fr; }
+    .about, .tast { grid-template-columns: 1fr; gap: 40px; }
+    .vert { display: none; } .tast aside { position: static; }
+    .arches { grid-template-columns: 1fr 1.3fr 1fr; margin-top: 30px; } .arch p { font-size: 9px; letter-spacing: .2em; }
+    .ev { grid-template-columns: 1fr; gap: 18px; }
+    form { grid-template-columns: 1fr 1fr; } label:nth-child(2) { border-right: 0; } label { border-bottom: 1px solid rgb(246 242 234 / .5); } form button { grid-column: 1 / -1; padding: 22px; }
+    .regions { gap: 18px; flex-wrap: wrap; }
+  }
+  @media (prefers-reduced-motion: reduce) { .rings circle, .label { animation: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <nav class="lab"><a href="#sklep">Sklep</a><a href="#listek">Vinný lístek</a></nav>
+    <a class="mark" href="#">Sklípek <b>№ 14</b></a>
+    <nav class="lab"><a href="#degustace">Degustace</a><a href="#rezervace">Rezervace</a></nav>
+  </div>
+</header>
+
+<section class="hero" style="padding-bottom:0">
+  <h1 class="rv">Víno, <em>pomalu.</em></h1>
+  <div class="wrap arches">
+    <div class="arch rv" style="--d:.2s"><div><div class="n">140</div><p class="lab">etiket ve sklepě</p></div></div>
+    <div class="arch mid rv" style="--d:.1s">
+      <svg class="rings" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="40" style="--t:0s" /><circle cx="100" cy="100" r="56" style="--t:.8s" /><circle cx="100" cy="100" r="72" style="--t:1.6s" /><circle cx="100" cy="100" r="88" style="--t:2.4s" /></svg>
+      <div style="position:relative"><div class="n">14°</div><p class="lab">celý rok, bez klimatizace</p></div>
+    </div>
+    <div class="arch rv" style="--d:.3s"><div><div class="n">30</div><p class="lab">vín na sklenky</p></div></div>
+  </div>
+</section>
+
+<section id="sklep">
+  <div class="wrap about">
+    <p class="lab vert rv">O sklípku</p>
+    <div class="rv" style="--d:.1s">
+      <p class="big">Gotický sklep pro třicet hostů, svíčky a víno od malých vinařů z <em>Moravy</em>, <em>Rakouska</em> a <em>Burgundska</em>. Dvanáct z nich známe osobně.</p>
+      <p class="small">Ke sklence krájíme sýry, šunku a chleba z kvasu. Nespěcháme my ani víno, a proto si vinný lístek přečtete za dvě minuty a zůstanete tři hodiny.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cellar" id="listek">
+  <div class="wrap cellar-head">
+    <div class="rv"><p class="lab">Vinný lístek</p><h2 style="margin-top:20px">Na sklenky <em>tento týden</em></h2></div>
+    <div class="regions rv" role="group" aria-label="Oblast">
+      <button data-r="vse" aria-pressed="true">Vše</button><button data-r="Morava">Morava</button><button data-r="Rakousko">Rakousko</button><button data-r="Francie">Francie</button>
+    </div>
+  </div>
+  <div class="labels" id="labels"></div>
+</section>
+
+<section id="degustace">
+  <div class="wrap tast">
+    <aside class="rv">
+      <p class="lab">Degustace</p>
+      <h2 style="margin-top:20px">Večery, kdy mluví <em>vinař</em></h2>
+      <p>Šest vín, jeden stůl, žádné přednášky. Místa se plní rychle, puntíky ukazují, kolik jich zbývá.</p>
+    </aside>
+    <div id="events"></div>
+  </div>
+</section>
+
+<section class="visit" id="rezervace">
+  <div class="wrap">
+    <p class="lab rv">Návštěva</p>
+    <h2 class="rv" style="margin-top:20px">Stůl pro dva,<br /><em>nebo celý sklep.</em></h2>
+    <div class="hours rv">
+      <div><small>Vinárna</small>út – so · 17 – 24</div>
+      <div><small>Vinotéka</small>denně · 12 – 20</div>
+      <div><small>Soukromé akce</small>až 30 hostů</div>
+    </div>
+    <form class="rv" data-demo="Ukázka návrhu. Rezervace se neodesílá.">
+      <label class="lab">Den<input type="date" required /></label>
+      <label class="lab">Čas<select><option>17:00</option><option>18:30</option><option>20:00</option><option>21:30</option></select></label>
+      <label class="lab">Hostů<select><option>2</option><option>3</option><option>4</option><option>6</option><option>Celý sklep</option></select></label>
+      <button>Rezervovat →</button>
+    </form>
+  </div>
+</section>
+<footer>Fiktivní značka · návrh studia WebTix · ukázka bez kontaktních údajů</footer>
+
+<script>
+  const wines = [
+    ['Morava', '#e9d58f', 'Ryzlink rýnský', '2022', 'Vinařství Pod Kopcem', 'Limetka, broskev, slaná minerálka', 95, '540'],
+    ['Morava', '#f0e2b0', 'Veltlínské zelené', '2023', 'Rodinné vinařství', 'Zelený pepř, jablko, svěží kyselina', 85, '460'],
+    ['Morava', '#9e2235', 'Frankovka', '2020', 'Sklep U Lípy', 'Višně, koření, jemné třísloviny', 110, '620'],
+    ['Rakousko', '#e7cf7f', 'Riesling Smaragd', '2021', 'Wachau', 'Meruňka, med, dlouhý závěr', 165, '980'],
+    ['Rakousko', '#a3283b', 'Blaufränkisch', '2019', 'Burgenland', 'Ostružina, grafit, samet', 140, '820'],
+    ['Francie', '#efd99a', 'Chablis', '2022', 'Burgundsko', 'Citrus, křída, ústřicová skořápka', 190, '1 150'],
+    ['Francie', '#7c1a2b', 'Pinot Noir', '2021', 'Côte de Beaune', 'Maliny, houby, lehké tělo', 210, '1 290'],
+  ]
+  const box = document.getElementById('labels'), btns = document.querySelectorAll('.regions button')
+  function render(r) {
+    box.innerHTML = wines.filter((w) => r === 'vse' || w[0] === r).map((w, i) => `
+      <article class="label" style="--i:${i};--c:${w[1]}"><div class="inner">
+        <p class="lab">${w[0]}</p><i class="drop"></i>
+        <h3>${w[2]}<span>${w[3]}</span></h3><p class="from">${w[4]}</p>
+        <p class="notes">${w[5]}</p>
+        <div class="price"><div>${w[6]} Kč<small>0,1 l</small></div><div>${w[7]} Kč<small>láhev</small></div></div>
+      </div></article>`).join('')
+    btns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.r === r)))
+    box.scrollTo({ left: 0, behavior: 'smooth' })
+  }
+  btns.forEach((b) => b.addEventListener('click', () => render(b.dataset.r)))
+  render('vse')
+
+  const events = [
+    ['17', 'října', 'Ryzlinky z Pálavy', 'Šest ryzlinků od tří vinařů, vertikála 2019 až 2024. Provází vinař osobně.', 890, 12, 6],
+    ['24', 'října', 'Burgundsko pro začátečníky', 'Pinot noir a chardonnay od vesnických vín po premier cru. Bez snobismu.', 1290, 12, 10],
+    ['07', 'listopadu', 'Svatomartinská u svíček', 'Mladá vína, škvarky a pečená husa. Celý sklep jen pro vás.', 1090, 12, 0],
+  ]
+  document.getElementById('events').innerHTML = events.map((e, i) => `
+    <article class="ev rv" style="--d:${i * 0.1}s">
+      <div class="date">${e[0]}<small>${e[1]}</small></div>
+      <div><h3>${e[2]}</h3><p>${e[3]}</p>
+        <div class="seats"><span class="dots">${Array.from({ length: e[5] }, (_, k) => `<i class="${k < e[6] ? 't' : ''}"></i>`).join('')}</span>
+        <span class="lab">${e[6] ? 'zbývá ' + (e[5] - e[6]) + ' míst' : 'registrace brzy'}</span><b>${e[4].toLocaleString('cs-CZ')} Kč</b></div>
+      </div>
+    </article>`).join('')
+</script>
+<script src="../assets/base.js"></script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Forno 400 · návrh webu</title>
+<meta name="description" content="Návrh webu pro neapolskou pizzerii. Tma pece, žár a teploměr, který stoupá se scrollem. Fiktivní značka, ukázka bez kontaktních údajů." />
+<meta name="robots" content="noindex" />
+<link rel="stylesheet" href="../fonts/fonts.css" />
+<style>
+  :root { --coal: #120d0a; --ash: #1d1612; --cream: #f6ead6; --ember: #ff4d17; --flame: #ffb321; --soft: #a39384; --line: rgb(246 234 214 / .14); --disp: 'Bricolage Grotesque', system-ui, sans-serif; --mono: 'JetBrains Mono', monospace; --ease: cubic-bezier(.16, 1, .3, 1); --heat: linear-gradient(180deg, #ffd35a 0%, #ff8a1f 45%, #ff3d12 100%); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--coal); color: var(--cream); font: 400 17px/1.6 var(--disp); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  .wrap { width: min(1280px, 100% - 40px); margin-inline: auto; }
+  .mono { font: 500 12px/1.4 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--soft); }
+  .hot { background: var(--heat); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  header { position: fixed; inset: 0 0 auto 0; z-index: 30; padding: 16px 0; background: linear-gradient(var(--coal), transparent); }
+  header .wrap { display: flex; justify-content: space-between; align-items: center; }
+  .logo { font: 800 22px/1 var(--disp); letter-spacing: -.04em; }
+  header nav { display: flex; gap: 28px; }
+  header nav a:hover { color: var(--flame); }
+  .btn { display: inline-flex; align-items: center; gap: 10px; background: var(--heat); color: #1a0d05; font: 700 15px/1 var(--disp); padding: 15px 24px; border-radius: 4px; transition: transform .4s var(--ease), box-shadow .4s; box-shadow: 0 0 0 rgb(255 77 23 / 0); }
+  .btn:hover { transform: translateY(-3px); box-shadow: 0 14px 44px rgb(255 77 23 / .55); }
+  .btn.ghost { background: none; color: var(--cream); border: 1px solid var(--line); }
+  .btn.ghost:hover { border-color: var(--flame); box-shadow: none; }
+
+  /* Thermometer */
+  .thermo { position: fixed; right: 18px; top: 50%; translate: 0 -50%; z-index: 25; display: grid; justify-items: center; gap: 10px; }
+  .thermo .tube { width: 6px; height: 34vh; background: var(--line); border-radius: 9px; position: relative; overflow: hidden; }
+  .thermo .tube i { position: absolute; inset: auto 0 0 0; height: calc(var(--p, 0) * 100%); background: var(--heat); border-radius: 9px; }
+  .thermo b { font: 700 12px var(--mono); color: var(--flame); writing-mode: vertical-rl; }
+
+  .hero { min-height: 100svh; display: grid; padding: 120px 0 0; position: relative; overflow: hidden; }
+  .glow { position: absolute; left: 50%; bottom: -46vw; width: 110vw; height: 80vw; translate: -50% 0; border-radius: 50%; background: radial-gradient(closest-side, rgb(255 90 20 / .6) 0%, rgb(200 40 8 / .4) 34%, rgb(120 20 5 / .25) 56%, transparent 74%); filter: blur(30px); animation: flick 3.2s ease-in-out infinite; pointer-events: none; }
+  @keyframes flick { 0%, 100% { opacity: .82; transform: scale(1); } 35% { opacity: 1; transform: scale(1.04); } 60% { opacity: .74; transform: scale(.98); } }
+  .sparks i { position: absolute; bottom: -10px; width: 4px; height: 4px; border-radius: 50%; background: var(--flame); left: var(--x); animation: rise var(--s) linear infinite; animation-delay: var(--dl); opacity: 0; }
+  @keyframes rise { 0% { transform: translate(0, 0); opacity: 0; } 10% { opacity: 1; } 100% { transform: translate(var(--dx), -90vh); opacity: 0; } }
+  .hero-in { position: relative; z-index: 2; display: grid; align-content: space-between; }
+  .hero-top { display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; }
+  .hero-top p { max-width: 400px; font-size: 19px; }
+  h1 { font: 800 clamp(8rem, 37vw, 36rem)/.72 var(--disp); letter-spacing: -.085em; margin: 0 0 -0.06em -.05em; white-space: nowrap; display: flex; align-items: flex-start; }
+  h1 sup { font-size: .22em; letter-spacing: -.04em; margin: .32em 0 0 .1em; color: var(--cream); }
+
+  .strip { background: var(--heat); color: #1a0d05; overflow: hidden; white-space: nowrap; padding: 14px 0; position: relative; z-index: 3; }
+  .strip div { display: inline-block; animation: run 30s linear infinite; }
+  .strip span { font: 800 22px/1 var(--disp); letter-spacing: -.02em; margin: 0 22px; }
+  .strip span::after { content: '●'; margin-left: 44px; font-size: 12px; vertical-align: middle; }
+  @keyframes run { to { transform: translateX(-50%); } }
+
+  section { padding: clamp(90px, 12vw, 170px) 0; }
+  h2 { font: 800 clamp(2.8rem, 7.4vw, 7rem)/.88 var(--disp); letter-spacing: -.055em; }
+
+  /* Menu rows */
+  .menu-head { display: flex; justify-content: space-between; align-items: end; gap: 30px; flex-wrap: wrap; }
+  .size { display: inline-flex; border: 1px solid var(--line); border-radius: 4px; padding: 4px; }
+  .size button { padding: 11px 18px; border-radius: 2px; font: 600 13px var(--mono); letter-spacing: .06em; transition: background .3s, color .3s; }
+  .size button[aria-pressed='true'] { background: var(--cream); color: var(--coal); }
+  .rows { margin-top: 56px; border-top: 1px solid var(--line); }
+  .row { display: grid; grid-template-columns: 60px 1fr 1.1fr auto; gap: 24px; align-items: center; padding: 26px 0; border-bottom: 1px solid var(--line); position: relative; cursor: default; transition: padding .6s var(--ease); }
+  .row::before { content: ''; position: absolute; inset: 0 -20px; background: var(--heat); opacity: 0; transform: scaleY(.3); transition: opacity .35s, transform .5s var(--ease); z-index: -1; border-radius: 4px; }
+  .row:hover { color: #1a0d05; padding-left: 14px; } .row:hover::before { opacity: 1; transform: none; }
+  .row:hover .mono, .row:hover .ing { color: #1a0d05; }
+  .row h3 { font: 800 clamp(1.8rem, 4.4vw, 3.8rem)/.95 var(--disp); letter-spacing: -.045em; }
+  .row h3 small { font: 600 11px var(--mono); letter-spacing: .1em; vertical-align: super; margin-left: 8px; color: var(--ember); }
+  .row:hover h3 small { color: #1a0d05; }
+  .row .ing { color: var(--soft); font-size: 16px; transition: color .3s; }
+  .row .pr { font: 800 clamp(1.5rem, 3vw, 2.4rem)/1 var(--disp); letter-spacing: -.04em; white-space: nowrap; }
+
+  /* Timer */
+  .bake { background: var(--ash); border-block: 1px solid var(--line); }
+  .bake .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; align-items: center; }
+  .oven { position: relative; width: min(460px, 100%); aspect-ratio: 1; margin-inline: auto; display: grid; place-items: center; }
+  .oven svg { position: absolute; inset: 0; rotate: -90deg; }
+  .oven circle { fill: none; stroke-width: 3; }
+  .oven .trk { stroke: var(--line); } .oven .prg { stroke: url(#g); stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 100; }
+  .pie { width: 62%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, #c73a1c 0 58%, #e8b874 59% 100%); position: relative; filter: saturate(calc(.3 + var(--b, 0) * .9)) brightness(calc(.55 + var(--b, 0) * .5)); transition: filter .3s; box-shadow: 0 0 calc(var(--b, 0) * 90px) rgb(255 100 20 / .6); }
+  .pie i { position: absolute; width: 20%; aspect-ratio: 1.15; border-radius: 50%; background: #fbf1dc; }
+  .pie u { position: absolute; width: 9%; aspect-ratio: 2; background: #3d9a4c; border-radius: 80% 0; }
+  .oven .sec { position: absolute; bottom: 6%; font: 700 15px var(--mono); color: var(--flame); }
+  .steps { list-style: none; margin-top: 36px; }
+  .steps li { display: grid; grid-template-columns: 110px 1fr; gap: 20px; padding: 18px 0; border-top: 1px solid var(--line); align-items: baseline; }
+  .steps b { font: 800 34px/1 var(--disp); letter-spacing: -.04em; }
+  .steps span { color: var(--soft); }
+
+  /* Delivery */
+  .deliv { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; align-items: center; }
+  .radar { position: relative; width: min(480px, 100%); aspect-ratio: 1; margin-inline: auto; }
+  .radar .z { position: absolute; inset: var(--in); border-radius: 50%; border: 1px dashed var(--line); display: flex; justify-content: center; transition: background .5s, border-color .5s; }
+  .radar .z span { translate: 0 -50%; background: var(--coal); padding: 0 10px; height: fit-content; }
+  .radar .z.on { background: rgb(255 77 23 / .1); border: 1px solid var(--ember); }
+  .radar .z.on span { color: var(--flame); }
+  .radar .me { position: absolute; inset: 44%; border-radius: 50%; background: var(--heat); box-shadow: 0 0 50px var(--ember); animation: flick 2s infinite; }
+  .zones { display: grid; gap: 10px; margin-top: 34px; }
+  .zones button { display: grid; grid-template-columns: 1fr auto auto; gap: 20px; text-align: left; align-items: center; padding: 18px 20px; border: 1px solid var(--line); border-radius: 4px; transition: border-color .3s, background .3s; }
+  .zones button[aria-pressed='true'] { border-color: var(--ember); background: rgb(255 77 23 / .08); }
+  .zones b { font: 800 24px/1 var(--disp); letter-spacing: -.03em; }
+
+  .last { text-align: center; padding-bottom: 60px; }
+  .last h2 { font-size: clamp(3.4rem, 12vw, 12rem); }
+  .hours { display: flex; justify-content: center; gap: 44px; flex-wrap: wrap; margin: 44px 0; }
+  .hours div b { display: block; font: 800 30px/1.1 var(--disp); letter-spacing: -.03em; color: var(--cream); }
+  footer { padding: 26px 0 90px; text-align: center; border-top: 1px solid var(--line); }
+
+  @media (max-width: 900px) {
+    header nav, .thermo { display: none; }
+    .bake .wrap, .deliv { grid-template-columns: 1fr; gap: 50px; }
+    .row { grid-template-columns: 1fr auto; gap: 6px 16px; } .row .mono { display: none; } .row .ing { grid-column: 1 / -1; grid-row: 2; }
+    .steps li { grid-template-columns: 84px 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) { .glow, .sparks i, .strip div, .radar .me { animation: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="logo" href="#">FORNO<span class="hot">400</span></a>
+    <nav class="mono"><a href="#menu">Menu</a><a href="#pec">Pec</a><a href="#rozvoz">Rozvoz</a></nav>
+    <a class="btn" href="#rozvoz">Objednat</a>
+  </div>
+</header>
+<div class="thermo" aria-hidden="true"><b id="deg">20 °C</b><div class="tube"><i></i></div></div>
+
+<section class="hero">
+  <div class="glow"></div>
+  <div class="sparks" id="sparks" aria-hidden="true"></div>
+  <div class="wrap hero-in">
+    <div class="hero-top">
+      <p class="rv">Neapolská pizza z pece na dřevo. Těsto kyne 48 hodin, v ohni je 90 sekund.</p>
+      <div class="rv" style="--d:.1s;display:flex;gap:12px;flex-wrap:wrap"><a class="btn" href="#menu">Vybrat pizzu →</a><a class="btn ghost" href="#pec">Jak pečeme</a></div>
+    </div>
+    <h1 aria-label="400 stupňů Celsia"><span class="hot">400</span><sup>°C</sup></h1>
+  </div>
+</section>
+<div class="strip" aria-hidden="true"><div id="strip"></div></div>
+
+<section id="menu">
+  <div class="wrap">
+    <div class="menu-head">
+      <div class="rv"><p class="mono">01 · Menu</p><h2 style="margin-top:14px">Šest pizz.<br /><span class="hot">Žádný ananas.</span></h2></div>
+      <div class="rv">
+        <div class="size" role="group" aria-label="Velikost"><button data-s="1" aria-pressed="true">Klasická 32 cm</button><button data-s="0.7" aria-pressed="false">Dětská 24 cm</button></div>
+        <p class="mono" style="margin-top:12px">Každá i bez lepku, +30 Kč</p>
+      </div>
+    </div>
+    <div class="rows rv" id="rows"></div>
+  </div>
+</section>
+
+<section class="bake" id="pec">
+  <div class="wrap">
+    <div class="rv">
+      <div class="oven">
+        <svg viewBox="0 0 36 36"><defs><linearGradient id="g"><stop stop-color="#ffd35a" /><stop offset="1" stop-color="#ff3d12" /></linearGradient></defs><circle class="trk" cx="18" cy="18" r="15.9" /><circle class="prg" id="prg" cx="18" cy="18" r="15.9" pathLength="100" /></svg>
+        <div class="pie" id="pie"><i style="left:22%;top:24%"></i><i style="left:54%;top:18%"></i><i style="left:36%;top:52%"></i><i style="left:62%;top:54%"></i><u style="left:44%;top:40%"></u><u style="left:26%;top:60%;rotate:60deg"></u><u style="left:66%;top:38%;rotate:-40deg"></u></div>
+        <span class="sec" id="sec">0 s</span>
+      </div>
+      <div style="text-align:center;margin-top:26px"><button class="btn" id="bake">Šoupnout do pece</button></div>
+    </div>
+    <div class="rv" style="--d:.15s">
+      <p class="mono">02 · Pec</p>
+      <h2 style="margin-top:14px">Devadesát <span class="hot">sekund.</span></h2>
+      <ul class="steps">
+        <li><b>48 h</b><span>kyne těsto v chladu, aby bylo lehké a stravitelné</span></li>
+        <li><b>400°</b><span>má pec na dřevo, kterou postavili řemeslníci z Neapole</span></li>
+        <li><b>90 s</b><span>trvá pečení. Okraj se nafoukne, střed zůstane šťavnatý</span></li>
+        <li><b>4</b><span>suroviny v těstě: mouka typu 00, voda, sůl a kvas</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="rozvoz">
+  <div class="wrap deliv">
+    <div class="rv">
+      <p class="mono">03 · Rozvoz</p>
+      <h2 style="margin-top:14px">Horká až <span class="hot">ke dveřím.</span></h2>
+      <p style="margin-top:22px;color:var(--soft);max-width:440px">Vozíme na elektrokolech v termoboxech. Do třiceti minut, nebo máte tiramisu zdarma. Vyberte, jak daleko od pece bydlíte.</p>
+      <div class="zones" id="zones">
+        <button data-z="0" aria-pressed="true"><b>do 1 km</b><span class="mono">12 min</span><span class="mono">zdarma</span></button>
+        <button data-z="1" aria-pressed="false"><b>do 2,5 km</b><span class="mono">20 min</span><span class="mono">39 Kč</span></button>
+        <button data-z="2" aria-pressed="false"><b>do 4 km</b><span class="mono">28 min</span><span class="mono">59 Kč</span></button>
+      </div>
+      <a class="btn" style="margin-top:26px" href="#" data-demo="Ukázka návrhu. Objednávka se neodesílá.">Objednat rozvoz →</a>
+    </div>
+    <div class="radar rv" style="--d:.15s" aria-hidden="true">
+      <div class="z" style="--in:0%"><span class="mono">4 km</span></div>
+      <div class="z" style="--in:16%"><span class="mono">2,5 km</span></div>
+      <div class="z on" style="--in:32%"><span class="mono">1 km</span></div>
+      <div class="me"></div>
+    </div>
+  </div>
+</section>
+
+<section class="last">
+  <div class="wrap">
+    <p class="mono rv">04 · U nás</p>
+    <h2 class="rv" style="margin-top:14px">Stůl <span class="hot">u pece.</span></h2>
+    <div class="hours mono rv"><div>Po – Čt<b>11 – 22</b></div><div>Pá – So<b>11 – 23</b></div><div>Ne<b>12 – 21</b></div><div>U baru<b>7 míst</b></div></div>
+    <a class="btn rv" href="#" data-demo="Ukázka návrhu. Rezervace se neodesílá.">Rezervovat místo →</a>
+  </div>
+</section>
+<footer class="mono">Fiktivní značka · návrh studia WebTix · ukázka bez kontaktních údajů</footer>
+
+<script>
+  const pizzas = [
+    ['Margherita', 'San Marzano, fior di latte, bazalka, olivový olej', 199],
+    ['Marinara', 'San Marzano, česnek, oregano, bez sýra', 169],
+    ['Diavola', 'San Marzano, mozzarella, pikantní salám, chilli', 239, 1],
+    ['Quattro formaggi', 'Fior di latte, gorgonzola, parmazán, pecorino', 249],
+    ['Salsiccia e friarielli', 'Italská klobása, brokolice rapini, uzený sýr', 259],
+    ['Nduja', 'Pikantní kalábrijská pomazánka, ricotta, med', 249, 1],
+  ]
+  const rows = document.getElementById('rows'), sizeBtns = document.querySelectorAll('.size button')
+  function render(k) {
+    rows.innerHTML = pizzas.map((p, i) => `<div class="row"><span class="mono">0${i + 1}</span><h3>${p[0]}${p[3] ? '<small>pálí</small>' : ''}</h3><span class="ing">${p[1]}</span><span class="pr">${Math.round((p[2] * k) / 10) * 10} Kč</span></div>`).join('')
+    sizeBtns.forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.s === k)))
+  }
+  sizeBtns.forEach((b) => b.addEventListener('click', () => render(+b.dataset.s)))
+  render(1)
+
+  document.getElementById('strip').innerHTML = [...pizzas, ...pizzas, ...pizzas, ...pizzas].map((p) => `<span>${p[0]}</span>`).join('')
+  document.getElementById('sparks').innerHTML = Array.from({ length: 22 }, (_, i) => `<i style="--x:${(i * 37) % 100}%;--s:${5 + (i % 5)}s;--dl:${(i * 0.43) % 5}s;--dx:${((i * 53) % 120) - 60}px"></i>`).join('')
+
+  // Thermometer climbs to 400 °C as you scroll
+  const thermo = document.querySelector('.thermo'), deg = document.getElementById('deg')
+  const onScroll = () => { const p = Math.min(1, scrollY / (document.documentElement.scrollHeight - innerHeight || 1)); thermo.style.setProperty('--p', p); deg.textContent = Math.round(20 + p * 380) + ' °C' }
+  addEventListener('scroll', onScroll, { passive: true }); onScroll()
+
+  // 90 seconds in the oven, played ten times faster
+  const prg = document.getElementById('prg'), pie = document.getElementById('pie'), sec = document.getElementById('sec'), bake = document.getElementById('bake')
+  bake.addEventListener('click', () => {
+    if (bake.disabled) return
+    bake.disabled = true; bake.textContent = 'Peče se…'
+    const t0 = performance.now()
+    ;(function tick(t) {
+      const p = Math.min(1, (t - t0) / 9000)
+      prg.style.strokeDashoffset = 100 - p * 100; pie.style.setProperty('--b', p); pie.style.rotate = p * 360 + 'deg'; sec.textContent = Math.round(p * 90) + ' s'
+      if (p < 1) requestAnimationFrame(tick)
+      else { bake.disabled = false; bake.textContent = 'Hotovo. Ještě jednu?'; nvToast('Buon appetito! (zrychleno 10×)') }
+    })(t0)
+  })
+
+  const zs = document.querySelectorAll('.radar .z'), zb = document.querySelectorAll('#zones button')
+  zb.forEach((b) => b.addEventListener('click', () => {
+    zb.forEach((x) => x.setAttribute('aria-pressed', String(x === b)))
+    zs.forEach((z, i) => z.classList.toggle('on', 2 - i <= +b.dataset.z))
+  }))
+</script>
+<script src="../assets/base.js"></script>
+</body>
+</html>

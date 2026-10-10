@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Café AdAstra · návrh webu</title>
+<meta name="description" content="Návrh webu pro kavárnu s večerním klavírem. Ukázka bez kontaktních údajů." />
+<meta name="robots" content="noindex" />
+<link rel="stylesheet" href="../fonts/fonts.css" />
+<style>
+  :root {
+    --bg: #f4efe4; --ink: #15163f; --soft: #5d5e80; --line: rgb(21 22 63 / .16);
+    --blue: #2b3bff; --gold: #d99a2b; --card: #fbf8f1;
+    --serif: 'Instrument Serif', Georgia, serif; --sans: 'Instrument Sans', system-ui, sans-serif;
+    --ease: cubic-bezier(.16, 1, .3, 1);
+  }
+  html[data-mode='vecer'] { --bg: #0d0e2c; --ink: #f1ecdf; --soft: #a3a4c9; --line: rgb(241 236 223 / .18); --blue: #8f9bff; --gold: #f2bd57; --card: #15173d; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--ink); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; transition: background .9s var(--ease), color .9s var(--ease); }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; cursor: pointer; background: none; border: 0; }
+  .wrap { width: min(1280px, 100% - 40px); margin-inline: auto; }
+  .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: var(--soft); }
+
+  header { position: fixed; inset: 0 0 auto 0; z-index: 20; padding: 18px 0; mix-blend-mode: normal; }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+  .logo { font: italic 30px/1 var(--serif); letter-spacing: -.01em; }
+  .logo sup { font: 600 10px var(--sans); letter-spacing: .2em; vertical-align: top; margin-left: 4px; color: var(--gold); }
+  nav { display: flex; gap: 30px; font-size: 14px; font-weight: 500; }
+  nav a { position: relative; padding: 4px 0; }
+  nav a::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform .5s var(--ease); }
+  nav a:hover::after { transform: scaleX(1); transform-origin: left; }
+  .mode { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; padding: 9px 16px 9px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); transition: background .9s var(--ease); }
+  .mode i { width: 34px; height: 20px; border-radius: 99px; background: var(--ink); position: relative; transition: background .9s; }
+  .mode i::after { content: ''; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: var(--gold); transition: transform .6s var(--ease); }
+  html[data-mode='vecer'] .mode i::after { transform: translateX(14px); }
+
+  .hero { min-height: 100svh; display: grid; align-items: end; padding: 140px 0 56px; position: relative; }
+  .sky { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .sky path { fill: none; stroke: var(--blue); stroke-width: 1; stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 3.2s var(--ease) .3s forwards; opacity: .7; }
+  .sky circle { fill: var(--gold); transform-origin: center; transform-box: fill-box; animation: tw 3.4s ease-in-out infinite; animation-delay: var(--t, 0s); }
+  .sky text { font: 600 11px var(--sans); letter-spacing: .2em; fill: var(--soft); text-transform: uppercase; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  @keyframes tw { 50% { transform: scale(.55); opacity: .5; } }
+  .hero-in { position: relative; }
+  h1 { font: 400 clamp(5rem, 19vw, 19rem)/.8 var(--serif); letter-spacing: -.045em; margin-left: -.04em; }
+  h1 em { color: var(--blue); transition: color .9s; }
+  .hero-row { display: grid; grid-template-columns: 1.2fr 1fr auto; gap: 40px; align-items: end; margin-top: 44px; padding-top: 26px; border-top: 1px solid var(--line); }
+  .hero-row p { max-width: 430px; font-size: 19px; }
+  .hours { font-size: 14px; color: var(--soft); display: grid; gap: 4px; }
+  .hours b { color: var(--ink); font-weight: 600; }
+  .btn { display: inline-flex; align-items: center; gap: 12px; background: var(--ink); color: var(--bg); padding: 17px 28px; border-radius: 999px; font-weight: 600; font-size: 15px; transition: transform .5s var(--ease), background .9s, color .9s; }
+  .btn:hover { transform: translateY(-3px) rotate(-1.5deg); }
+  .btn span { display: inline-block; transition: transform .5s var(--ease); }
+  .btn:hover span { transform: translateX(5px); }
+
+  section { padding: clamp(90px, 12vw, 170px) 0; }
+  h2 { font: 400 clamp(2.8rem, 7vw, 6.4rem)/.92 var(--serif); letter-spacing: -.03em; }
+  h2 em { color: var(--blue); }
+
+  /* Piano */
+  .piano-sec { text-align: center; }
+  .piano-sec p.lead { max-width: 520px; margin: 22px auto 0; color: var(--soft); }
+  .piano { position: relative; display: flex; margin: 60px auto 0; width: min(900px, 100%); height: clamp(170px, 26vw, 300px); border: 1px solid var(--ink); border-radius: 6px 6px 22px 22px; overflow: hidden; background: var(--ink); gap: 1px; user-select: none; touch-action: manipulation; }
+  .key { flex: 1; background: #fbf8f1; border-radius: 0 0 8px 8px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 14px; font: 600 11px var(--sans); color: #8b8ca8; transition: background .15s, transform .15s; transform-origin: top; }
+  .key.on { background: var(--gold); transform: scaleY(.985); color: #15163f; }
+  .bk { position: absolute; top: 0; width: 5.6%; height: 60%; background: #15163f; border-radius: 0 0 6px 6px; translate: -50% 0; z-index: 2; transition: background .15s, height .15s; border: 1px solid #f1ecdf22; border-top: 0; }
+  .bk.on { background: var(--blue); height: 58%; }
+  .hint { margin-top: 20px; font-size: 13px; color: var(--soft); }
+
+  /* Program */
+  .prog-head { display: flex; justify-content: space-between; align-items: end; gap: 30px; flex-wrap: wrap; }
+  .prog { margin-top: 60px; border-top: 1px solid var(--ink); }
+  .prog a { display: grid; grid-template-columns: 110px 1fr 220px 40px; gap: 24px; align-items: center; padding: 30px 0; border-bottom: 1px solid var(--line); position: relative; transition: padding .6s var(--ease), color .4s; }
+  .prog a:hover { padding-left: 22px; color: var(--blue); }
+  .prog .d { font: 600 13px var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--soft); }
+  .prog .t { font: 400 clamp(1.7rem, 3.6vw, 3rem)/1 var(--serif); letter-spacing: -.02em; }
+  .prog .t i { color: var(--soft); font-size: .6em; }
+  .prog .m { font-size: 14px; color: var(--soft); }
+  .prog .a { font-size: 22px; justify-self: end; transition: transform .6s var(--ease); }
+  .prog a:hover .a { transform: rotate(-45deg); }
+
+  /* Menu */
+  .menu-sec { background: var(--card); border-block: 1px solid var(--line); transition: background .9s var(--ease); }
+  .menu-grid { display: grid; grid-template-columns: .8fr 1fr 1fr; gap: 56px; }
+  .menu-grid aside p { color: var(--soft); margin-top: 22px; max-width: 300px; }
+  .col h3 { font: italic 400 34px/1 var(--serif); padding-bottom: 16px; border-bottom: 1px solid var(--ink); }
+  .item { display: grid; grid-template-columns: 1fr auto; gap: 6px 16px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .item b { font-weight: 600; }
+  .item small { grid-column: 1; color: var(--soft); font-size: 14px; }
+  .item span { font: 400 24px/1 var(--serif); grid-row: 1; grid-column: 2; }
+
+  /* Day rhythm */
+  .rhythm { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 60px; }
+  .slot { border: 1px solid var(--line); border-radius: 28px; padding: 32px; min-height: 320px; display: flex; flex-direction: column; justify-content: space-between; background: var(--card); transition: transform .7s var(--ease), background .9s var(--ease); }
+  .slot:hover { transform: translateY(-8px) rotate(-.6deg); }
+  .slot:nth-child(2) { background: var(--blue); color: #fff; border-color: transparent; }
+  html[data-mode='vecer'] .slot:nth-child(2) { color: #0d0e2c; }
+  .slot:nth-child(3) { background: var(--ink); color: var(--bg); border-color: transparent; }
+  .slot .time { font: 400 64px/1 var(--serif); letter-spacing: -.03em; }
+  .slot h3 { font: italic 400 30px/1.05 var(--serif); }
+  .slot p { margin-top: 10px; font-size: 15px; opacity: .78; }
+
+  /* Reserve */
+  .res { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; align-items: start; }
+  form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  label { display: grid; gap: 8px; font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--soft); }
+  label.full { grid-column: 1 / -1; }
+  input, select { font: 400 26px/1.2 var(--serif); color: var(--ink); background: transparent; border: 0; border-bottom: 1px solid var(--ink); padding: 8px 0 12px; border-radius: 0; outline: 0; width: 100%; }
+  select option { color: #15163f; }
+  input:focus, select:focus { border-color: var(--blue); }
+  form .btn { grid-column: 1 / -1; justify-content: center; margin-top: 16px; }
+
+  footer { padding: 46px 0 90px; border-top: 1px solid var(--line); font-size: 14px; color: var(--soft); }
+  footer .wrap { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; align-items: baseline; }
+  footer .big { font: italic 400 clamp(2rem, 5vw, 4rem)/1 var(--serif); color: var(--ink); }
+
+  @media (max-width: 900px) {
+    nav { display: none; }
+    .hero-row, .menu-grid, .res, .rhythm { grid-template-columns: 1fr; }
+    .prog a { grid-template-columns: 1fr 30px; gap: 8px; }
+    .prog .d, .prog .m { grid-column: 1; }
+    .prog .a { grid-row: 1 / 4; grid-column: 2; }
+    .sky text { display: none; }
+    .slot { min-height: 230px; }
+    .key { font-size: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { .sky path { animation: none; stroke-dashoffset: 0; } .sky circle { animation: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="logo" href="#">AdAstra<sup>CAFÉ</sup></a>
+    <nav>
+      <a href="#klavir">Klavír</a><a href="#program">Program</a><a href="#listek">Lístek</a><a href="#rezervace">Rezervace</a>
+    </nav>
+    <button class="mode" id="mode" aria-pressed="false"><i></i><span id="mode-t">Večer</span></button>
+  </div>
+</header>
+
+<section class="hero">
+  <svg class="sky" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <path pathLength="1" d="M180 250 L420 140 L640 300 L900 120 L1180 260 L1320 110" />
+    <path pathLength="1" d="M640 300 L760 520 L1060 470 L1180 260" style="animation-delay:1s" />
+    <circle cx="180" cy="250" r="5" /><circle cx="420" cy="140" r="7" style="--t:.4s" /><circle cx="640" cy="300" r="5" style="--t:.9s" />
+    <circle cx="900" cy="120" r="8" style="--t:.2s" /><circle cx="1180" cy="260" r="6" style="--t:1.3s" /><circle cx="1320" cy="110" r="4" style="--t:.7s" />
+    <circle cx="760" cy="520" r="4" style="--t:1.6s" /><circle cx="1060" cy="470" r="6" style="--t:.5s" />
+    <text x="438" y="134">Káva</text><text x="918" y="114">Klavír</text><text x="1196" y="254">Kniha</text><text x="1076" y="464">Palačinka</text>
+  </svg>
+  <div class="wrap hero-in">
+    <p class="eyebrow rv">Kavárna a bistro · per aspera ad astra</p>
+    <h1 class="rv" style="--d:.1s">Ad <em>Astra</em></h1>
+    <div class="hero-row rv" style="--d:.25s">
+      <p>Přes den káva, palačinky a polední menu. Večer klavír, na který si můžete zahrát i vy.</p>
+      <div class="hours"><span><b>Po–St</b> 11–22</span><span><b>Čt–Pá</b> 11–23</span><span><b>So</b> 10–23</span></div>
+      <a class="btn" href="#rezervace">Zamluvit stůl <span>→</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="piano-sec" id="klavir">
+  <div class="wrap">
+    <p class="eyebrow rv">Každý večer</p>
+    <h2 class="rv" style="margin-top:16px">Zahrajte si. <em>Opravdu.</em></h2>
+    <p class="lead rv">Klavír u nás není dekorace. Zkuste to nanečisto tady, a až přijdete, sedněte si k tomu pravému.</p>
+    <div class="piano rv" id="piano" aria-label="Klaviatura, hraje po kliknutí nebo klávesami A až L"></div>
+    <p class="hint rv">Klikněte, nebo hrajte na klávesnici: A S D F G H J K L</p>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <p class="eyebrow rv">Jeden den u nás</p>
+    <h2 class="rv" style="margin-top:16px">Ráno tiše, <em>večer nahlas.</em></h2>
+    <div class="rhythm">
+      <article class="slot rv"><div class="time">11:00</div><div><h3>Káva a noviny</h3><p>Otevíráme. Espresso, filtr a police plná knih, které si můžete půjčit domů.</p></div></article>
+      <article class="slot rv" style="--d:.1s"><div class="time">12:00</div><div><h3>Polední menu</h3><p>Dvě hlavní jídla a polévka. Vaříme do tří odpoledne, pak zase palačinky.</p></div></article>
+      <article class="slot rv" style="--d:.2s"><div class="time">19:30</div><div><h3>Klavír a víno</h3><p>Lampy ztlumíme, klavír otevřeme. Hraje host večera, nebo kdokoli z vás.</p></div></article>
+    </div>
+  </div>
+</section>
+
+<section id="program" style="padding-top:0">
+  <div class="wrap">
+    <div class="prog-head">
+      <div><p class="eyebrow rv">Program</p><h2 class="rv" style="margin-top:16px">Tento <em>týden</em></h2></div>
+      <p class="rv" style="max-width:340px;color:var(--soft)">Vstup je volný. Na večery s hostem doporučujeme stůl zamluvit předem.</p>
+    </div>
+    <div class="prog rv">
+      <a href="#rezervace"><span class="d">Út · 19:30</span><span class="t">Otevřený klavír</span><span class="m">Hraje, kdo má odvahu</span><span class="a">→</span></a>
+      <a href="#rezervace"><span class="d">St · 20:00</span><span class="t">Jazzové trio <i>živě</i></span><span class="m">Klavír, kontrabas, bicí</span><span class="a">→</span></a>
+      <a href="#rezervace"><span class="d">Čt · 19:00</span><span class="t">Autorské čtení</span><span class="m">Povídky a sklenka k tomu</span><span class="a">→</span></a>
+      <a href="#rezervace"><span class="d">Pá · 20:30</span><span class="t">Šansony při svíčkách</span><span class="m">Zpěv a klavír</span><span class="a">→</span></a>
+      <a href="#rezervace"><span class="d">So · 10:00</span><span class="t">Palačinkový brunch</span><span class="m">Do vyprodání těsta</span><span class="a">→</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="menu-sec" id="listek">
+  <div class="wrap menu-grid">
+    <aside class="rv">
+      <p class="eyebrow">Lístek</p>
+      <h2 style="margin-top:16px">Pala&shy;činky</h2>
+      <p>Těsto mícháme každé ráno. Slané z pohankové mouky, sladké z hladké. Ke každé kávě sedí jiná.</p>
+    </aside>
+    <div class="col rv" style="--d:.1s">
+      <h3>slané…</h3>
+      <div class="item"><b>Popeye</b><span>82 Kč</span><small>slanina, špenát</small></div>
+      <div class="item"><b>Norvégienne</b><span>89 Kč</span><small>ementál, losos</small></div>
+      <div class="item"><b>AdAstra</b><span>89 Kč</span><small>vejce, šunka, žampiony</small></div>
+    </div>
+    <div class="col rv" style="--d:.2s">
+      <h3>…sladké</h3>
+      <div class="item"><b>Nutella</b><span>59 Kč</span><small>lískové ořechy, banán</small></div>
+      <div class="item"><b>Canada</b><span>79 Kč</span><small>javorový sirup, mandle</small></div>
+      <div class="item"><b>Citron a cukr</b><span>49 Kč</span><small>klasika, která nikdy nezklame</small></div>
+    </div>
+  </div>
+</section>
+
+<section id="rezervace">
+  <div class="wrap res">
+    <div class="rv">
+      <p class="eyebrow">Rezervace</p>
+      <h2 style="margin-top:16px">Stůl <em>u klavíru?</em></h2>
+      <p style="margin-top:24px;color:var(--soft);max-width:400px">Vyberte den a počet hostů. Celou kavárnu pronajímáme i na oslavy a rauty, stačí to připsat.</p>
+    </div>
+    <form class="rv" data-demo="Ukázka návrhu. Rezervace se neodesílá.">
+      <label>Den<input type="date" required /></label>
+      <label>Čas<select><option>18:00</option><option>19:00</option><option selected>19:30</option><option>20:30</option></select></label>
+      <label>Hostů<select><option>2</option><option>3</option><option>4</option><option>5–8</option><option>Celá kavárna</option></select></label>
+      <label>Kde<select><option>U klavíru</option><option>U okna</option><option>U knihovny</option></select></label>
+      <label class="full">Jméno<input type="text" placeholder="Na koho stůl píšeme" required /></label>
+      <button class="btn">Odeslat rezervaci <span>→</span></button>
+    </form>
+  </div>
+</section>
+
+<footer><div class="wrap"><span class="big">per aspera ad astra</span><span>Návrh webu · studio WebTix · ukázka bez kontaktních údajů</span></div></footer>
+
+<script src="../assets/base.js"></script>
+<script>
+  // Day / evening
+  const root = document.documentElement, mode = document.getElementById('mode')
+  const setMode = (v) => { root.dataset.mode = v ? 'vecer' : 'den'; mode.setAttribute('aria-pressed', String(v)); document.getElementById('mode-t').textContent = v ? 'Den' : 'Večer' }
+  mode.addEventListener('click', () => setMode(root.dataset.mode !== 'vecer'))
+  setMode(false)
+
+  // Piano: ten white keys from C4, black keys between them
+  const piano = document.getElementById('piano')
+  const white = [0, 2, 4, 5, 7, 9, 11, 12, 14, 16], names = ['C', 'D', 'E', 'F', 'G', 'A', 'H', 'C', 'D', 'E'], kb = 'asdfghjkl;'
+  const black = [[1, 1], [3, 2], [6, 4], [8, 5], [10, 6], [13, 8], [15, 9]]
+  let ctx
+  function play(semi, el) {
+    ctx ||= new (window.AudioContext || window.webkitAudioContext)()
+    const o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime
+    o.type = 'triangle'; o.frequency.value = 261.63 * 2 ** (semi / 12)
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.32, t + .01); g.gain.exponentialRampToValueAtTime(.001, t + 1.4)
+    o.connect(g).connect(ctx.destination); o.start(t); o.stop(t + 1.5)
+    el.classList.add('on'); setTimeout(() => el.classList.remove('on'), 180)
+  }
+  const keys = white.map((s, i) => {
+    const k = document.createElement('button'); k.className = 'key'; k.textContent = names[i]; k.setAttribute('aria-label', 'Tón ' + names[i])
+    k.addEventListener('pointerdown', () => play(s, k)); piano.append(k); return [s, k]
+  })
+  black.forEach(([s, pos]) => {
+    const k = document.createElement('button'); k.className = 'bk'; k.style.left = pos * 10 + '%'; k.setAttribute('aria-label', 'Půltón')
+    k.addEventListener('pointerdown', () => play(s, k)); piano.append(k)
+  })
+  addEventListener('keydown', (e) => {
+    if (e.repeat || /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) return
+    const i = kb.indexOf(e.key.toLowerCase()); if (i > -1) play(keys[i][0], keys[i][1])
+  })
+</script>
+</body>
+</html>

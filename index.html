@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="cs" data-hub>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Návrhy · WebTix</title>
+<meta name="description" content="Jedenáct návrhů webů od studia WebTix. Každý má vlastní písmo, barvy i nápad. Ukázky bez kontaktních údajů." />
+<meta name="robots" content="noindex" />
+<link rel="stylesheet" href="fonts/fonts.css" />
+<style>
+  :root { --bg: #f4f4f1; --ink: #0c0c0c; --soft: #7b7b76; --line: rgb(12 12 12 / .12); --font: 'Inter Tight', system-ui, sans-serif; --serif: 'Instrument Serif', Georgia, serif; --ease: cubic-bezier(.16, 1, .3, 1); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--ink); font: 400 17px/1.5 var(--font); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  .wrap { width: min(1360px, 100% - 40px); margin-inline: auto; }
+  .sm { font: 500 13px/1.3 var(--font); letter-spacing: -.005em; }
+
+  header { position: fixed; inset: 14px 0 auto 0; z-index: 30; display: flex; justify-content: center; pointer-events: none; }
+  .pill { pointer-events: auto; display: flex; align-items: center; gap: 22px; background: rgb(255 255 255 / .78); backdrop-filter: blur(16px); border: 1px solid var(--line); border-radius: 999px; padding: 7px 7px 7px 20px; box-shadow: 0 10px 40px rgb(0 0 0 / .06); }
+  .pill .w { font: italic 400 24px/1 var(--serif); letter-spacing: -.01em; }
+  .pill nav { display: flex; gap: 2px; }
+  .pill button { padding: 9px 15px; border-radius: 999px; font-weight: 500; font-size: 14px; transition: background .3s, color .3s; }
+  .pill button:hover { background: rgb(12 12 12 / .06); }
+  .pill button[aria-pressed='true'] { background: var(--ink); color: #fff; }
+
+  .hero { padding: clamp(150px, 20vw, 250px) 0 clamp(60px, 8vw, 110px); text-align: center; }
+  h1 { font: 600 clamp(3.2rem, 11.4vw, 12rem)/.86 var(--font); letter-spacing: -.065em; }
+  h1 .l { display: block; overflow: hidden; padding-bottom: .12em; margin-bottom: -.12em; }
+  h1 .l > span { display: block; transform: translateY(105%); animation: up 1.2s var(--ease) forwards; animation-delay: calc(var(--i) * 120ms + 100ms); }
+  h1 em { font: italic 400 1.02em/1 var(--serif); letter-spacing: -.04em; }
+  @keyframes up { to { transform: none; } }
+  .hero p { margin: 34px auto 0; max-width: 520px; font-size: clamp(1.05rem, 1.5vw, 1.25rem); color: var(--soft); letter-spacing: -.01em; }
+  .dots { display: flex; justify-content: center; gap: 6px; margin-top: 40px; }
+  .dots i { width: 14px; height: 14px; border-radius: 50%; background: var(--c); transition: transform .5s var(--ease); animation: pop .7s var(--ease) both; animation-delay: calc(var(--i) * 60ms + .7s); }
+  .dots:hover i { transform: translateY(calc(sin(var(--i) * 1rad) * 8px)); }
+  @keyframes pop { from { scale: 0; } }
+
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(50px, 6vw, 90px) clamp(20px, 2.4vw, 34px); padding-bottom: 140px; }
+  .card { display: block; }
+  .card:nth-child(even) { margin-top: clamp(0px, 7vw, 110px); }
+  .card.hide { display: none; }
+  .shot { position: relative; border-radius: 22px; overflow: hidden; aspect-ratio: 16 / 10; background: var(--c); border: 1px solid var(--line); }
+  .shot img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; transition: transform 1.4s var(--ease), filter .6s; }
+  .card:hover .shot img { transform: scale(1.045); }
+  .shot .open { position: absolute; right: 16px; bottom: 16px; background: #fff; color: #0c0c0c; border-radius: 999px; padding: 12px 18px; font: 600 14px/1 var(--font); translate: 0 70px; transition: translate .7s var(--ease); box-shadow: 0 10px 30px rgb(0 0 0 / .2); }
+  .card:hover .open, .card:focus-visible .open { translate: 0 0; }
+  .meta { display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: baseline; margin-top: 18px; }
+  .meta .n { color: var(--soft); font-variant-numeric: tabular-nums; }
+  .meta h2 { font: 600 clamp(1.5rem, 2.5vw, 2.2rem)/1 var(--font); letter-spacing: -.045em; }
+  .meta .pal { display: flex; gap: 4px; }
+  .meta .pal i { width: 16px; height: 16px; border-radius: 50%; background: var(--p); border: 1px solid var(--line); }
+  .card p { margin: 8px 0 0 calc(16px + 2ch); color: var(--soft); max-width: 46ch; font-size: 16px; }
+  .card .f { margin: 10px 0 0 calc(16px + 2ch); display: flex; gap: 6px; flex-wrap: wrap; }
+  .card .f span { border: 1px solid var(--line); border-radius: 999px; padding: 4px 11px; }
+
+  footer { border-top: 1px solid var(--line); padding: 26px 0 40px; color: var(--soft); }
+  footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+  @media (max-width: 800px) {
+    .grid { grid-template-columns: 1fr; } .card:nth-child(even) { margin-top: 0; }
+    .pill { gap: 10px; padding-left: 14px; } .pill button { padding: 8px 10px; font-size: 13px; }
+    .shot .open { translate: 0 0; padding: 9px 13px; font-size: 12px; }
+  }
+  @media (prefers-reduced-motion: reduce) { h1 .l > span { animation: none; transform: none; } .dots i { animation: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="pill">
+    <span class="w">Návrhy</span>
+    <nav id="filter" aria-label="Filtr">
+      <button data-f="vse" aria-pressed="true">Vše</button><button data-f="podnik" aria-pressed="false">Podniky</button><button data-f="portfolio" aria-pressed="false">Portfolia</button>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <h1><span class="l"><span style="--i:0">Jedenáct webů.</span></span><span class="l"><span style="--i:1">Žádný <em>stejný.</em></span></span></h1>
+    <p>Každý návrh má vlastní písmo, barvy i nápad, na který se dá sáhnout. Ukázky jsou bez telefonů, adres a dalších kontaktů.</p>
+    <div class="dots" id="dots" aria-hidden="true"></div>
+  </div>
+</section>
+
+<main class="wrap grid" id="grid"></main>
+
+<footer class="sm"><div class="wrap"><span>Návrhy studia WebTix · 2026</span><span>Formuláře na ukázkách nic neodesílají</span></div></footer>
+
+<script>
+  const sites = [
+    ['forno', 'Forno 400', 'podnik', 'Pizzerie', 'Tma pece a žár. Teploměr stoupá se scrollem, pizzu si upečete za devadesát vteřin.', ['#120d0a', '#ff4d17', '#ffb321'], ['Bricolage Grotesque', 'JetBrains Mono']],
+    ['ranni-ptace', 'Ranní ptáče', 'podnik', 'Snídaňové bistro', 'Samolepky, které se dají přetahovat, šachovnice a tác, na který si skládáte snídani.', ['#cfc4ff', '#ff5a36', '#ffd84a'], ['Fredoka']],
+    ['sklipek', 'Sklípek 14', 'podnik', 'Vinárna', 'Světlý vápenec, gotické klenby a vinný lístek jako řada etiket.', ['#ebe5d9', '#6e1425', '#c9828c'], ['Cormorant Garamond', 'Jost']],
+    ['kvasek', 'Pekárna Kvásek', 'podnik', 'Řemeslná pekárna', 'Stránka začíná ve čtyři ráno a se scrollem na ní svítá. Časová osa pece vede od tmy do oběda.', ['#0d1130', '#f0744f', '#ffc35c'], ['Fraunces', 'DM Sans']],
+    ['lampa', 'Pražírna Lampa', 'podnik', 'Pražírna kávy', 'Barevné bloky jako obaly kávy, které se rozevírají. Kroky pražení se skládají na sebe.', ['#ff9fcf', '#ff5433', '#2c62ff'], ['Archivo']],
+    ['vyska', 'Výška Boulder', 'podnik', 'Lezecká hala', 'Světlá mapa s vrstevnicemi. Lezecká cesta se kreslí celou stránkou až k vrcholu.', ['#f3f0e8', '#2b50ff', '#ffd03b'], ['Unbounded', 'DM Sans']],
+    ['merkur', 'Restaurace Merkur', 'podnik', 'Restaurace', 'Web jako denní list. Hlavní zpráva dne je polední menu, rezervace je kupón k vystřižení.', ['#f5f1e8', '#141210', '#c5281c'], ['Bodoni Moda', 'Newsreader']],
+    ['hostinec', 'U Kamenné kašny', 'podnik', 'Hostinec', 'Pivní tácek, křídová tabule a lístek, na který si děláte čárky.', ['#f3ecd9', '#123a2b', '#e6a92b'], ['Zilla Slab', 'Caveat']],
+    ['adastra', 'Café AdAstra', 'podnik', 'Kavárna a bistro', 'Souhvězdí místo fotky, přepínač dne a večera a klavír, na který se dá opravdu zahrát.', ['#f4efe4', '#15163f', '#2b3bff'], ['Instrument Serif', 'Instrument Sans']],
+    ['richard-buchnicek', 'Richard Buchníček', 'portfolio', 'Portfolio', 'Kobaltová plocha a jméno, jehož písmena tloustnou podle toho, kde je kurzor.', ['#1b3bff', '#d6ff3d', '#f4f1e6'], ['Epilogue']],
+    ['daniel-sveda', 'Daniel Švéda', 'portfolio', 'Portfolio', 'Světlý papír, redakční typografie a rejstřík prací s náhledem, který jde za kurzorem.', ['#f8f7f3', '#0f0f0e', '#e8401c'], ['Inter Tight', 'Newsreader']],
+  ]
+  document.getElementById('grid').innerHTML = sites.map((s, i) => `
+    <a class="card rv" href="${s[0]}/index.html" data-k="${s[2]}">
+      <div class="shot" style="--c:${s[5][0]}"><img src="nahledy/${s[0]}.jpg" alt="Náhled webu ${s[1]}" loading="${i < 2 ? 'eager' : 'lazy'}" width="1440" height="900" /><span class="open">Otevřít návrh ↗</span></div>
+      <div class="meta"><span class="sm n">${String(i + 1).padStart(2, '0')}</span><h2>${s[1]}</h2><span class="pal">${s[5].map((p) => `<i style="--p:${p}"></i>`).join('')}</span></div>
+      <p>${s[4]}</p>
+      <div class="f sm"><span>${s[3]}</span>${s[6].map((f) => `<span>${f}</span>`).join('')}</div>
+    </a>`).join('')
+  document.getElementById('dots').innerHTML = sites.map((s, i) => `<i style="--c:${s[5][1]};--i:${i}"></i>`).join('')
+
+  const btns = document.querySelectorAll('#filter button')
+  btns.forEach((b) => b.addEventListener('click', () => {
+    btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)))
+    document.querySelectorAll('.card').forEach((c) => c.classList.toggle('hide', b.dataset.f !== 'vse' && c.dataset.k !== b.dataset.f))
+  }))
+</script>
+<script src="assets/base.js"></script>
+</body>
+</html>

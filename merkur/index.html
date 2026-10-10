@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Restaurace Merkur · návrh webu</title>
+<meta name="description" content="Návrh webu pro restauraci s tradicí, pojatý jako denní list. Ukázka bez kontaktních údajů." />
+<meta name="robots" content="noindex" />
+<link rel="stylesheet" href="../fonts/fonts.css" />
+<style>
+  :root { --paper: #f5f1e8; --ink: #141210; --red: #c5281c; --soft: #6b655c; --rule: #141210; --serif: 'Newsreader', Georgia, serif; --head: 'Bodoni Moda', 'Times New Roman', serif; --ease: cubic-bezier(.16, 1, .3, 1); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--paper); color: var(--ink); font: 18px/1.55 var(--serif); -webkit-font-smoothing: antialiased; overflow-x: hidden;
+    background-image: radial-gradient(rgb(20 18 16 / .05) 1px, transparent 1px); background-size: 4px 4px; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  .wrap { width: min(1320px, 100% - 36px); margin-inline: auto; }
+  .caps { font: 600 12px/1.3 var(--serif); letter-spacing: .2em; text-transform: uppercase; }
+
+  .ticker { background: var(--ink); color: var(--paper); overflow: hidden; white-space: nowrap; padding: 9px 0; }
+  .ticker div { display: inline-block; animation: run 38s linear infinite; }
+  .ticker span { margin: 0 26px; font: 600 12px var(--serif); letter-spacing: .2em; text-transform: uppercase; }
+  .ticker span::before { content: '●'; color: var(--red); margin-right: 26px; }
+  @keyframes run { to { transform: translateX(-50%); } }
+
+  .mast { text-align: center; padding: 26px 0 0; }
+  .mast-top { display: flex; justify-content: space-between; align-items: center; padding-bottom: 14px; border-bottom: 1px solid var(--rule); gap: 16px; }
+  .mast-top nav { display: flex; gap: 26px; }
+  .mast-top nav a { border-bottom: 1px solid transparent; transition: border-color .3s, color .3s; }
+  .mast-top nav a:hover { color: var(--red); border-color: var(--red); }
+  .mast h1 { font: 900 clamp(3.6rem, 17.6vw, 17.5rem)/.82 var(--head); letter-spacing: -.045em; padding: .12em 0 .06em; text-transform: uppercase; white-space: nowrap; }
+  .mast h1 span { display: inline-block; opacity: 0; transform: translateY(.35em) rotate(4deg); animation: up 1s var(--ease) forwards; animation-delay: calc(var(--i) * 70ms); }
+  @keyframes up { to { opacity: 1; transform: none; } }
+  .mast-bot { display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: center; border-block: 4px double var(--rule); padding: 10px 0; }
+  .mast-bot span:first-child { text-align: left; } .mast-bot span:last-child { text-align: right; }
+  .mast-bot em { font-style: italic; font-size: 17px; letter-spacing: 0; text-transform: none; font-weight: 400; }
+
+  .front { display: grid; grid-template-columns: 1fr 2.1fr 1fr; gap: 0; margin-top: 30px; }
+  .front > * { padding: 0 30px; border-right: 1px solid var(--rule); }
+  .front > *:first-child { padding-left: 0; } .front > *:last-child { padding-right: 0; border: 0; }
+  .kicker { color: var(--red); margin-bottom: 12px; display: block; }
+  h2 { font: 700 clamp(2.4rem, 5vw, 4.6rem)/.95 var(--head); letter-spacing: -.03em; }
+  h3 { font: 700 30px/1 var(--head); letter-spacing: -.02em; }
+  .lead { font-size: 21px; line-height: 1.45; margin-top: 18px; }
+  .lead::first-letter { font: 900 5.2em/.72 var(--head); float: left; padding: .08em .1em 0 0; color: var(--red); }
+  .cols2 { columns: 2; column-gap: 28px; column-rule: 1px solid rgb(20 18 16 / .2); margin-top: 18px; color: #2c2823; font-size: 17px; }
+  .cols2 p + p { text-indent: 1.4em; }
+
+  .days { display: flex; border: 1px solid var(--rule); margin-top: 26px; }
+  .days button { flex: 1; padding: 10px 4px; border-right: 1px solid var(--rule); transition: background .3s, color .3s; }
+  .days button:last-child { border: 0; }
+  .days button[aria-pressed='true'] { background: var(--ink); color: var(--paper); }
+  .days button:hover:not([aria-pressed='true']) { background: rgb(197 40 28 / .12); }
+  .dish { display: grid; grid-template-columns: 54px 1fr auto; gap: 14px; align-items: baseline; padding: 15px 0; border-bottom: 1px solid rgb(20 18 16 / .25); }
+  .dish i { font-style: italic; color: var(--soft); font-size: 15px; }
+  .dish b { font: 700 24px/1 var(--head); white-space: nowrap; }
+  .dish.soup { border-bottom: 3px double var(--rule); }
+  #menu-list { transition: opacity .25s; }
+
+  .side h3 { padding-bottom: 12px; border-bottom: 1px solid var(--rule); margin-bottom: 4px; }
+  .tap { display: flex; justify-content: space-between; gap: 10px; padding: 12px 0; border-bottom: 1px dotted var(--ink); }
+  .tap b { font: 700 20px var(--head); }
+  .box { border: 1px solid var(--rule); padding: 20px; margin-top: 28px; position: relative; }
+  .box::before { content: ''; position: absolute; inset: 4px; border: 1px solid var(--rule); pointer-events: none; }
+  .box p { font-size: 16px; margin-top: 8px; }
+  .weather { text-align: center; }
+  .weather .n { font: 900 86px/.9 var(--head); letter-spacing: -.04em; color: var(--red); }
+  .fixt { width: 100%; border-collapse: collapse; font-size: 16px; margin-top: 4px; }
+  .fixt td { padding: 11px 0; border-bottom: 1px dotted var(--ink); }
+  .fixt td:last-child { text-align: right; font-style: italic; color: var(--soft); }
+
+  .band { margin-top: 56px; border-block: 4px double var(--rule); padding: 40px 0; display: grid; grid-template-columns: repeat(4, 1fr); text-align: center; }
+  .band > div { border-right: 1px solid var(--rule); padding: 0 16px; } .band > div:last-child { border: 0; }
+  .band .n { font: 900 clamp(3rem, 7vw, 6rem)/.9 var(--head); letter-spacing: -.04em; }
+  .band p { font-size: 15px; font-style: italic; margin-top: 8px; color: var(--soft); }
+
+  .ads { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; margin: 56px 0 0; align-items: stretch; }
+  .ad { background: var(--ink); color: var(--paper); padding: 44px; position: relative; overflow: hidden; }
+  .ad h2 { font-style: italic; font-weight: 500; }
+  .ad h2 b { font-style: normal; font-weight: 900; color: var(--red); -webkit-text-stroke: 0; }
+  .ad ul { list-style: none; margin-top: 26px; display: grid; grid-template-columns: 1fr 1fr; gap: 0 30px; }
+  .ad li { padding: 12px 0; border-bottom: 1px solid rgb(245 241 232 / .25); display: flex; justify-content: space-between; gap: 12px; font-size: 16px; }
+  .ad li span:last-child { font-style: italic; opacity: .7; text-align: right; }
+  .stamp { position: absolute; right: 34px; top: 34px; width: 120px; height: 120px; border-radius: 50%; border: 2px solid var(--red); color: var(--red); display: grid; place-items: center; text-align: center; font: 900 30px/1 var(--head); rotate: 12deg; transition: rotate .8s var(--ease); }
+  .ad:hover .stamp { rotate: -8deg; }
+  .stamp small { display: block; font: 600 9px var(--serif); letter-spacing: .2em; text-transform: uppercase; }
+
+  .coupon { border: 2px dashed var(--ink); padding: 34px; position: relative; background: rgb(255 255 255 / .35); }
+  .coupon::before { content: '✂'; position: absolute; top: -15px; left: 26px; background: var(--paper); padding: 0 8px; font-size: 20px; }
+  form { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 22px; }
+  label { display: grid; gap: 4px; } label.full { grid-column: 1 / -1; }
+  input, select { font: 400 19px var(--serif); background: transparent; border: 0; border-bottom: 1px solid var(--ink); padding: 6px 0; color: var(--ink); outline: 0; border-radius: 0; width: 100%; }
+  input:focus, select:focus { border-bottom: 2px solid var(--red); }
+  .btn { grid-column: 1 / -1; background: var(--red); color: #fff; padding: 16px; font: 700 14px var(--serif); letter-spacing: .2em; text-transform: uppercase; transition: background .3s, letter-spacing .5s var(--ease); margin-top: 8px; }
+  .btn:hover { background: var(--ink); letter-spacing: .3em; }
+
+  footer { margin-top: 56px; border-top: 1px solid var(--rule); padding: 20px 0 90px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--soft); }
+
+  @media (max-width: 980px) {
+    .front { grid-template-columns: 1fr; }
+    .front > * { padding: 30px 0 !important; border-right: 0; border-bottom: 1px solid var(--rule); }
+    .front > *:first-child { order: 2; } .front > *:nth-child(2) { order: 1; padding-top: 0 !important; } .front > *:last-child { order: 3; }
+    .ads { grid-template-columns: 1fr; }
+    .band { grid-template-columns: 1fr 1fr; row-gap: 30px; } .band > div:nth-child(2) { border: 0; }
+    .mast-top nav { display: none; }
+    .mast-bot { grid-template-columns: 1fr; text-align: center; } .mast-bot span { text-align: center !important; }
+    .cols2 { columns: 1; } .ad { padding: 30px 24px; } .ad ul { grid-template-columns: 1fr; } .stamp { position: static; margin-bottom: 20px; }
+    .dish { grid-template-columns: 1fr auto; } .dish i { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .ticker div { animation: none; } .mast h1 span { animation: none; opacity: 1; transform: none; } }
+</style>
+</head>
+<body>
+<div class="ticker" aria-hidden="true"><div id="tick"></div></div>
+
+<div class="wrap">
+  <header class="mast">
+    <div class="mast-top caps">
+      <span>Ročník 115</span>
+      <nav><a href="#menu">Dnešní menu</a><a href="#cep">Na čepu</a><a href="#salonek">Salonek</a><a href="#rezervace">Rezervace</a></nav>
+      <span>Cena: dobrá nálada</span>
+    </div>
+    <h1 aria-label="Merkur" id="title"></h1>
+    <div class="mast-bot caps">
+      <span id="date">Denní list</span>
+      <span><em>Restaurace na rohu, kde se vaří od roku 1911</em></span>
+      <span id="open">Otevřeno denně 11–23</span>
+    </div>
+  </header>
+
+  <main class="front">
+    <aside class="side rv" id="cep">
+      <span class="caps kicker">Výčep</span>
+      <h3>Na čepu</h3>
+      <div class="tap"><span>Plzeňský ležák 12°</span><b>62,–</b></div>
+      <div class="tap"><span>Světlá jedenáctka</span><b>52,–</b></div>
+      <div class="tap"><span>Černé pivo</span><b>52,–</b></div>
+      <div class="tap"><span>Řezané</span><b>54,–</b></div>
+      <div class="tap"><span>Limonáda z výčepu</span><b>42,–</b></div>
+      <div class="box weather">
+        <span class="caps">Teplota piva</span>
+        <div class="n">7°</div>
+        <p><i>Stálá, v létě i v zimě. Předpověď na zítra: stejná.</i></p>
+      </div>
+    </aside>
+
+    <article class="rv" id="menu" style="--d:.1s">
+      <span class="caps kicker">Hlavní zpráva dne</span>
+      <h2>Dnes vaříme: <span id="headline">kuře na divoko</span></h2>
+      <p class="lead">Polední menu se u nás píše každé ráno a platí od jedenácti do tří. Polévka je k tomu, pivo za rohem a místo u okna, když přijdete včas.</p>
+      <div class="days caps" role="group" aria-label="Den v týdnu">
+        <button data-d="0">Po</button><button data-d="1">Út</button><button data-d="2">St</button><button data-d="3">Čt</button><button data-d="4">Pá</button>
+      </div>
+      <div id="menu-list"></div>
+      <div class="cols2">
+        <p>Kuchyně Merkuru se nikam nežene. Vývar táhneme přes noc, knedlíky vaříme v utěrce a řízek klepeme ručně, protože jinak to nejde poznat jen na první sousto.</p>
+        <p>Jídelní lístek mimo polední menu najdete na stole. Je krátký schválně: co na něm je, umíme nazpaměť.</p>
+      </div>
+    </article>
+
+    <aside class="side rv" style="--d:.2s">
+      <span class="caps kicker">Sport</span>
+      <h3>Přenosy</h3>
+      <table class="fixt">
+        <tr><td>Fotbal, liga</td><td>so 18:00</td></tr>
+        <tr><td>Hokej, extraliga</td><td>ne 17:00</td></tr>
+        <tr><td>Fotbal, poháry</td><td>út 21:00</td></tr>
+        <tr><td>Formule, závod</td><td>ne 15:00</td></tr>
+      </table>
+      <div class="box">
+        <span class="caps">Oznámení</span>
+        <p><b>Dvě plátna, zvuk nahlas.</b> Na velké zápasy si stůl držte předem, sál bývá plný hodinu před výkopem.</p>
+      </div>
+      <div class="box">
+        <span class="caps">Drobná inzerce</span>
+        <p><i>Hledá se štamgast ke stolu u okna. Zn.: čtvrtky, mariáš.</i></p>
+      </div>
+    </aside>
+  </main>
+
+  <section class="band rv">
+    <div><div class="n">1911</div><p>rok, kdy se tu poprvé načepovalo</p></div>
+    <div><div class="n">30</div><p>hostů se vejde do salonku</p></div>
+    <div><div class="n">11–15</div><p>polední menu každý všední den</p></div>
+    <div><div class="n">2</div><p>plátna na sportovní přenosy</p></div>
+  </section>
+
+  <section class="ads">
+    <div class="ad rv" id="salonek">
+      <div class="stamp"><div>30<small>hostů</small></div></div>
+      <span class="caps" style="color:var(--red)">Celostránková inzerce</span>
+      <h2 style="margin-top:14px">Oslavy, srazy,<br /><b>svatby</b> i kar.</h2>
+      <ul>
+        <li><span>Salonek</span><span>až 30 míst</span></li>
+        <li><span>Raut</span><span>na míru</span></li>
+        <li><span>Vlastní výčep</span><span>ano</span></li>
+        <li><span>Projekce</span><span>v ceně</span></li>
+        <li><span>Výzdoba</span><span>po domluvě</span></li>
+        <li><span>Zavíračka</span><span>až vy řeknete</span></li>
+      </ul>
+    </div>
+    <div class="coupon rv" id="rezervace" style="--d:.1s">
+      <span class="caps kicker">Kupón k vystřižení</span>
+      <h3>Rezervace stolu</h3>
+      <form data-demo="Ukázka návrhu. Kupón se neodesílá.">
+        <label class="caps">Den<input type="date" required /></label>
+        <label class="caps">Hodina<select><option>11:30</option><option>12:30</option><option>18:00</option><option>19:00</option><option>20:00</option></select></label>
+        <label class="caps">Osob<select><option>2</option><option>4</option><option>6</option><option>8 a více</option><option>Salonek</option></select></label>
+        <label class="caps">Příležitost<select><option>Večeře</option><option>Oběd</option><option>Přenos</option><option>Oslava</option></select></label>
+        <label class="caps full">Na jméno<input type="text" required /></label>
+        <button class="btn">Podat rezervaci</button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="caps"><span>Restaurace Merkur · denní list</span><span>Návrh webu · studio WebTix · ukázka bez kontaktních údajů</span></footer>
+</div>
+
+<script src="../assets/base.js"></script>
+<script>
+  document.getElementById('title').innerHTML = [...'Merkur'].map((c, i) => `<span style="--i:${i}">${c}</span>`).join('')
+  const news = ['Polední menu Po–Pá 11–15', 'Plzeň a černé na čepu', 'Sportovní přenosy na dvou plátnech', 'Salonek pro 30 hostů', 'Vaříme od roku 1911']
+  document.getElementById('tick').innerHTML = [...news, ...news, ...news, ...news].map((n) => `<span>${n}</span>`).join('')
+
+  const now = new Date()
+  document.getElementById('date').textContent = now.toLocaleDateString('cs-CZ', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+  const h = now.getHours()
+  document.getElementById('open').textContent = h >= 11 && h < 23 ? 'Právě máme otevřeno' : 'Otevíráme v 11:00'
+
+  const menus = [
+    ['kuře na divoko', [['350 ml', 'Hrachový krém s krutony', '60,–'], ['250 g', 'Pečené kuřecí stehno na divoko, červené zelí, bramborové knedlíky', '169,–'], ['150 g', 'Maďarský vepřový guláš, houskové knedlíky', '175,–'], ['150 g', 'Kuřecí cordon bleu, opečené brambory', '179,–']]],
+    ['svíčkovou', [['350 ml', 'Hovězí vývar s játrovými knedlíčky', '60,–'], ['150 g', 'Svíčková na smetaně, houskové knedlíky, brusinky', '189,–'], ['300 g', 'Špagety s pestem a sušenými rajčaty', '165,–'], ['150 g', 'Smažený vepřový řízek, bramborový salát', '179,–']]],
+    ['pečenou kachnu', [['350 ml', 'Kulajda s vejcem a koprem', '60,–'], ['1/4', 'Pečená kachna, bílé zelí, dvojí knedlíky', '229,–'], ['150 g', 'Hovězí na houbách, rýže', '179,–'], ['300 g', 'Tvarohové knedlíky s jahodami', '149,–']]],
+    ['vepřo knedlo zelo', [['350 ml', 'Česnečka se sýrem', '60,–'], ['150 g', 'Vepřová pečeně, kysané zelí, knedlíky', '175,–'], ['150 g', 'Kuřecí plátek na bylinkách, pečené brambory', '169,–'], ['200 g', 'Hamburger s hranolky', '179,–']]],
+    ['smaženého kapra', [['350 ml', 'Rybí polévka s krutony', '60,–'], ['200 g', 'Smažený kapr, bramborový salát', '199,–'], ['150 g', 'Hovězí guláš, chléb nebo knedlík', '179,–'], ['300 g', 'Šišky s mákem a máslem', '139,–']]],
+  ]
+  const list = document.getElementById('menu-list'), head = document.getElementById('headline'), btns = document.querySelectorAll('.days button')
+  function show(d) {
+    list.style.opacity = 0
+    setTimeout(() => {
+      head.textContent = menus[d][0]
+      list.innerHTML = menus[d][1].map((m, i) => `<div class="dish${i ? '' : ' soup'}"><i>${m[0]}</i><span>${m[1]}</span><b>${m[2]}</b></div>`).join('')
+      list.style.opacity = 1
+    }, 200)
+    btns.forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.d === d)))
+  }
+  btns.forEach((b) => b.addEventListener('click', () => show(+b.dataset.d)))
+  const wd = (now.getDay() + 6) % 7
+  show(wd < 5 ? wd : 0)
+</script>
+</body>
+</html>

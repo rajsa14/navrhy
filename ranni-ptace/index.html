@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ranní ptáče · návrh webu</title>
+<meta name="description" content="Návrh webu pro snídaňové bistro. Samolepky, šachovnice a tác, na který si skládáte snídani. Fiktivní značka, ukázka bez kontaktních údajů." />
+<meta name="robots" content="noindex" />
+<link rel="stylesheet" href="../fonts/fonts.css" />
+<style>
+  :root { --lilac: #cfc4ff; --ink: #18141f; --tom: #ff5a36; --butter: #ffd84a; --mint: #b4ecc6; --white: #fffdf6; --sky: #9fd8ff; --font: 'Fredoka', system-ui, sans-serif; --ease: cubic-bezier(.34, 1.56, .64, 1); --sh: 5px 5px 0 var(--ink); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--lilac); color: var(--ink); font: 400 18px/1.5 var(--font); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  .wrap { width: min(1240px, 100% - 36px); margin-inline: auto; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; background: var(--white); border: 2.5px solid var(--ink); border-radius: 999px; padding: 7px 16px; font-weight: 600; font-size: 15px; box-shadow: 3px 3px 0 var(--ink); }
+  .btn { display: inline-flex; align-items: center; gap: 10px; background: var(--tom); color: var(--white); border: 2.5px solid var(--ink); border-radius: 16px; padding: 15px 26px; font: 600 19px/1 var(--font); box-shadow: var(--sh); transition: transform .3s var(--ease), box-shadow .3s var(--ease); }
+  .btn:hover { transform: translate(-3px, -3px) rotate(-2deg); box-shadow: 8px 8px 0 var(--ink); }
+  .btn:active { transform: translate(4px, 4px); box-shadow: 1px 1px 0 var(--ink); }
+  .btn.y { background: var(--butter); color: var(--ink); }
+
+  header { padding: 18px 0; position: sticky; top: 0; z-index: 30; }
+  header .wrap { display: flex; justify-content: space-between; align-items: center; background: var(--white); border: 2.5px solid var(--ink); border-radius: 22px; padding: 10px 12px 10px 20px; box-shadow: var(--sh); width: min(1240px, 100% - 36px); }
+  .logo { display: flex; align-items: center; gap: 10px; font: 700 24px/1 var(--font); }
+  .logo i { width: 34px; height: 34px; border-radius: 50% 50% 50% 8px; background: var(--tom); border: 2.5px solid var(--ink); position: relative; display: block; }
+  .logo i::after { content: ''; position: absolute; top: 8px; right: 7px; width: 6px; height: 6px; border-radius: 50%; background: var(--ink); }
+  nav { display: flex; gap: 6px; }
+  nav a { padding: 8px 16px; border-radius: 12px; font-weight: 500; transition: background .2s; }
+  nav a:hover { background: var(--butter); }
+  header .btn { padding: 11px 20px; font-size: 17px; border-radius: 14px; box-shadow: 3px 3px 0 var(--ink); }
+
+  .hero { padding: 50px 0 120px; position: relative; }
+  .hero .wrap { position: relative; }
+  h1 { font: 700 clamp(4rem, 13.5vw, 13.5rem)/.84 var(--font); letter-spacing: -.045em; margin-top: 26px; position: relative; z-index: 1; }
+  h1 span { display: inline-block; }
+  h1 .o { color: var(--tom); -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; text-shadow: 6px 6px 0 var(--ink); }
+  h1 .w { background: var(--butter); border: 3px solid var(--ink); border-radius: 30px; padding: 0 .16em .04em; rotate: -3deg; box-shadow: 7px 7px 0 var(--ink); transition: rotate .5s var(--ease); }
+  h1 .w:hover { rotate: 3deg; }
+  .hero-bot { display: flex; justify-content: space-between; align-items: end; gap: 30px; margin-top: 46px; flex-wrap: wrap; position: relative; z-index: 1; }
+  .hero-bot p { max-width: 470px; font-size: 21px; }
+  .sticker { position: absolute; z-index: 2; cursor: grab; touch-action: none; filter: drop-shadow(5px 5px 0 var(--ink)); transition: scale .3s var(--ease); user-select: none; }
+  .sticker:hover { scale: 1.08; } .sticker.drag { cursor: grabbing; scale: 1.14; transition: none; }
+  .sticker svg { display: block; width: 100%; pointer-events: none; }
+  .wob { animation: wob 5s ease-in-out infinite; animation-delay: var(--t, 0s); }
+  @keyframes wob { 50% { rotate: 6deg; translate: 0 -8px; } }
+
+  .check { height: 44px; background: conic-gradient(var(--ink) 25%, var(--white) 0 50%, var(--ink) 0 75%, var(--white) 0) 0 0 / 44px 44px; border-block: 2.5px solid var(--ink); }
+
+  section { padding: 110px 0; }
+  h2 { font: 700 clamp(2.8rem, 7vw, 6rem)/.9 var(--font); letter-spacing: -.035em; }
+
+  .menu { background: var(--white); }
+  .menu-head { display: flex; justify-content: space-between; align-items: end; gap: 26px; flex-wrap: wrap; }
+  .tabs { display: flex; gap: 10px; flex-wrap: wrap; }
+  .tabs button { border: 2.5px solid var(--ink); border-radius: 999px; padding: 9px 20px; font-weight: 600; background: var(--white); transition: transform .3s var(--ease), background .2s; }
+  .tabs button:hover { transform: rotate(-3deg) scale(1.05); }
+  .tabs button[aria-pressed='true'] { background: var(--ink); color: var(--white); }
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 50px; }
+  .card { background: var(--c); border: 2.5px solid var(--ink); border-radius: 26px; padding: 24px; box-shadow: var(--sh); text-align: left; display: flex; flex-direction: column; gap: 10px; min-height: 250px; transition: transform .35s var(--ease), box-shadow .35s var(--ease); animation: pop .5s var(--ease) both; animation-delay: calc(var(--i) * 60ms); position: relative; }
+  @keyframes pop { from { opacity: 0; transform: scale(.8) rotate(-4deg); } }
+  .card:hover { transform: translate(-4px, -6px) rotate(var(--r)); box-shadow: 10px 12px 0 var(--ink); }
+  .card h3 { font: 700 30px/1 var(--font); letter-spacing: -.02em; }
+  .card p { font-size: 16px; line-height: 1.4; }
+  .card .foot { margin-top: auto; display: flex; justify-content: space-between; align-items: center; }
+  .card .foot b { font: 700 26px/1 var(--font); }
+  .card .add { width: 46px; height: 46px; border-radius: 50%; border: 2.5px solid var(--ink); background: var(--white); font: 600 28px/1 var(--font); display: grid; place-items: center; transition: rotate .4s var(--ease), background .2s; }
+  .card:hover .add { rotate: 90deg; background: var(--ink); color: var(--white); }
+  .card .tag { position: absolute; top: -14px; right: 18px; background: var(--ink); color: var(--white); border-radius: 999px; padding: 4px 12px; font-size: 13px; font-weight: 600; rotate: 4deg; }
+
+  .tray { position: fixed; right: 16px; bottom: 16px; z-index: 40; background: var(--butter); border: 2.5px solid var(--ink); border-radius: 22px; padding: 14px 18px; box-shadow: var(--sh); display: none; align-items: center; gap: 16px; animation: pop .4s var(--ease); }
+  .tray.on { display: flex; }
+  .tray b { font: 700 22px/1 var(--font); display: block; }
+  .tray small { font-size: 14px; }
+  .tray button { background: var(--ink); color: var(--white); border-radius: 12px; padding: 11px 16px; font-weight: 600; }
+
+  .open { background: var(--tom); color: var(--white); border-block: 2.5px solid var(--ink); }
+  .open .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: 50px; align-items: center; }
+  .clock { font: 700 clamp(4rem, 12vw, 10.5rem)/.82 var(--font); letter-spacing: -.05em; color: var(--butter); -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; text-shadow: 7px 7px 0 var(--ink); }
+  .times { background: var(--white); color: var(--ink); border: 2.5px solid var(--ink); border-radius: 26px; box-shadow: var(--sh); padding: 10px 26px; rotate: 2deg; }
+  .times div { display: flex; justify-content: space-between; padding: 16px 0; border-bottom: 2.5px dashed var(--ink); font-weight: 500; }
+  .times div:last-child { border: 0; } .times b { font-weight: 700; }
+
+  .events .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 54px; }
+  .ev { background: var(--white); border: 2.5px solid var(--ink); border-radius: 26px; box-shadow: var(--sh); overflow: hidden; rotate: var(--r); transition: rotate .4s var(--ease), transform .4s var(--ease); }
+  .ev:hover { rotate: 0deg; transform: translateY(-8px); }
+  .ev .top { background: var(--c); border-bottom: 2.5px solid var(--ink); padding: 18px 22px; display: flex; align-items: baseline; gap: 10px; }
+  .ev .top b { font: 700 62px/.9 var(--font); letter-spacing: -.04em; }
+  .ev .top span { font-weight: 600; font-size: 20px; }
+  .ev .body { padding: 22px; }
+  .ev h3 { font: 700 26px/1.05 var(--font); }
+  .ev p { margin-top: 8px; font-size: 16px; }
+
+  .res { background: var(--mint); border-top: 2.5px solid var(--ink); text-align: center; }
+  form { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 40px; }
+  input, select { font: 500 19px var(--font); color: var(--ink); background: var(--white); border: 2.5px solid var(--ink); border-radius: 16px; padding: 14px 18px; box-shadow: 3px 3px 0 var(--ink); outline: 0; }
+  input:focus, select:focus { background: var(--butter); }
+  footer { background: var(--ink); color: var(--white); padding: 30px 0 90px; text-align: center; font-size: 15px; }
+
+  @media (max-width: 900px) {
+    nav { display: none; }
+    .cards, .events .grid, .open .wrap { grid-template-columns: 1fr; }
+    .sticker { scale: .7; } .sticker:hover { scale: .76; } .s-off { display: none; } .s-egg { top: auto !important; bottom: -96px; }
+    h1 .o { -webkit-text-stroke-width: 2px; text-shadow: 4px 4px 0 var(--ink); }
+    .ev { rotate: 0deg; }
+  }
+  @media (prefers-reduced-motion: reduce) { .wob, .card { animation: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="logo" href="#"><i></i>Ranní ptáče</a>
+    <nav><a href="#menu">Menu</a><a href="#otevreno">Otevřeno</a><a href="#akce">Akce</a></nav>
+    <a class="btn" href="#stul">Chci stůl</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap" id="stage">
+    <span class="chip rv"><span id="dot" style="width:10px;height:10px;border-radius:50%;background:#2fbf5b;border:2px solid var(--ink)"></span><span id="status">Teď máme otevřeno</span></span>
+    <h1 class="rv" style="--d:.08s"><span>Snídaně</span> <span class="w">celý</span> <span>den,</span><br /><span class="o">i v neděli.</span></h1>
+    <div class="hero-bot rv" style="--d:.16s">
+      <p>Vajíčka od farmáře, kvásek z vedlejší pekárny a káva, kvůli které se vyplatí vstát. Ale nemusíte. Snídáme do tří.</p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap"><a class="btn" href="#menu">Co si dáte? →</a><a class="btn y" href="#akce">Víkendové akce</a></div>
+    </div>
+
+    <div class="sticker s-egg" style="right:0%;top:30%;width:clamp(120px,16vw,220px)"><div class="wob"><svg viewBox="0 0 200 200"><path d="M100 14c44 0 82 30 82 78 0 30-14 44-10 62 4 20-20 34-48 30-18-2-28 6-50 2-34-6-60-32-58-72 2-52 40-100 84-100z" fill="#fffdf6" stroke="#18141f" stroke-width="6" /><circle cx="96" cy="100" r="40" fill="#ffb21f" stroke="#18141f" stroke-width="6" /><path d="M78 84c6-8 16-10 22-8" stroke="#fffdf6" stroke-width="7" stroke-linecap="round" fill="none" /></svg></div></div>
+    <div class="sticker s-off" style="right:26%;top:48%;width:clamp(90px,11vw,150px)"><div class="wob" style="--t:1.2s"><svg viewBox="0 0 160 160"><path d="M24 62c-10-18 6-40 28-34 8-14 48-14 56 0 22-6 38 16 28 34v62a14 14 0 0 1-14 14H38a14 14 0 0 1-14-14z" fill="#e9a55a" stroke="#18141f" stroke-width="6" stroke-linejoin="round" /><path d="M46 66c-4-10 4-20 14-16 6-8 34-8 40 0 10-4 18 6 14 16v44a8 8 0 0 1-8 8H54a8 8 0 0 1-8-8z" fill="#fff0c9" stroke="#18141f" stroke-width="5" stroke-linejoin="round" /></svg></div></div>
+    <div class="sticker" style="left:46%;top:-6%;width:clamp(80px,10vw,130px)"><div class="wob" style="--t:2.1s"><svg viewBox="0 0 140 140"><path d="M70 8l14 34 36-8-22 30 22 30-36-8-14 34-14-34-36 8 22-30-22-30 36 8z" fill="#ff5a36" stroke="#18141f" stroke-width="6" stroke-linejoin="round" /><text x="70" y="77" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="20" fill="#fffdf6">do 15:00</text></svg></div></div>
+    <div class="sticker s-off" style="right:16%;top:66%;width:clamp(90px,10vw,140px)"><div class="wob" style="--t:.6s"><svg viewBox="0 0 150 150"><path d="M22 46h82v50a36 36 0 0 1-36 36h-10a36 36 0 0 1-36-36z" fill="#9fd8ff" stroke="#18141f" stroke-width="6" stroke-linejoin="round" /><path d="M104 58h10a18 18 0 0 1 0 36h-10" fill="none" stroke="#18141f" stroke-width="6" /><ellipse cx="63" cy="48" rx="41" ry="10" fill="#7a4a2a" stroke="#18141f" stroke-width="6" /><path d="M50 30c-6-8 6-10 0-18M72 30c-6-8 6-10 0-18" stroke="#18141f" stroke-width="5" stroke-linecap="round" fill="none" /></svg></div></div>
+  </div>
+</section>
+<div class="check" aria-hidden="true"></div>
+
+<section class="menu" id="menu">
+  <div class="wrap">
+    <div class="menu-head">
+      <h2 class="rv">Slané, sladké,<br />nebo obojí?</h2>
+      <div class="tabs rv" role="group" aria-label="Filtr menu">
+        <button data-f="vse" aria-pressed="true">Všechno</button><button data-f="slane">Slané</button><button data-f="sladke">Sladké</button><button data-f="piti">Pití</button>
+      </div>
+    </div>
+    <div class="cards" id="cards"></div>
+  </div>
+</section>
+<div class="check" aria-hidden="true"></div>
+
+<section class="open" id="otevreno">
+  <div class="wrap">
+    <div class="rv"><p style="font-weight:600;font-size:22px">Otevírací doba</p><div class="clock">7:30<br />→ 15:00</div></div>
+    <div class="times rv" style="--d:.12s">
+      <div><span>Pondělí – pátek</span><b>7:30 – 15:00</b></div>
+      <div><span>Sobota, neděle</span><b>8:30 – 16:00</b></div>
+      <div><span>Svátky</span><b>8:30 – 14:00</b></div>
+      <div><span>Kuchyně vaří</span><b>až do zavíračky</b></div>
+    </div>
+  </div>
+</section>
+
+<section class="events" id="akce">
+  <div class="wrap">
+    <h2 class="rv">Přijďte na brunch</h2>
+    <div class="grid">
+      <article class="ev rv" style="--r:-2deg;--c:var(--butter)"><div class="top"><b>18</b><span>sobota</span></div><div class="body"><h3>Palačinkový brunch</h3><p>Neomezené palačinky. Děti do deseti let jedí zdarma.</p></div></article>
+      <article class="ev rv" style="--r:1.5deg;--c:var(--sky);--d:.1s"><div class="top"><b>26</b><span>neděle</span></div><div class="body"><h3>Ranní jazz na zahrádce</h3><p>Duo kytara a kontrabas, hrajeme od deseti.</p></div></article>
+      <article class="ev rv" style="--r:-1deg;--c:var(--mint);--d:.2s"><div class="top"><b>01</b><span>sobota</span></div><div class="body"><h3>Kurz latte artu</h3><p>Pro šest lidí, 590 Kč včetně snídaně.</p></div></article>
+    </div>
+  </div>
+</section>
+
+<section class="res" id="stul">
+  <div class="wrap">
+    <h2 class="rv">Držíme vám místo?</h2>
+    <form class="rv" data-demo="Ukázka návrhu. Stůl se nerezervuje.">
+      <input type="date" aria-label="Den" required />
+      <select aria-label="Čas"><option>8:00</option><option>9:30</option><option>11:00</option><option>12:30</option><option>14:00</option></select>
+      <select aria-label="Počet lidí"><option>2 lidi</option><option>3 lidi</option><option>4 lidi</option><option>Parta 5+</option></select>
+      <button class="btn">Zamluvit →</button>
+    </form>
+  </div>
+</section>
+<footer>Fiktivní značka · návrh studia WebTix · ukázka bez kontaktních údajů</footer>
+
+<div class="tray" id="tray"><div><b id="tray-n">1 věc na tácu</b><small id="tray-s">219 Kč</small></div><button id="tray-x">Vysypat</button></div>
+
+<script>
+  const items = [
+    ['slane', 'Shakshuka', 'Vejce pošírovaná v pikantní rajčatové omáčce, feta a kvásek.', 219, 'vege', '#ffd84a'],
+    ['sladke', 'Lívance s ricottou', 'Tři nadýchané lívance, ricotta, lesní ovoce, javorový sirup.', 189, 'vege', '#ffc4d6'],
+    ['slane', 'Avokádový toast', 'Kvásek, avokádo, ředkvičky, sázené vejce, chilli vločky.', 205, 'vege', '#b4ecc6'],
+    ['sladke', 'Granola miska', 'Domácí granola, řecký jogurt, med a sezónní ovoce.', 155, 'bez lepku', '#9fd8ff'],
+    ['piti', 'Flat white', 'Výběrová káva z malé pražírny, plnotučné nebo ovesné mléko.', 79, '', '#f0c79a'],
+    ['piti', 'Domácí limonáda', 'Rebarbora a máta, nebo zázvor s citronem. Půl litru.', 69, 'vegan', '#cfc4ff'],
+  ]
+  const cards = document.getElementById('cards'), tabs = document.querySelectorAll('.tabs button')
+  let n = 0, total = 0
+  const tray = document.getElementById('tray')
+  function update() {
+    tray.classList.toggle('on', n > 0)
+    document.getElementById('tray-n').textContent = n + (n === 1 ? ' věc' : n < 5 ? ' věci' : ' věcí') + ' na tácu'
+    document.getElementById('tray-s').textContent = total + ' Kč'
+  }
+  function render(f) {
+    cards.innerHTML = items.filter((i) => f === 'vse' || i[0] === f).map((i, k) => `
+      <button class="card" style="--c:${i[5]};--i:${k};--r:${k % 2 ? 2 : -2}deg" data-p="${i[3]}" aria-label="${i[1]}, přidat na tác">
+        ${i[4] ? `<span class="tag">${i[4]}</span>` : ''}<h3>${i[1]}</h3><p>${i[2]}</p>
+        <span class="foot"><b>${i[3]} Kč</b><span class="add">+</span></span>
+      </button>`).join('')
+    tabs.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.f === f)))
+  }
+  tabs.forEach((b) => b.addEventListener('click', () => render(b.dataset.f)))
+  cards.addEventListener('click', (e) => { const c = e.target.closest('.card'); if (!c) return; n++; total += +c.dataset.p; update() })
+  document.getElementById('tray-x').addEventListener('click', () => { n = 0; total = 0; update() })
+  render('vse')
+
+  const now = new Date(), h = now.getHours() + now.getMinutes() / 60, wk = now.getDay() % 6 === 0
+  const open = wk ? h >= 8.5 && h < 16 : h >= 7.5 && h < 15
+  document.getElementById('status').textContent = open ? 'Teď máme otevřeno' : 'Otevíráme zítra ráno'
+  if (!open) document.getElementById('dot').style.background = '#ff5a36'
+
+  // Stickers can be dragged around the hero
+  document.querySelectorAll('.sticker').forEach((s) => {
+    let sx, sy, ox = 0, oy = 0
+    s.addEventListener('pointerdown', (e) => { sx = e.clientX - ox; sy = e.clientY - oy; s.setPointerCapture(e.pointerId); s.classList.add('drag') })
+    s.addEventListener('pointermove', (e) => { if (!s.classList.contains('drag')) return; ox = e.clientX - sx; oy = e.clientY - sy; s.style.translate = `${ox}px ${oy}px` })
+    const end = () => s.classList.remove('drag')
+    s.addEventListener('pointerup', end); s.addEventListener('pointercancel', end)
+  })
+</script>
+<script src="../assets/base.js"></script>
+</body>
+</html>

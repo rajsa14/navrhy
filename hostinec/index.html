@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hostinec U Kamenné kašny · návrh webu</title>
+<meta name="description" content="Návrh webu pro tradiční hospodu. Pivní tácek, křída a lístek s čárkami. Fiktivní značka, ukázka bez kontaktních údajů." />
+<meta name="robots" content="noindex" />
+<link rel="stylesheet" href="../fonts/fonts.css" />
+<style>
+  :root { --green: #123a2b; --deep: #0b2a1f; --cream: #f3ecd9; --paper: #fbf7ea; --must: #e6a92b; --red: #b9432c; --soft: #5f6f63; --slab: 'Zilla Slab', Georgia, serif; --chalk: 'Caveat', cursive; --ease: cubic-bezier(.16, 1, .3, 1); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--cream); color: var(--green); font: 400 19px/1.55 var(--slab); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  .wrap { width: min(1240px, 100% - 40px); margin-inline: auto; }
+  .tag { font: 700 13px/1 var(--slab); letter-spacing: .2em; text-transform: uppercase; }
+
+  header { padding: 22px 0; }
+  header .wrap { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+  .brand { display: flex; align-items: center; gap: 12px; font: 700 20px/1 var(--slab); }
+  .brand svg { width: 38px; height: 38px; }
+  nav { display: flex; gap: 6px; background: var(--paper); border: 2px solid var(--green); border-radius: 999px; padding: 5px; }
+  nav a { padding: 9px 18px; border-radius: 999px; font-weight: 600; font-size: 16px; transition: background .3s, color .3s; }
+  nav a:hover { background: var(--green); color: var(--cream); }
+  .btn { display: inline-flex; align-items: center; gap: 10px; background: var(--must); color: var(--deep); border: 2px solid var(--green); border-radius: 12px; padding: 14px 24px; font: 700 17px/1 var(--slab); box-shadow: 4px 4px 0 var(--green); transition: transform .25s var(--ease), box-shadow .25s var(--ease); }
+  .btn:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--green); }
+  .btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--green); }
+
+  .hero { padding: 50px 0 110px; }
+  .hero .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: 50px; align-items: center; }
+  h1 { font: 700 clamp(3.6rem, 9.4vw, 9.4rem)/.86 var(--slab); letter-spacing: -.035em; }
+  h1 small { display: block; font: 600 clamp(1.8rem, 3.6vw, 3.2rem)/1 var(--chalk); letter-spacing: 0; color: var(--red); rotate: -3deg; margin: 0 0 14px 6px; transform-origin: left; }
+  h1 u { text-decoration: none; background: linear-gradient(var(--must), var(--must)) 0 88% / 100% .16em no-repeat; }
+  .hero p { margin-top: 30px; max-width: 480px; font-size: 21px; color: #2c4a3c; }
+  .cta { display: flex; gap: 16px; margin-top: 34px; flex-wrap: wrap; align-items: center; }
+  .cta a.link { font-weight: 600; border-bottom: 2px solid var(--green); padding-bottom: 2px; }
+
+  .mat-wrap { display: grid; justify-items: center; gap: 26px; }
+  .mat { width: min(440px, 82vw); aspect-ratio: 1; border-radius: 50%; background: var(--paper); border: 3px solid var(--green); box-shadow: 0 0 0 12px var(--paper), 0 0 0 15px var(--green), 14px 22px 0 12px rgb(18 58 43 / .14); position: relative; display: grid; place-items: center; rotate: 6deg; transition: rotate 1s var(--ease); cursor: grab; }
+  .mat:hover { rotate: -4deg; }
+  .mat .ring { position: absolute; inset: 14px; animation: spin 40s linear infinite; }
+  .mat .ring text { font: 700 15.5px var(--slab); letter-spacing: .3em; fill: var(--green); text-transform: uppercase; }
+  .mat .glass { width: 38%; }
+  .foam { animation: foam 4s ease-in-out infinite; transform-origin: center bottom; transform-box: fill-box; }
+  @keyframes spin { to { rotate: 360deg; } }
+  @keyframes foam { 50% { transform: scaleY(1.12); } }
+
+  .tab { background: var(--paper); border: 2px solid var(--green); border-radius: 6px; padding: 16px 20px; width: min(440px, 100%); display: grid; grid-template-columns: 1fr auto; gap: 10px 16px; align-items: center; rotate: -1.5deg; box-shadow: 5px 5px 0 rgb(18 58 43 / .18); }
+  .tab .marks { display: flex; flex-wrap: wrap; gap: 10px; min-height: 40px; align-items: center; }
+  .tab .marks svg { height: 38px; width: auto; }
+  .tab .marks path { stroke: var(--green); stroke-width: 3; stroke-linecap: round; fill: none; stroke-dasharray: 60; stroke-dashoffset: 60; animation: mark .35s ease-out forwards; }
+  @keyframes mark { to { stroke-dashoffset: 0; } }
+  .tab .sum { font: 700 30px/1 var(--chalk); grid-column: 1 / -1; border-top: 2px dashed var(--green); padding-top: 10px; display: flex; justify-content: space-between; }
+  .tab button.plus { background: var(--green); color: var(--cream); border-radius: 10px; padding: 12px 16px; font-weight: 700; font-size: 16px; transition: background .3s; white-space: nowrap; }
+  .tab button.plus:hover { background: var(--red); }
+
+  /* Chalk board */
+  .board-sec { background: var(--green); color: var(--cream); padding: 110px 0; position: relative; }
+  .board-sec::before, .board-sec::after { content: ''; position: absolute; left: 0; right: 0; height: 22px; background: radial-gradient(circle at 11px 0, var(--cream) 11px, transparent 11.5px) 0 0 / 22px 22px repeat-x; }
+  .board-sec::before { top: 0; } .board-sec::after { bottom: 0; transform: scaleY(-1); }
+  .board-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 60px; align-items: start; }
+  h2 { font: 700 clamp(2.6rem, 5.6vw, 5rem)/.92 var(--slab); letter-spacing: -.03em; }
+  h2 em { font: 600 1.05em/1 var(--chalk); font-style: normal; color: var(--must); letter-spacing: 0; }
+  .board { background: var(--deep); border: 12px solid #6e4a2a; border-radius: 10px; padding: 34px 38px; font-family: var(--chalk); box-shadow: inset 0 0 80px rgb(0 0 0 / .5), 0 30px 60px rgb(0 0 0 / .3); rotate: 1deg; }
+  .board h3 { font: 700 46px/1 var(--chalk); text-align: center; color: var(--must); }
+  .board h3::after { content: ''; display: block; height: 3px; margin: 10px auto 12px; width: 60%; background: currentColor; border-radius: 50%; opacity: .7; }
+  .beer { display: grid; grid-template-columns: 1fr auto; gap: 2px 20px; padding: 13px 0; border-bottom: 2px dashed rgb(243 236 217 / .22); cursor: default; transition: translate .4s var(--ease); }
+  .beer:hover { translate: 10px 0; }
+  .beer:last-child { border: 0; }
+  .beer b { font: 700 34px/1 var(--chalk); }
+  .beer span { font: 700 34px/1 var(--chalk); color: var(--must); }
+  .beer small { font: 500 22px/1.1 var(--chalk); opacity: .7; grid-column: 1; }
+
+  /* Week */
+  .week-sec { padding: 120px 0; }
+  .week-head { display: flex; justify-content: space-between; align-items: end; gap: 30px; flex-wrap: wrap; }
+  .week-head h2 em { color: var(--red); }
+  .week { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-top: 54px; }
+  .day { background: var(--paper); border: 2px solid var(--green); border-radius: 14px; padding: 22px 20px 24px; transition: transform .5s var(--ease), box-shadow .5s var(--ease); position: relative; }
+  .day:hover { transform: translateY(-8px) rotate(-1deg); box-shadow: 6px 8px 0 var(--green); }
+  .day.today { background: var(--must); }
+  .day.today::after { content: 'dnes!'; position: absolute; top: -20px; right: 12px; font: 700 34px/1 var(--chalk); color: var(--red); rotate: 8deg; }
+  .day h3 { font: 700 26px/1 var(--slab); padding-bottom: 12px; border-bottom: 2px solid var(--green); }
+  .day p { padding: 12px 0; border-bottom: 1px dashed rgb(18 58 43 / .4); font-size: 17px; line-height: 1.3; }
+  .day p:last-child { border: 0; padding-bottom: 0; }
+  .day p b { display: block; font-size: 15px; color: var(--red); margin-top: 3px; }
+  .day p.soup { font: 600 23px/1.1 var(--chalk); }
+
+  /* Story */
+  .story { padding: 0 0 120px; }
+  .story .wrap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 2px solid var(--green); border-radius: 18px; overflow: hidden; background: var(--paper); }
+  .cell { padding: 40px 34px; border-right: 2px solid var(--green); }
+  .cell:last-child { border: 0; }
+  .cell .n { font: 700 clamp(3.4rem, 6vw, 5.4rem)/.9 var(--slab); letter-spacing: -.04em; }
+  .cell .n sup { font: 700 .45em var(--chalk); color: var(--red); margin-left: 6px; }
+  .cell p { margin-top: 14px; color: #2c4a3c; font-size: 18px; }
+
+  /* Salonek + form */
+  .salon { background: var(--must); border-block: 3px solid var(--green); padding: 110px 0; }
+  .salon .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+  .salon h2 em { color: var(--red); }
+  .facts { list-style: none; margin-top: 30px; border-top: 2px solid var(--green); }
+  .facts li { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 2px solid var(--green); font-weight: 600; }
+  .facts li span:last-child { font: 700 26px/1 var(--chalk); }
+  form { background: var(--paper); border: 2px solid var(--green); border-radius: 18px; padding: 34px; box-shadow: 8px 8px 0 var(--green); display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  form h3 { grid-column: 1 / -1; font: 700 32px/1 var(--slab); }
+  label { display: grid; gap: 6px; } label.full { grid-column: 1 / -1; }
+  input, select { font: 600 18px var(--slab); color: var(--green); background: var(--cream); border: 2px solid var(--green); border-radius: 10px; padding: 12px 14px; outline: 0; width: 100%; }
+  input:focus, select:focus { background: #fff; box-shadow: 3px 3px 0 var(--red); }
+  form .btn { grid-column: 1 / -1; justify-content: center; }
+
+  footer { background: var(--green); color: var(--cream); padding: 44px 0 90px; }
+  footer .wrap { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; flex-wrap: wrap; }
+  footer b { font: 700 40px/1 var(--chalk); color: var(--must); }
+  footer span { font-size: 16px; opacity: .7; }
+
+  @media (max-width: 960px) {
+    nav { display: none; }
+    .hero .wrap, .board-grid, .salon .wrap { grid-template-columns: 1fr; }
+    .week { grid-template-columns: 1fr; }
+    .story .wrap { grid-template-columns: 1fr; } .cell { border-right: 0; border-bottom: 2px solid var(--green); }
+    .board { padding: 24px 22px; } form { grid-template-columns: 1fr; padding: 24px; }
+    .hero { padding-top: 20px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .mat .ring, .foam { animation: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="brand" href="#">
+      <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M8 30h24M11 30v-7h18v7M20 23V12M20 12c-5 0-7 3-7 6M20 12c5 0 7 3 7 6M20 8v4" /></svg>
+      U Kamenné kašny
+    </a>
+    <nav><a href="#cep">Na čepu</a><a href="#menu">Polední menu</a><a href="#salonek">Salonek</a></nav>
+    <a class="btn" href="#salonek">Zamluvit stůl</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <h1 class="rv"><small>hostinec od roku 1897</small>Poctivé pivo, <u>poctivá</u> kuchyně.</h1>
+      <p class="rv" style="--d:.1s">Svíčková se tu dělá tři dny a pivo se točí na hladinku i na mlíko. Polední menu každý všední den od jedenácti do dvou.</p>
+      <div class="cta rv" style="--d:.2s"><a class="btn" href="#menu">Co se dnes vaří</a><a class="link" href="#cep">Co je na čepu →</a></div>
+    </div>
+    <div class="mat-wrap rv" style="--d:.15s">
+      <div class="mat" aria-hidden="true">
+        <svg class="ring" viewBox="0 0 400 400"><defs><path id="c" d="M200 200m-168 0a168 168 0 1 1 336 0a168 168 0 1 1-336 0" /></defs><text><textPath href="#c">U Kamenné kašny ✦ hostinec ✦ čepujeme od roku 1897 ✦ na hladinku ✦</textPath></text></svg>
+        <svg class="glass" viewBox="0 0 120 150" fill="none">
+          <path d="M22 30h62l-6 104a8 8 0 0 1-8 8H36a8 8 0 0 1-8-8z" fill="#e6a92b" stroke="#123a2b" stroke-width="5" />
+          <path d="M84 52h10a14 14 0 0 1 14 14v22a14 14 0 0 1-14 14H82" stroke="#123a2b" stroke-width="5" />
+          <path class="foam" d="M16 34c-6-14 8-24 18-18 4-12 24-12 28-1 12-6 28 4 22 19z" fill="#fbf7ea" stroke="#123a2b" stroke-width="5" stroke-linejoin="round" />
+          <path d="M40 56v64M56 56v64M72 56v50" stroke="#123a2b" stroke-width="3" stroke-linecap="round" opacity=".35" />
+        </svg>
+      </div>
+      <div class="tab">
+        <div class="marks" id="marks" aria-live="polite"></div>
+        <button class="plus" id="plus">Ještě jedno!</button>
+        <div class="sum"><span id="count">Lístek je čistý</span><span id="sum"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="board-sec" id="cep">
+  <div class="wrap board-grid">
+    <div class="rv">
+      <p class="tag" style="color:var(--must)">Výčep</p>
+      <h2 style="margin-top:16px">Čtyři kohouty, <em>žádné kompromisy.</em></h2>
+      <p style="margin-top:22px;opacity:.8;max-width:400px">Tankové pivo držíme na čtyřech stupních a trubky čistíme každý týden, ne každý měsíc. Poznáte to na první hlt.</p>
+    </div>
+    <div class="board rv" style="--d:.15s">
+      <h3>Dnes na čepu</h3>
+      <div class="beer"><b>Plzeňský ležák 12°</b><span>59,–</span><small>tankové, nepasterizované</small></div>
+      <div class="beer"><b>Tmavá 13°</b><span>62,–</span><small>z malého pivovaru z Vysočiny</small></div>
+      <div class="beer"><b>Polotmavý speciál 14°</b><span>68,–</span><small>host týdne</small></div>
+      <div class="beer"><b>Kofola točená</b><span>39,–</span><small>pro řidiče a děti</small></div>
+    </div>
+  </div>
+</section>
+
+<section class="week-sec" id="menu">
+  <div class="wrap">
+    <div class="week-head">
+      <div class="rv"><p class="tag" style="color:var(--red)">Polední menu</p><h2 style="margin-top:16px">Celý týden <em>na jednom tácu</em></h2></div>
+      <p class="rv" style="max-width:360px;color:var(--soft)">Píšeme ho každé ráno podle toho, co přivezl řezník a zelinář. Polévka je ke každému jídlu v ceně.</p>
+    </div>
+    <div class="week" id="week"></div>
+  </div>
+</section>
+
+<section class="story">
+  <div class="wrap rv">
+    <div class="cell"><div class="n">1897</div><p>Sládek Josef otevřel hostinec u kamenné kašny. Kašna i výčep stojí dodnes.</p></div>
+    <div class="cell"><div class="n">3<sup>dny</sup></div><p>Tak dlouho se u nás dělá svíčková. Omáčku nezahušťujeme moukou, jen zeleninou.</p></div>
+    <div class="cell"><div class="n">4<sup>°C</sup></div><p>Teplota tankového piva. Ani o stupeň víc, ani o stupeň míň.</p></div>
+  </div>
+</section>
+
+<section class="salon" id="salonek">
+  <div class="wrap">
+    <div class="rv">
+      <p class="tag">Salonek</p>
+      <h2 style="margin-top:16px">Oslava, schůze, <em>nebo jen stůl.</em></h2>
+      <p style="margin-top:20px;max-width:440px">Oddělená místnost s vlastním výčepem. Domluvíme raut na míru a vy se staráte jen o hosty.</p>
+      <ul class="facts">
+        <li><span>Kapacita</span><span>až 30 osob</span></li>
+        <li><span>Pronájem</span><span>zdarma od 6 000 Kč útraty</span></li>
+        <li><span>Raut</span><span>od 290 Kč na osobu</span></li>
+        <li><span>Projektor a ozvučení</span><span>v ceně</span></li>
+      </ul>
+    </div>
+    <form class="rv" style="--d:.15s" data-demo="Ukázka návrhu. Rezervace se neodesílá.">
+      <h3>Zamluvit místo</h3>
+      <label class="tag">Den<input type="date" required /></label>
+      <label class="tag">Hodina<select><option>11:30</option><option>12:30</option><option>18:00</option><option>19:00</option><option>20:00</option></select></label>
+      <label class="tag">Kolik vás bude<select><option>2</option><option>4</option><option>6</option><option>8–12</option><option>Celý salonek</option></select></label>
+      <label class="tag">Na jméno<input type="text" required /></label>
+      <button class="btn">Poslat rezervaci →</button>
+    </form>
+  </div>
+</section>
+
+<footer><div class="wrap"><b>Na zdraví!</b><span>Fiktivní značka · návrh studia WebTix · ukázka bez kontaktních údajů</span></div></footer>
+
+<script>
+  // Beer tab: tally marks the way a pub bill is kept
+  const marks = document.getElementById('marks'), count = document.getElementById('count'), sum = document.getElementById('sum')
+  const strokes = ['M6 4v32', 'M16 4v32', 'M26 4v32', 'M36 4v32', 'M1 30L41 10']
+  let n = 0
+  document.getElementById('plus').addEventListener('click', () => {
+    if (n >= 20) { marks.innerHTML = ''; n = 0 }
+    if (n % 5 === 0) marks.insertAdjacentHTML('beforeend', '<svg viewBox="0 0 42 40"></svg>')
+    marks.lastElementChild.insertAdjacentHTML('beforeend', `<path d="${strokes[n % 5]}"/>`)
+    n++
+    count.textContent = n === 1 ? '1 pivo' : n < 5 ? n + ' piva' : n + ' piv'
+    sum.textContent = n * 59 + ' Kč'
+    if (n === 20) nvToast('Dvacet? Zavoláme vám taxi.')
+  })
+
+  const week = [
+    ['Pondělí', 'Česnečka se sýrem', [['Svíčková na smetaně, knedlík', 189], ['Smažený sýr, brambory, tatarka', 169], ['Kuřecí řízek, bramborový salát', 179]]],
+    ['Úterý', 'Hovězí vývar s nudlemi', [['Vepřo knedlo zelo', 179], ['Rizoto s kuřecím masem', 159], ['Utopenec s cibulí a chlebem', 99]]],
+    ['Středa', 'Gulášová polévka', [['Pečená kachna, červené zelí', 229], ['Bramboráky s uzeným', 159], ['Salát s kozím sýrem', 169]]],
+    ['Čtvrtek', 'Kulajda', [['Španělský ptáček, rýže', 179], ['Plněné papriky, knedlík', 169], ['Nakládaný hermelín', 99]]],
+    ['Pátek', 'Rybí polévka', [['Smažený kapr, salát', 199], ['Hovězí guláš, knedlík', 179], ['Ovocné knedlíky s tvarohem', 149]]],
+  ]
+  const today = (new Date().getDay() + 6) % 7
+  document.getElementById('week').innerHTML = week.map((d, i) => `<article class="day rv${i === today ? ' today' : ''}" style="--d:${i * 0.07}s"><h3>${d[0]}</h3><p class="soup">${d[1]}</p>${d[2].map((m) => `<p>${m[0]}<b>${m[1]} Kč</b></p>`).join('')}</article>`).join('')
+</script>
+<script src="../assets/base.js"></script>
+</body>
+</html>

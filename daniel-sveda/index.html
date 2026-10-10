@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Daniel Švéda · návrh portfolia</title>
+<meta name="description" content="Návrh osobního webu. Světlý papír, redakční typografie a rejstřík prací s náhledem u kurzoru. Ukázka bez kontaktních údajů." />
+<meta name="robots" content="noindex" />
+<link rel="stylesheet" href="../fonts/fonts.css" />
+<style>
+  :root { --paper: #f8f7f3; --ink: #0f0f0e; --soft: #8a8880; --line: rgb(15 15 14 / .14); --acc: #e8401c; --sans: 'Inter Tight', system-ui, sans-serif; --serif: 'Newsreader', Georgia, serif; --ease: cubic-bezier(.16, 1, .3, 1); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--paper); color: var(--ink); font: 400 16px/1.5 var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { width: min(1440px, 100% - 48px); margin-inline: auto; }
+  .sm { font: 500 13px/1.35 var(--sans); letter-spacing: -.005em; }
+  .mut { color: var(--soft); }
+  i.s { font: italic 400 1.04em var(--serif); letter-spacing: -.02em; }
+
+  header { position: fixed; inset: 0 0 auto 0; z-index: 20; padding: 20px 0; mix-blend-mode: difference; color: #fff; }
+  header .wrap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  header a:hover { opacity: .6; }
+  header .r { justify-self: end; text-align: right; font-variant-numeric: tabular-nums; }
+
+  .hero { min-height: 100svh; display: grid; grid-template-rows: 1fr auto; padding: 120px 0 26px; }
+  .state { font: 400 clamp(2.4rem, 7.4vw, 8rem)/1 var(--sans); letter-spacing: -.045em; max-width: 17ch; }
+  .state .l { display: block; overflow: hidden; padding-bottom: .1em; margin-bottom: -.1em; }
+  .state .l > span { display: block; transform: translateY(110%); animation: up 1.2s var(--ease) forwards; animation-delay: calc(var(--i) * 110ms + 150ms); }
+  @keyframes up { to { transform: none; } }
+  .state i.s { color: var(--acc); }
+  .hero-foot { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; align-items: end; padding-top: 20px; border-top: 1px solid var(--ink); }
+  .hero-foot .name { grid-column: span 2; font: 400 clamp(1.5rem, 2.6vw, 2.4rem)/1 var(--serif); font-style: italic; letter-spacing: -.02em; }
+  .scroll { justify-self: end; display: flex; align-items: center; gap: 10px; }
+  .scroll::after { content: ''; width: 1px; height: 34px; background: var(--ink); animation: drip 2s var(--ease) infinite; transform-origin: top; }
+  @keyframes drip { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+
+  section { padding: clamp(90px, 12vw, 180px) 0; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .about p.big { grid-column: 2 / 5; font: 400 clamp(1.5rem, 3.1vw, 3rem)/1.14 var(--sans); letter-spacing: -.035em; }
+  .about p.big + p.big { margin-top: 1em; }
+
+  /* Index */
+  .idx-head { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--ink); }
+  .row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; align-items: baseline; padding: 22px 0; border-bottom: 1px solid var(--line); position: relative; transition: color .4s, padding .7s var(--ease); }
+  .row .t { grid-column: 2 / 4; font: 400 clamp(1.8rem, 4.6vw, 4.6rem)/.95 var(--sans); letter-spacing: -.05em; transition: transform .7s var(--ease); }
+  .row .y { justify-self: end; }
+  .idx:hover .row { color: var(--soft); }
+  .idx .row:hover { color: var(--ink); }
+  .row:hover .t { transform: translateX(18px); }
+  .row:hover .t::after { content: ' ↗'; font-family: var(--serif); color: var(--acc); }
+  .peek { position: fixed; left: 0; top: 0; z-index: 15; width: 300px; aspect-ratio: 4 / 5; pointer-events: none; border-radius: 6px; overflow: hidden; opacity: 0; scale: .7; rotate: -6deg; transition: opacity .35s, scale .6s var(--ease), rotate .6s var(--ease), background .4s; display: grid; place-items: center; text-align: center; padding: 20px; color: var(--pc, #fff); background: var(--pb, #111); will-change: transform; }
+  .peek.on { opacity: 1; scale: 1; rotate: 3deg; }
+  .peek b { font: 400 54px/.9 var(--serif); font-style: italic; letter-spacing: -.03em; }
+  .peek span { position: absolute; left: 16px; bottom: 14px; }
+
+  /* Principles */
+  .prin { counter-reset: p; }
+  .prin article { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 44px 0; border-top: 1px solid var(--ink); counter-increment: p; }
+  .prin article::before { content: '0' counter(p); font: 500 13px var(--sans); }
+  .prin h3 { font: 400 clamp(1.6rem, 3vw, 2.8rem)/1 var(--serif); font-style: italic; letter-spacing: -.03em; }
+  .prin p { grid-column: 3 / 5; font-size: clamp(1.05rem, 1.5vw, 1.35rem); line-height: 1.4; letter-spacing: -.015em; max-width: 34ch; }
+
+  .end { padding-bottom: 60px; }
+  .end h2 { font: 400 clamp(3.6rem, 15vw, 16rem)/.82 var(--sans); letter-spacing: -.07em; }
+  .end h2 i.s { color: var(--acc); }
+  footer { border-top: 1px solid var(--ink); padding: 18px 0 90px; }
+  footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+  @media (max-width: 800px) {
+    header .wrap, .hero-foot, .grid4, .idx-head, .row, .prin article { grid-template-columns: 1fr 1fr; }
+    header .wrap > :nth-child(2), header .wrap > :nth-child(3), .idx-head > :nth-child(3) { display: none; }
+    .about p.big, .row .t { grid-column: 1 / -1; } .row .t { order: -1; }
+    .prin p { grid-column: 1 / -1; } .peek { display: none; }
+    .hero-foot .name { grid-column: 1 / -1; }
+  }
+  @media (prefers-reduced-motion: reduce) { .state .l > span { animation: none; transform: none; } .scroll::after { animation: none; } }
+</style>
+</head>
+<body>
+<header class="sm">
+  <div class="wrap">
+    <a href="#">Daniel Švéda</a>
+    <span>Projekty, nápady, experimenty</span>
+    <a href="#prace">Rejstřík (06)</a>
+    <span class="r" id="clock">00:00:00</span>
+  </div>
+</header>
+
+<section class="hero" style="padding-bottom:26px">
+  <div class="wrap" style="align-self:center"><h1 class="state" aria-label="Většinou věci, které jsem začal dřív, než se někdo zeptal.">
+    <span class="l"><span style="--i:0">Většinou věci,</span></span>
+    <span class="l"><span style="--i:1">které jsem začal</span></span>
+    <span class="l"><span style="--i:2"><i class="s">dřív,</i> než se</span></span>
+    <span class="l"><span style="--i:3">někdo zeptal.</span></span>
+  </h1></div>
+  <div class="wrap">
+    <div class="hero-foot sm">
+      <span class="name">Daniel Švéda</span>
+      <span class="mut">Design a vývoj webů.<br />Spoluzakladatel studia WebTix.</span>
+      <span class="scroll">Dolů</span>
+    </div>
+  </div>
+</section>
+
+<section class="about">
+  <div class="wrap grid4">
+    <span class="sm mut rv">(O mně)</span>
+    <div style="grid-column:2/5">
+      <p class="big rv">Stavím weby, které se dají přečíst za deset vteřin a <i class="s">pamatovat</i> o dost déle. Bez šablon, od prázdné stránky.</p>
+      <p class="big mut rv" style="--d:.1s">Nejradši mám chvíli, kdy z nápadu na ubrousku začne být něco, na co se dá kliknout.</p>
+    </div>
+  </div>
+</section>
+
+<section id="prace" style="padding-top:0">
+  <div class="wrap">
+    <div class="idx-head sm mut"><span>(Č.)</span><span>Projekt</span><span>Obor</span><span style="justify-self:end">Rok</span></div>
+    <div class="idx" id="idx"></div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap prin">
+    <p class="sm mut rv" style="padding-bottom:18px">(Jak pracuju)</p>
+    <article class="rv"><h3>Nejdřív text.</h3><p>Dokud nevím, co má stránka říct, nekreslím ani čáru. Design je obal na větu, ne naopak.</p></article>
+    <article class="rv"><h3>Pak jedno písmo.</h3><p>Většina webů potřebuje jeden dobrý font, hodně místa a odvahu nechat věci velké.</p></article>
+    <article class="rv"><h3>Pohyb až nakonec.</h3><p>Animace má něco vysvětlit, nebo potěšit. Když nedělá ani jedno, mažu ji.</p></article>
+  </div>
+</section>
+
+<section class="end" style="padding-top:0">
+  <div class="wrap"><h2 class="rv">Díky, že jste <i class="s">dočetli.</i></h2></div>
+</section>
+<footer class="sm mut"><div class="wrap"><span>© Daniel Švéda</span><span>Návrh portfolia · studio WebTix · ukázka bez kontaktních údajů</span></div></footer>
+
+<div class="peek" id="peek" aria-hidden="true"><b></b><span class="sm"></span></div>
+
+<script>
+  const work = [
+    ['Forno 400', 'Pizzerie', 2026, '../forno/index.html', '#120d0a', '#ff8a1f'],
+    ['Sklípek 14', 'Vinárna', 2026, '../sklipek/index.html', '#6e1425', '#f6f2ea'],
+    ['Pražírna Lampa', 'Pražírna kávy', 2026, '../lampa/index.html', '#ffc41f', '#101010'],
+    ['Výška Boulder', 'Lezecká hala', 2026, '../vyska/index.html', '#2b50ff', '#f3f0e8'],
+    ['Pekárna Kvásek', 'Pekárna', 2026, '../kvasek/index.html', '#171a45', '#ffc35c'],
+    ['Restaurace Merkur', 'Restaurace', 2026, '../merkur/index.html', '#f5f1e8', '#c5281c'],
+  ]
+  document.getElementById('idx').innerHTML = work.map((w, i) => `<a class="row rv" href="${w[3]}" data-i="${i}" style="--d:${i * 0.05}s"><span class="sm">0${i + 1}</span><span class="t">${w[0]}</span><span class="sm y">${w[1]} · ${w[2]}</span></a>`).join('')
+
+  // Preview card follows the cursor over the index
+  const peek = document.getElementById('peek')
+  let x = 0, y = 0, tx = 0, ty = 0
+  document.querySelectorAll('.row').forEach((r) => {
+    r.addEventListener('pointerenter', () => { const w = work[r.dataset.i]; peek.style.setProperty('--pb', w[4]); peek.style.setProperty('--pc', w[5]); peek.firstElementChild.textContent = w[0]; peek.lastElementChild.textContent = w[1]; peek.classList.add('on') })
+    r.addEventListener('pointerleave', () => peek.classList.remove('on'))
+  })
+  addEventListener('pointermove', (e) => { tx = e.clientX + 30; ty = e.clientY - 180 })
+  ;(function loop() { x += (tx - x) * 0.12; y += (ty - y) * 0.12; peek.style.transform = `translate(${x}px, ${y}px)`; requestAnimationFrame(loop) })()
+
+  const clock = document.getElementById('clock')
+  const tick = () => (clock.textContent = new Date().toLocaleTimeString('cs-CZ'))
+  tick(); setInterval(tick, 1000)
+</script>
+<script src="../assets/base.js"></script>
+</body>
+</html>
