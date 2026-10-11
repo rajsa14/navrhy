@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="cs">
+<html lang="cs" data-nv-in="rise" data-nv-ease="expo.out">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -132,7 +132,7 @@
       <p class="rv">Neapolská pizza z pece na dřevo. Těsto kyne 48 hodin, v ohni je 90 sekund.</p>
       <div class="rv" style="--d:.1s;display:flex;gap:12px;flex-wrap:wrap"><a class="btn" href="#menu">Vybrat pizzu →</a><a class="btn ghost" href="#pec">Jak pečeme</a></div>
     </div>
-    <h1 aria-label="400 stupňů Celsia"><span class="hot">400</span><sup>°C</sup></h1>
+    <h1 aria-label="400 stupňů Celsia"><span class="hot" data-count="20">400</span><sup>°C</sup></h1>
   </div>
 </section>
 <div class="strip" aria-hidden="true"><div id="strip"></div></div>
@@ -140,7 +140,7 @@
 <section id="menu">
   <div class="wrap">
     <div class="menu-head">
-      <div class="rv"><p class="mono">01 · Menu</p><h2 style="margin-top:14px">Šest pizz.<br /><span class="hot">Žádný ananas.</span></h2></div>
+      <div class="rv"><p class="mono">01 · Menu</p><h2 style="margin-top:14px" data-split="words">Šest pizz.<br /><span class="hot" data-atom>Žádný ananas.</span></h2></div>
       <div class="rv">
         <div class="size" role="group" aria-label="Velikost"><button data-s="1" aria-pressed="true">Klasická 32 cm</button><button data-s="0.7" aria-pressed="false">Dětská 24 cm</button></div>
         <p class="mono" style="margin-top:12px">Každá i bez lepku, +30 Kč</p>
@@ -162,12 +162,12 @@
     </div>
     <div class="rv" style="--d:.15s">
       <p class="mono">02 · Pec</p>
-      <h2 style="margin-top:14px">Devadesát <span class="hot">sekund.</span></h2>
+      <h2 style="margin-top:14px" data-split="words">Devadesát <span class="hot" data-atom>sekund.</span></h2>
       <ul class="steps">
-        <li><b>48 h</b><span>kyne těsto v chladu, aby bylo lehké a stravitelné</span></li>
-        <li><b>400°</b><span>má pec na dřevo, kterou postavili řemeslníci z Neapole</span></li>
-        <li><b>90 s</b><span>trvá pečení. Okraj se nafoukne, střed zůstane šťavnatý</span></li>
-        <li><b>4</b><span>suroviny v těstě: mouka typu 00, voda, sůl a kvas</span></li>
+        <li><b data-count>48 h</b><span>kyne těsto v chladu, aby bylo lehké a stravitelné</span></li>
+        <li><b data-count>400°</b><span>má pec na dřevo, kterou postavili řemeslníci z Neapole</span></li>
+        <li><b data-count>90 s</b><span>trvá pečení. Okraj se nafoukne, střed zůstane šťavnatý</span></li>
+        <li><b data-count>4</b><span>suroviny v těstě: mouka typu 00, voda, sůl a kvas</span></li>
       </ul>
     </div>
   </div>
@@ -177,7 +177,7 @@
   <div class="wrap deliv">
     <div class="rv">
       <p class="mono">03 · Rozvoz</p>
-      <h2 style="margin-top:14px">Horká až <span class="hot">ke dveřím.</span></h2>
+      <h2 style="margin-top:14px" data-split="words">Horká až <span class="hot" data-atom>ke dveřím.</span></h2>
       <p style="margin-top:22px;color:var(--soft);max-width:440px">Vozíme na elektrokolech v termoboxech. Do třiceti minut, nebo máte tiramisu zdarma. Vyberte, jak daleko od pece bydlíte.</p>
       <div class="zones" id="zones">
         <button data-z="0" aria-pressed="true"><b>do 1 km</b><span class="mono">12 min</span><span class="mono">zdarma</span></button>
@@ -198,13 +198,17 @@
 <section class="last">
   <div class="wrap">
     <p class="mono rv">04 · U nás</p>
-    <h2 class="rv" style="margin-top:14px">Stůl <span class="hot">u pece.</span></h2>
+    <h2 class="rv" style="margin-top:14px" data-split="words">Stůl <span class="hot" data-atom>u pece.</span></h2>
     <div class="hours mono rv"><div>Po – Čt<b>11 – 22</b></div><div>Pá – So<b>11 – 23</b></div><div>Ne<b>12 – 21</b></div><div>U baru<b>7 míst</b></div></div>
     <a class="btn rv" href="#" data-demo="Ukázka návrhu. Rezervace se neodesílá.">Rezervovat místo →</a>
   </div>
 </section>
 <footer class="mono">Fiktivní značka · návrh studia WebTix · ukázka bez kontaktních údajů</footer>
 
+<script src="../assets/vendor/gsap.min.js"></script>
+<script src="../assets/vendor/ScrollTrigger.min.js"></script>
+<script src="../assets/vendor/lenis.min.js"></script>
+<script src="../assets/motion.js"></script>
 <script>
   const pizzas = [
     ['Margherita', 'San Marzano, fior di latte, bazalka, olivový olej', 199],
@@ -219,7 +223,7 @@
     rows.innerHTML = pizzas.map((p, i) => `<div class="row"><span class="mono">0${i + 1}</span><h3>${p[0]}${p[3] ? '<small>pálí</small>' : ''}</h3><span class="ing">${p[1]}</span><span class="pr">${Math.round((p[2] * k) / 10) * 10} Kč</span></div>`).join('')
     sizeBtns.forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.s === k)))
   }
-  sizeBtns.forEach((b) => b.addEventListener('click', () => render(+b.dataset.s)))
+  sizeBtns.forEach((b) => b.addEventListener('click', () => { render(+b.dataset.s); nv.pop(rows.children, { y: 0, x: -30, stagger: 0.05, duration: 0.6 }) }))
   render(1)
 
   document.getElementById('strip').innerHTML = [...pizzas, ...pizzas, ...pizzas, ...pizzas].map((p) => `<span>${p[0]}</span>`).join('')
@@ -251,5 +255,16 @@
   }))
 </script>
 <script src="../assets/base.js"></script>
+<script>
+  nv.ready(() => {
+    // The strip of pizzas speeds up with the scroll, the giant 400 sinks into the fire, buttons throw embers.
+    nv.velocity(document.getElementById('strip'), { speed: 70, boost: 1 })
+    gsap.to('.hero h1', { yPercent: 16, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } })
+    nv.stagger('#rows .row', { y: 0, x: -40, stagger: 0.06 })
+    nv.stagger('.steps li', { y: 24, stagger: 0.08 })
+    nv.spark({ target: '.btn', color: '#ffb321', n: 12, reach: 44 })
+    nv.magnet('.btn', 0.25)
+  })
+</script>
 </body>
 </html>

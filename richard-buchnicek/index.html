@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="cs">
+<html lang="cs" data-nv-in="rise">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -197,7 +197,7 @@
         </div>
         <div class="size">
           <span class="k">Věk</span>
-          <div class="n d">16<sup>let</sup></div>
+          <div class="n d" data-count>16<sup>let</sup></div>
           <span class="k" id="hint">Pohni myší. Štítek se nakloní.</span>
           <div class="stamp">Od nuly<br />bez<br />šablony</div>
         </div>
@@ -224,7 +224,7 @@
       </div>
     </div>
     <div>
-      <h2 class="d rv">Práce</h2>
+      <h2 class="d rv" data-split="chars">Práce</h2>
       <div class="jobs" style="margin-top:26px">
         <article class="job rv"><div class="no">01</div><div class="in"><h3>Webtix</h3><p><b>Spoluzakladatel.</b> Webdesignové studio, které navrhuje a staví weby pro klienty, od prvního náčrtu po spuštění.</p></div></article>
         <article class="job rv" style="--d:.08s"><div class="no">02</div><div class="in"><h3>Sellect</h3><p><b>Vedle školy.</b> Známý obchod s limitovanými sneakery a streetwearem.</p></div></article>
@@ -237,7 +237,7 @@
 <section id="weby">
   <div class="wrap">
     <div class="drop-head">
-      <div class="rv"><p class="k">Všechno, co jsem postavil</p><h2 class="d" style="margin-top:10px">Postavené weby<sup>07</sup></h2></div>
+      <div class="rv"><p class="k">Všechno, co jsem postavil</p><h2 class="d" style="margin-top:10px" data-split="chars">Postavené weby<sup>07</sup></h2></div>
       <div class="filters k rv" role="group" aria-label="Filtr webů" id="filters">
         <button data-f="all" aria-pressed="true">Vše<b>7</b></button><button data-f="live" aria-pressed="false">Živé<b>2</b></button><button data-f="concept" aria-pressed="false">Koncepty<b>5</b></button>
       </div>
@@ -270,7 +270,7 @@
   <div class="wrap quotes">
     <div class="rv">
       <p class="k">Visačky, co si nechávám</p>
-      <h2 class="d" style="margin-top:10px">Myšlenky</h2>
+      <h2 class="d" style="margin-top:10px" data-split="chars">Myšlenky</h2>
       <button class="next" id="next">Další →</button>
     </div>
     <div class="deck rv" id="deck" aria-live="polite"></div>
@@ -283,6 +283,10 @@
 </div>
 <p class="foot k">© 2026 Richard Buchníček · návrh portfolia · ukázka bez kontaktních údajů</p>
 
+<script src="../assets/vendor/gsap.min.js"></script>
+<script src="../assets/vendor/ScrollTrigger.min.js"></script>
+<script src="../assets/vendor/lenis.min.js"></script>
+<script src="../assets/motion.js"></script>
 <script>
   // Barcode drawn from the letters of the name
   const bits = [...'RICHARDBUCHNICEK2026'].map((c) => c.charCodeAt(0).toString(2).padStart(7, '0')).join('')
@@ -349,5 +353,17 @@
   fill('s2', ['Design', 'Kód', 'Typografie', 'Pohyb', 'Detail'])
 </script>
 <script src="../assets/base.js"></script>
+<script>
+  nv.ready(() => {
+    // The label is slapped onto the page, the hang tag swings with the scroll speed, the tapes run with it.
+    gsap.from('.hero .wrap', { y: -140, rotation: -7, scale: 1.12, opacity: 0, duration: 1.3, ease: 'back.out(1.5)', clearProps: 'transform,opacity' })
+    const swing = gsap.quickTo('.hang', 'rotation', { duration: 0.9, ease: 'power3' })
+    nv.lenis.on('scroll', ({ velocity }) => swing(gsap.utils.clamp(-7, 7, velocity * -0.35)))
+    nv.velocity(document.getElementById('s1'), { speed: 60 })
+    nv.velocity(document.getElementById('s2'), { speed: 60, flip: true })
+    nv.stagger('#drops > *', { y: 46, stagger: 0.06 })
+    nv.magnet('#next', 0.3)
+  })
+</script>
 </body>
 </html>

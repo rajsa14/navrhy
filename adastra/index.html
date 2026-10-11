@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="cs">
+<html lang="cs" data-nv-in="blur">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -151,7 +151,7 @@
   </svg>
   <div class="wrap hero-in">
     <p class="eyebrow rv">Kavárna a bistro · per aspera ad astra</p>
-    <h1 class="rv" style="--d:.1s">Ad <em>Astra</em></h1>
+    <h1 class="rv" style="--d:.1s" data-split="chars" data-stagger=".09">Ad <em>Astra</em></h1>
     <div class="hero-row rv" style="--d:.25s">
       <p>Přes den káva, palačinky a polední menu. Večer klavír, na který si můžete zahrát i vy.</p>
       <div class="hours"><span><b>Po–St</b> 11–22</span><span><b>Čt–Pá</b> 11–23</span><span><b>So</b> 10–23</span></div>
@@ -163,8 +163,8 @@
 <section class="piano-sec" id="klavir">
   <div class="wrap">
     <p class="eyebrow rv">Každý večer</p>
-    <h2 class="rv" style="margin-top:16px">Zahrajte si. <em>Opravdu.</em></h2>
-    <p class="lead rv">Klavír u nás není dekorace. Zkuste to nanečisto tady, a až přijdete, sedněte si k tomu pravému.</p>
+    <h2 class="rv" style="margin-top:16px" data-split="words">Zahrajte si. <em>Opravdu.</em></h2>
+    <p class="lead rv" data-scrub>Klavír u nás není dekorace. Zkuste to nanečisto tady, a až přijdete, sedněte si k tomu pravému.</p>
     <div class="piano rv" id="piano" aria-label="Klaviatura, hraje po kliknutí nebo klávesami A až L"></div>
     <p class="hint rv">Klikněte, nebo hrajte na klávesnici: A S D F G H J K L</p>
   </div>
@@ -173,7 +173,7 @@
 <section style="padding-top:0">
   <div class="wrap">
     <p class="eyebrow rv">Jeden den u nás</p>
-    <h2 class="rv" style="margin-top:16px">Ráno tiše, <em>večer nahlas.</em></h2>
+    <h2 class="rv" style="margin-top:16px" data-split="words">Ráno tiše, <em>večer nahlas.</em></h2>
     <div class="rhythm">
       <article class="slot rv"><div class="time">11:00</div><div><h3>Káva a noviny</h3><p>Otevíráme. Espresso, filtr a police plná knih, které si můžete půjčit domů.</p></div></article>
       <article class="slot rv" style="--d:.1s"><div class="time">12:00</div><div><h3>Polední menu</h3><p>Dvě hlavní jídla a polévka. Vaříme do tří odpoledne, pak zase palačinky.</p></div></article>
@@ -185,7 +185,7 @@
 <section id="program" style="padding-top:0">
   <div class="wrap">
     <div class="prog-head">
-      <div><p class="eyebrow rv">Program</p><h2 class="rv" style="margin-top:16px">Tento <em>týden</em></h2></div>
+      <div><p class="eyebrow rv">Program</p><h2 class="rv" style="margin-top:16px" data-split="words">Tento <em>týden</em></h2></div>
       <p class="rv" style="max-width:340px;color:var(--soft)">Vstup je volný. Na večery s hostem doporučujeme stůl zamluvit předem.</p>
     </div>
     <div class="prog rv">
@@ -224,7 +224,7 @@
   <div class="wrap res">
     <div class="rv">
       <p class="eyebrow">Rezervace</p>
-      <h2 style="margin-top:16px">Stůl <em>u klavíru?</em></h2>
+      <h2 style="margin-top:16px" data-split="words">Stůl <em>u klavíru?</em></h2>
       <p style="margin-top:24px;color:var(--soft);max-width:400px">Vyberte den a počet hostů. Celou kavárnu pronajímáme i na oslavy a rauty, stačí to připsat.</p>
     </div>
     <form class="rv" data-demo="Ukázka návrhu. Rezervace se neodesílá.">
@@ -240,6 +240,10 @@
 
 <footer><div class="wrap"><span class="big">per aspera ad astra</span><span>Návrh webu · studio WebTix · ukázka bez kontaktních údajů</span></div></footer>
 
+<script src="../assets/vendor/gsap.min.js"></script>
+<script src="../assets/vendor/ScrollTrigger.min.js"></script>
+<script src="../assets/vendor/lenis.min.js"></script>
+<script src="../assets/motion.js"></script>
 <script src="../assets/base.js"></script>
 <script>
   // Day / evening
@@ -272,6 +276,16 @@
   addEventListener('keydown', (e) => {
     if (e.repeat || /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) return
     const i = kb.indexOf(e.key.toLowerCase()); if (i > -1) play(keys[i][0], keys[i][1])
+  })
+</script>
+<script>
+  nv.ready(() => {
+    // The constellation drifts off as the hero leaves; the keys land like a glissando; clicks throw stars.
+    gsap.to('.sky', { yPercent: -12, scale: 1.14, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } })
+    nv.stagger('#piano .key', { y: 70, stagger: 0.05, ease: 'back.out(1.7)' })
+    nv.stagger('.prog a', { y: 0, x: -44 })
+    nv.magnet('.btn')
+    nv.spark({ color: 'var(--gold)' })
   })
 </script>
 </body>

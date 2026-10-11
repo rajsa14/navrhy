@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="cs">
+<html lang="cs" data-nv-in="type">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -128,7 +128,7 @@
   <div class="root">
     <div class="dimline" aria-hidden="true"><span>← 1 osoba →</span></div>
     <header><span>Kořen</span><span>Kdo?</span></header>
-    <h1>Zakládám věci. A zůstávám u nich, dokud nepochopím, jak <mark>doopravdy</mark> fungují.</h1>
+    <h1 data-split="chars">Zakládám věci. A zůstávám u nich, dokud nepochopím, jak <mark>doopravdy</mark> fungují.</h1>
     <p>Stavím weby, vedl jsem online komunity a čtu o tom, jak fungují zákony a instituce. Začal jsem: <span class="type" id="type">weby</span></p>
   </div>
   <div class="trunk" aria-hidden="true"></div>
@@ -136,7 +136,7 @@
 
 <main class="wrap branches" id="chart">
   <details class="branch" open>
-    <summary><span class="no">01</span><h2>Co jsem postavil</h2><span class="pm"></span></summary>
+    <summary><span class="no">01</span><h2 data-scramble>Co jsem postavil</h2><span class="pm"></span></summary>
     <div class="kids">
       <article class="n solid"><span class="tag y">Právě vzniká</span><h3>Webtix<small>Webové a designové studio · spoluzakladatel</small></h3><p>Založili jsme ho s kamarádem. Postavili jsme spolu několik webů a teď z toho děláme byznys.</p></article>
       <article class="n" id="ukol"><span class="tag">Archivovaný experiment</span><h3>Úkolníček<small>Studentský plánovač úkolů, prototyp</small></h3><p>Úkoly a termíny byly rozházené na moc místech. Chtěl jsem zjistit, jestli by stačilo jedno, tak jsem v Google Sheets a Softru postavil funkční verzi.</p>
@@ -148,7 +148,7 @@
   </details>
 
   <details class="branch" open>
-    <summary><span class="no">02</span><h2>Co jsem vedl</h2><span class="pm"></span></summary>
+    <summary><span class="no">02</span><h2 data-scramble>Co jsem vedl</h2><span class="pm"></span></summary>
     <div class="kids">
       <article class="n" id="comm"><span class="tag">Discord komunity</span><div class="big" id="num">0</div><p>členství dohromady napříč discordovými servery, které jsem založil a vedl. Fungovaly míň jako chat a víc jako malé organizace.</p>
         <div class="kids">
@@ -166,7 +166,7 @@
   </details>
 
   <details class="branch" open>
-    <summary><span class="no">03</span><h2>Co mě zajímá</h2><span class="pm"></span></summary>
+    <summary><span class="no">03</span><h2 data-scramble>Co mě zajímá</h2><span class="pm"></span></summary>
     <div class="kids">
       <article class="n"><span class="lab">Pravidla a moc</span><div class="chips"><span>Právo</span><span>Lidská práva</span><span>Politické systémy</span><span>Správa a řízení</span></div></article>
       <article class="n"><span class="lab">Svět</span><div class="chips"><span>Mezinárodní vztahy</span><span>Historie</span><span>Ekonomie</span><span>Města</span><span>Kultura</span></div></article>
@@ -178,7 +178,7 @@
   </details>
 
   <details class="branch" open>
-    <summary><span class="no">04</span><h2>Právě teď</h2><span class="pm"></span></summary>
+    <summary><span class="no">04</span><h2 data-scramble>Právě teď</h2><span class="pm"></span></summary>
     <div class="kids">
       <article class="n"><span class="lab">Aktualizováno 2026-09</span><div class="verb" style="margin-top:8px">Stavím.</div><p>Webtix a jeho první projekty</p></article>
       <article class="n"><div class="verb">Zkouším.</div><p>Nové webové a AI nástroje, rovnou při práci</p></article>
@@ -200,6 +200,10 @@
   </div>
 </section>
 
+<script src="../assets/vendor/gsap.min.js"></script>
+<script src="../assets/vendor/ScrollTrigger.min.js"></script>
+<script src="../assets/vendor/lenis.min.js"></script>
+<script src="../assets/motion.js"></script>
 <script>
   document.getElementById('count').textContent = 'uzlů: ' + (document.querySelectorAll('.n').length + 5)
 
@@ -231,5 +235,14 @@
   once(document.getElementById('comm'), () => { const t0 = performance.now(); (function f(t) { const p = Math.min(1, (t - t0) / 1600); num.textContent = Math.round(180 * (1 - (1 - p) ** 3)) + 'K+'; if (p < 1) requestAnimationFrame(f) })(t0) })
 </script>
 <script src="../assets/base.js"></script>
+<script>
+  nv.ready(() => {
+    // Drafting hairlines follow the pointer; the trunk draws down and each branch plots its nodes in turn.
+    nv.crosshair('rgb(255 226 74 / .45)')
+    gsap.from('.trunk', { scaleY: 0, transformOrigin: '50% 0', ease: 'none', scrollTrigger: { trigger: '.root-sec', start: 'bottom 98%', end: 'bottom 60%', scrub: true } })
+    gsap.utils.toArray('.branch').forEach((b) => nv.stagger(b.querySelectorAll(':scope > .kids > .n'), { y: 0, x: -28, stagger: 0.08 }, b))
+    nv.stagger('.tb > div', { y: 20, stagger: 0.05 })
+  })
+</script>
 </body>
 </html>

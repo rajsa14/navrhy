@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="cs">
+<html lang="cs" data-nv-in="blur" data-nv-lerp=".075">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -124,14 +124,14 @@
 </header>
 
 <section class="hero" style="padding-bottom:0">
-  <h1 class="rv">Víno, <em>pomalu.</em></h1>
+  <h1 class="rv" data-split="chars" data-stagger=".085">Víno, <em>pomalu.</em></h1>
   <div class="wrap arches">
-    <div class="arch rv" style="--d:.2s"><div><div class="n">140</div><p class="lab">etiket ve sklepě</p></div></div>
+    <div class="arch rv" style="--d:.2s"><div><div class="n" data-count>140</div><p class="lab">etiket ve sklepě</p></div></div>
     <div class="arch mid rv" style="--d:.1s">
       <svg class="rings" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="40" style="--t:0s" /><circle cx="100" cy="100" r="56" style="--t:.8s" /><circle cx="100" cy="100" r="72" style="--t:1.6s" /><circle cx="100" cy="100" r="88" style="--t:2.4s" /></svg>
-      <div style="position:relative"><div class="n">14°</div><p class="lab">celý rok, bez klimatizace</p></div>
+      <div style="position:relative"><div class="n" data-count>14°</div><p class="lab">celý rok, bez klimatizace</p></div>
     </div>
-    <div class="arch rv" style="--d:.3s"><div><div class="n">30</div><p class="lab">vín na sklenky</p></div></div>
+    <div class="arch rv" style="--d:.3s"><div><div class="n" data-count>30</div><p class="lab">vín na sklenky</p></div></div>
   </div>
 </section>
 
@@ -139,7 +139,7 @@
   <div class="wrap about">
     <p class="lab vert rv">O sklípku</p>
     <div class="rv" style="--d:.1s">
-      <p class="big">Gotický sklep pro třicet hostů, svíčky a víno od malých vinařů z <em>Moravy</em>, <em>Rakouska</em> a <em>Burgundska</em>. Dvanáct z nich známe osobně.</p>
+      <p class="big" data-scrub>Gotický sklep pro třicet hostů, svíčky a víno od malých vinařů z <em>Moravy</em>, <em>Rakouska</em> a <em>Burgundska</em>. Dvanáct z nich známe osobně.</p>
       <p class="small">Ke sklence krájíme sýry, šunku a chleba z kvasu. Nespěcháme my ani víno, a proto si vinný lístek přečtete za dvě minuty a zůstanete tři hodiny.</p>
     </div>
   </div>
@@ -147,7 +147,7 @@
 
 <section class="cellar" id="listek">
   <div class="wrap cellar-head">
-    <div class="rv"><p class="lab">Vinný lístek</p><h2 style="margin-top:20px">Na sklenky <em>tento týden</em></h2></div>
+    <div class="rv"><p class="lab">Vinný lístek</p><h2 style="margin-top:20px" data-split="words">Na sklenky <em>tento týden</em></h2></div>
     <div class="regions rv" role="group" aria-label="Oblast">
       <button data-r="vse" aria-pressed="true">Vše</button><button data-r="Morava">Morava</button><button data-r="Rakousko">Rakousko</button><button data-r="Francie">Francie</button>
     </div>
@@ -159,7 +159,7 @@
   <div class="wrap tast">
     <aside class="rv">
       <p class="lab">Degustace</p>
-      <h2 style="margin-top:20px">Večery, kdy mluví <em>vinař</em></h2>
+      <h2 style="margin-top:20px" data-split="words">Večery, kdy mluví <em>vinař</em></h2>
       <p>Šest vín, jeden stůl, žádné přednášky. Místa se plní rychle, puntíky ukazují, kolik jich zbývá.</p>
     </aside>
     <div id="events"></div>
@@ -169,7 +169,7 @@
 <section class="visit" id="rezervace">
   <div class="wrap">
     <p class="lab rv">Návštěva</p>
-    <h2 class="rv" style="margin-top:20px">Stůl pro dva,<br /><em>nebo celý sklep.</em></h2>
+    <h2 class="rv" style="margin-top:20px" data-split="words">Stůl pro dva,<br /><em>nebo celý sklep.</em></h2>
     <div class="hours rv">
       <div><small>Vinárna</small>út – so · 17 – 24</div>
       <div><small>Vinotéka</small>denně · 12 – 20</div>
@@ -185,6 +185,10 @@
 </section>
 <footer>Fiktivní značka · návrh studia WebTix · ukázka bez kontaktních údajů</footer>
 
+<script src="../assets/vendor/gsap.min.js"></script>
+<script src="../assets/vendor/ScrollTrigger.min.js"></script>
+<script src="../assets/vendor/lenis.min.js"></script>
+<script src="../assets/motion.js"></script>
 <script>
   const wines = [
     ['Morava', '#e9d58f', 'Ryzlink rýnský', '2022', 'Vinařství Pod Kopcem', 'Limetka, broskev, slaná minerálka', 95, '540'],
@@ -205,6 +209,7 @@
         <div class="price"><div>${w[6]} Kč<small>0,1 l</small></div><div>${w[7]} Kč<small>láhev</small></div></div>
       </div></article>`).join('')
     btns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.r === r)))
+    nv.spot(box.children, 'rgb(255 190 110 / .34)')
     box.scrollTo({ left: 0, behavior: 'smooth' })
   }
   btns.forEach((b) => b.addEventListener('click', () => render(b.dataset.r)))
@@ -225,5 +230,14 @@
     </article>`).join('')
 </script>
 <script src="../assets/base.js"></script>
+<script>
+  nv.ready(() => {
+    // Slow scroll, candlelight under the pointer, and the wine list glides in from the side.
+    nv.spot('#events .ev', 'rgb(255 190 110 / .3)')
+    nv.par('.arch .n', -34, true)
+    gsap.fromTo('#labels', { x: 180 }, { x: 0, ease: 'none', scrollTrigger: { trigger: '#labels', start: 'top bottom', end: 'top 35%', scrub: 1 } })
+    nv.magnet('.visit form button', 0.2)
+  })
+</script>
 </body>
 </html>

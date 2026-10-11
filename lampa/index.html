@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="cs">
+<html lang="cs" data-nv-in="drop" data-nv-ease="expo.out">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -132,7 +132,7 @@
   <div class="wrap stack">
     <aside class="rv">
       <p class="cap">Jak pražíme</p>
-      <h2 class="h wide" style="margin-top:16px">Od farmy<br />k hrnku</h2>
+      <h2 class="h wide" style="margin-top:16px" data-split="chars">Od farmy<br />k hrnku</h2>
       <p>Žádné sklady, žádné měsíce v regálu. Zrno putuje od farmáře k nám a od nás rovnou k vám.</p>
     </aside>
     <div>
@@ -149,7 +149,7 @@
     <form class="subs rv" data-demo="Ukázka návrhu. Předplatné se neobjednává.">
       <div>
         <p class="cap">Předplatné</p>
-        <h2 class="h wide" style="margin-top:16px">Nikdy bez kávy</h2>
+        <h2 class="h wide" style="margin-top:16px" data-split="chars">Nikdy bez kávy</h2>
         <p style="margin-top:24px;max-width:400px;opacity:.7;font-size:18px">Čerstvě praženou kávu vám pošleme tak často, jak ji stihnete vypít. Zrušit můžete kdykoli, jedním kliknutím.</p>
       </div>
       <div>
@@ -165,7 +165,7 @@
 <section id="navsteva" style="padding-top:0">
   <div class="wrap">
     <p class="cap rv">Přijďte na šálek</p>
-    <h2 class="h wide rv" style="margin-top:16px">Pražírna<br />s okénkem</h2>
+    <h2 class="h wide rv" style="margin-top:16px" data-split="chars">Pražírna<br />s okénkem</h2>
     <div class="visit rv">
       <div><span class="cap">Pondělí – pátek</span><b class="wide">7:30 – 17</b></div>
       <div><span class="cap">Sobota</span><b class="wide">9 – 14</b></div>
@@ -176,6 +176,10 @@
 </section>
 <footer class="cap"><div class="wrap"><span>Pražírna Lampa · fiktivní značka</span><span>Návrh studia WebTix · ukázka bez kontaktních údajů</span></div></footer>
 
+<script src="../assets/vendor/gsap.min.js"></script>
+<script src="../assets/vendor/ScrollTrigger.min.js"></script>
+<script src="../assets/vendor/lenis.min.js"></script>
+<script src="../assets/motion.js"></script>
 <script>
   const cols = ['#ff5433', '#ffc41f', '#2c62ff', '#12a26a', '#ff9fcf']
   document.getElementById('h1').innerHTML = [...'LAMPA'].map((c) => `<span>${c}</span>`).join('')
@@ -218,5 +222,20 @@
   })))
 </script>
 <script src="../assets/base.js"></script>
+<script>
+  nv.ready(() => {
+    // The wordmark and the bags drop into place, the origins run with the scroll, each step shrinks under the next.
+    const letters = gsap.utils.toArray('#h1 span'), bags = document.querySelector('.bags')
+    gsap.set(letters, { transition: 'color .3s' })
+    gsap.from(letters, { yPercent: 115, duration: 1.3, ease: 'expo.out', stagger: 0.07, onComplete: () => gsap.set(letters, { clearProps: 'transform,transition' }) })
+    bags.style.overflow = 'hidden'
+    nv.pop('.bag', { y: 0, yPercent: 100, opacity: 1, stagger: 0.08, duration: 1.3, delay: 0.35 })
+    nv.velocity(document.getElementById('run'), { speed: 60 })
+    const steps = gsap.utils.toArray('.step')
+    steps.forEach((s, i) => { if (steps[i + 1]) gsap.to(s, { scale: 0.93, transformOrigin: '50% 0%', ease: 'none', scrollTrigger: { trigger: steps[i + 1], start: 'top bottom', end: 'top 20%', scrub: true } }) })
+    nv.stagger('.visit > div', { y: 30, stagger: 0.08 })
+    nv.magnet('.btn', 0.25)
+  })
+</script>
 </body>
 </html>

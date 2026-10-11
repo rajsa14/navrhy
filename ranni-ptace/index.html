@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="cs">
+<html lang="cs" data-nv-in="pop" data-nv-ease="back.out(1.6)">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -120,7 +120,7 @@
 <section class="hero">
   <div class="wrap" id="stage">
     <span class="chip rv"><span id="dot" style="width:10px;height:10px;border-radius:50%;background:#2fbf5b;border:2px solid var(--ink)"></span><span id="status">Teď máme otevřeno</span></span>
-    <h1 class="rv" style="--d:.08s"><span>Snídaně</span> <span class="w">celý</span> <span>den,</span><br /><span class="o">i v neděli.</span></h1>
+    <h1 class="rv" style="--d:.08s" data-split="chars"><span>Snídaně</span> <span class="w">celý</span> <span>den,</span><br /><span class="o">i v neděli.</span></h1>
     <div class="hero-bot rv" style="--d:.16s">
       <p>Vajíčka od farmáře, kvásek z vedlejší pekárny a káva, kvůli které se vyplatí vstát. Ale nemusíte. Snídáme do tří.</p>
       <div style="display:flex;gap:14px;flex-wrap:wrap"><a class="btn" href="#menu">Co si dáte? →</a><a class="btn y" href="#akce">Víkendové akce</a></div>
@@ -137,7 +137,7 @@
 <section class="menu" id="menu">
   <div class="wrap">
     <div class="menu-head">
-      <h2 class="rv">Slané, sladké,<br />nebo obojí?</h2>
+      <h2 class="rv" data-split="words">Slané, sladké,<br />nebo obojí?</h2>
       <div class="tabs rv" role="group" aria-label="Filtr menu">
         <button data-f="vse" aria-pressed="true">Všechno</button><button data-f="slane">Slané</button><button data-f="sladke">Sladké</button><button data-f="piti">Pití</button>
       </div>
@@ -161,7 +161,7 @@
 
 <section class="events" id="akce">
   <div class="wrap">
-    <h2 class="rv">Přijďte na brunch</h2>
+    <h2 class="rv" data-split="words">Přijďte na brunch</h2>
     <div class="grid">
       <article class="ev rv" style="--r:-2deg;--c:var(--butter)"><div class="top"><b>18</b><span>sobota</span></div><div class="body"><h3>Palačinkový brunch</h3><p>Neomezené palačinky. Děti do deseti let jedí zdarma.</p></div></article>
       <article class="ev rv" style="--r:1.5deg;--c:var(--sky);--d:.1s"><div class="top"><b>26</b><span>neděle</span></div><div class="body"><h3>Ranní jazz na zahrádce</h3><p>Duo kytara a kontrabas, hrajeme od deseti.</p></div></article>
@@ -172,7 +172,7 @@
 
 <section class="res" id="stul">
   <div class="wrap">
-    <h2 class="rv">Držíme vám místo?</h2>
+    <h2 class="rv" data-split="words">Držíme vám místo?</h2>
     <form class="rv" data-demo="Ukázka návrhu. Stůl se nerezervuje.">
       <input type="date" aria-label="Den" required />
       <select aria-label="Čas"><option>8:00</option><option>9:30</option><option>11:00</option><option>12:30</option><option>14:00</option></select>
@@ -185,6 +185,10 @@
 
 <div class="tray" id="tray"><div><b id="tray-n">1 věc na tácu</b><small id="tray-s">219 Kč</small></div><button id="tray-x">Vysypat</button></div>
 
+<script src="../assets/vendor/gsap.min.js"></script>
+<script src="../assets/vendor/ScrollTrigger.min.js"></script>
+<script src="../assets/vendor/lenis.min.js"></script>
+<script src="../assets/motion.js"></script>
 <script>
   const items = [
     ['slane', 'Shakshuka', 'Vejce pošírovaná v pikantní rajčatové omáčce, feta a kvásek.', 219, 'vege', '#ffd84a'],
@@ -210,7 +214,7 @@
       </button>`).join('')
     tabs.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.f === f)))
   }
-  tabs.forEach((b) => b.addEventListener('click', () => render(b.dataset.f)))
+  tabs.forEach((b) => b.addEventListener('click', () => { render(b.dataset.f); nv.pop('#cards .card', { y: 30, scale: 0.9, stagger: 0.04, duration: 0.6 }) }))
   cards.addEventListener('click', (e) => { const c = e.target.closest('.card'); if (!c) return; n++; total += +c.dataset.p; update() })
   document.getElementById('tray-x').addEventListener('click', () => { n = 0; total = 0; update() })
   render('vse')
@@ -230,5 +234,15 @@
   })
 </script>
 <script src="../assets/base.js"></script>
+<script>
+  nv.ready(() => {
+    // Stickers slap onto the page, the checkerboard slides with the scroll, cards tip toward the pointer.
+    gsap.from('.sticker', { scale: 0, rotation: () => gsap.utils.random(-70, 70), duration: 1.3, ease: 'elastic.out(1, .5)', stagger: 0.14, delay: 0.5, clearProps: 'transform' })
+    gsap.utils.toArray('.check').forEach((c, i) => gsap.to(c, { backgroundPositionX: i % 2 ? -220 : 220, ease: 'none', scrollTrigger: { trigger: c, start: 'top bottom', end: 'bottom top', scrub: true } }))
+    nv.stagger('#cards .card', { y: 60, rotation: -4, stagger: 0.06 })
+    nv.tilt('.ev', 9)
+    nv.magnet('.btn', 0.3)
+  })
+</script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="cs">
+<html lang="cs" data-nv-in="rise">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -146,7 +146,7 @@
   <section id="hala">
     <div class="wrap">
       <p class="tag rv" style="color:var(--blue)">01 · Hala</p>
-      <h2 class="rv" style="margin-top:16px">Každá barva,<br />jiná obtížnost.</h2>
+      <h2 class="rv" style="margin-top:16px" data-split="words">Každá barva,<br />jiná obtížnost.</h2>
       <div class="hall">
         <div class="card grades rv">
           <h3>Rozložení 180 cest</h3>
@@ -159,10 +159,10 @@
           </div>
         </div>
         <div class="stats">
-          <div class="card stat c1 rv"><span class="tag">Nových měsíčně</span><div class="n">40</div></div>
-          <div class="card stat c2 rv" style="--d:.08s"><span class="tag">Výška stěn</span><div class="n">4,5 m</div></div>
+          <div class="card stat c1 rv"><span class="tag">Nových měsíčně</span><div class="n" data-count>40</div></div>
+          <div class="card stat c2 rv" style="--d:.08s"><span class="tag">Výška stěn</span><div class="n" data-count>4,5 m</div></div>
           <div class="card stat c3 rv" style="--d:.16s"><span class="tag">Otevřeno do</span><div class="n">23:00</div></div>
-          <div class="card stat rv" style="--d:.24s"><span class="tag">Půjčení lezeček</span><div class="n">60 Kč</div></div>
+          <div class="card stat rv" style="--d:.24s"><span class="tag">Půjčení lezeček</span><div class="n" data-count>60 Kč</div></div>
         </div>
         <div class="card busy rv">
           <h3>Kdy je nejvolněji</h3>
@@ -176,11 +176,11 @@
   <section id="cenik" style="padding-top:0">
     <div class="wrap">
       <p class="tag rv" style="color:var(--blue)">02 · Ceník</p>
-      <h2 class="rv" style="margin-top:16px">Bez registrace,<br />bez závazků.</h2>
+      <h2 class="rv" style="margin-top:16px" data-split="words">Bez registrace,<br />bez závazků.</h2>
       <div class="prices">
-        <div class="card price rv"><span class="tag">Jednorázový vstup</span><div class="n">240 Kč</div><ul><li>Celý den v hale</li><li>Šatna a sprchy</li><li>První vstup za 190 Kč</li></ul><a class="btn" href="#vstup">Koupit</a></div>
-        <div class="card price top rv" style="--d:.1s"><span class="tag badge">Nejoblíbenější</span><span class="tag">Měsíční permanentka</span><div class="n">1 490 Kč</div><ul><li>Neomezené vstupy</li><li>Sleva 20 % na kurzy</li><li>Káva zdarma každé pondělí</li></ul><a class="btn" href="#vstup">Chci permanentku</a></div>
-        <div class="card price rv" style="--d:.2s"><span class="tag">Desetivstupová karta</span><div class="n">1 990 Kč</div><ul><li>Platí 12 měsíců</li><li>Přenosná na kamaráda</li><li>Vstup vychází na 199 Kč</li></ul><a class="btn" href="#vstup">Koupit</a></div>
+        <div class="card price rv"><span class="tag">Jednorázový vstup</span><div class="n" data-count>240 Kč</div><ul><li>Celý den v hale</li><li>Šatna a sprchy</li><li>První vstup za 190 Kč</li></ul><a class="btn" href="#vstup">Koupit</a></div>
+        <div class="card price top rv" style="--d:.1s"><span class="tag badge">Nejoblíbenější</span><span class="tag">Měsíční permanentka</span><div class="n" data-count>1 490 Kč</div><ul><li>Neomezené vstupy</li><li>Sleva 20 % na kurzy</li><li>Káva zdarma každé pondělí</li></ul><a class="btn" href="#vstup">Chci permanentku</a></div>
+        <div class="card price rv" style="--d:.2s"><span class="tag">Desetivstupová karta</span><div class="n" data-count>1 990 Kč</div><ul><li>Platí 12 měsíců</li><li>Přenosná na kamaráda</li><li>Vstup vychází na 199 Kč</li></ul><a class="btn" href="#vstup">Koupit</a></div>
       </div>
     </div>
   </section>
@@ -199,7 +199,7 @@
     <div class="wrap">
       <svg class="flag rv" viewBox="0 0 70 90" fill="none"><path d="M10 88V6" stroke="#14161b" stroke-width="5" stroke-linecap="round" /><path d="M12 8c16-8 28 8 46 0v34c-18 8-30-8-46 0z" fill="#2b50ff" /></svg>
       <p class="tag rv">Top · konec cesty</p>
-      <h2 class="rv" style="margin-top:16px">Tak kdy přijdeš?</h2>
+      <h2 class="rv" style="margin-top:16px" data-split="words">Tak kdy přijdeš?</h2>
       <form class="rv" data-demo="Ukázka návrhu. Vstup se nekupuje.">
         <input type="date" aria-label="Den" required />
         <select aria-label="Typ vstupu"><option>První vstup · 190 Kč</option><option>Jednorázový · 240 Kč</option><option>Úvodní kurz</option></select>
@@ -211,6 +211,10 @@
 </main>
 <footer>Fiktivní značka · návrh studia WebTix · ukázka bez kontaktních údajů</footer>
 
+<script src="../assets/vendor/gsap.min.js"></script>
+<script src="../assets/vendor/ScrollTrigger.min.js"></script>
+<script src="../assets/vendor/lenis.min.js"></script>
+<script src="../assets/motion.js"></script>
 <script>
   // Contour lines
   let t = ''
@@ -241,5 +245,16 @@
   document.getElementById('pbar').style.background = pct > 80 ? 'var(--red)' : pct > 50 ? 'var(--yel)' : 'var(--green)'
 </script>
 <script src="../assets/base.js"></script>
+<script>
+  nv.ready(() => {
+    // The contour map turns slowly under the page; the flag swings in at the top of the route.
+    gsap.to('#topo', { scale: 1.3, rotation: 7, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: 1.5 } })
+    gsap.from('.flag', { rotation: -50, transformOrigin: '14% 100%', duration: 1.8, ease: 'elastic.out(1, .35)', scrollTrigger: { trigger: '.summit', start: 'top 55%', once: true } })
+    nv.spot('.card.price', 'rgb(43 80 255 / .14)')
+    nv.tilt('.card.stat', 8)
+    nv.stagger('.open li', { y: 18, stagger: 0.06 })
+    nv.magnet('.btn, header .cta', 0.25)
+  })
+</script>
 </body>
 </html>

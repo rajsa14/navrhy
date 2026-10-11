@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="cs">
+<html lang="cs" data-nv-in="rise">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -142,7 +142,7 @@
 <section class="hero">
   <div class="wrap">
     <div>
-      <h1 class="rv"><small>hostinec od roku 1897</small>Poctivé pivo, <u>poctivá</u> kuchyně.</h1>
+      <h1 class="rv" data-split="words"><small>hostinec od roku 1897</small>Poctivé pivo, <u>poctivá</u> kuchyně.</h1>
       <p class="rv" style="--d:.1s">Svíčková se tu dělá tři dny a pivo se točí na hladinku i na mlíko. Polední menu každý všední den od jedenácti do dvou.</p>
       <div class="cta rv" style="--d:.2s"><a class="btn" href="#menu">Co se dnes vaří</a><a class="link" href="#cep">Co je na čepu →</a></div>
     </div>
@@ -169,7 +169,7 @@
   <div class="wrap board-grid">
     <div class="rv">
       <p class="tag" style="color:var(--must)">Výčep</p>
-      <h2 style="margin-top:16px">Čtyři kohouty, <em>žádné kompromisy.</em></h2>
+      <h2 style="margin-top:16px" data-split="words">Čtyři kohouty, <em>žádné kompromisy.</em></h2>
       <p style="margin-top:22px;opacity:.8;max-width:400px">Tankové pivo držíme na čtyřech stupních a trubky čistíme každý týden, ne každý měsíc. Poznáte to na první hlt.</p>
     </div>
     <div class="board rv" style="--d:.15s">
@@ -185,7 +185,7 @@
 <section class="week-sec" id="menu">
   <div class="wrap">
     <div class="week-head">
-      <div class="rv"><p class="tag" style="color:var(--red)">Polední menu</p><h2 style="margin-top:16px">Celý týden <em>na jednom tácu</em></h2></div>
+      <div class="rv"><p class="tag" style="color:var(--red)">Polední menu</p><h2 style="margin-top:16px" data-split="words">Celý týden <em>na jednom tácu</em></h2></div>
       <p class="rv" style="max-width:360px;color:var(--soft)">Píšeme ho každé ráno podle toho, co přivezl řezník a zelinář. Polévka je ke každému jídlu v ceně.</p>
     </div>
     <div class="week" id="week"></div>
@@ -194,9 +194,9 @@
 
 <section class="story">
   <div class="wrap rv">
-    <div class="cell"><div class="n">1897</div><p>Sládek Josef otevřel hostinec u kamenné kašny. Kašna i výčep stojí dodnes.</p></div>
-    <div class="cell"><div class="n">3<sup>dny</sup></div><p>Tak dlouho se u nás dělá svíčková. Omáčku nezahušťujeme moukou, jen zeleninou.</p></div>
-    <div class="cell"><div class="n">4<sup>°C</sup></div><p>Teplota tankového piva. Ani o stupeň víc, ani o stupeň míň.</p></div>
+    <div class="cell"><div class="n" data-count="1850">1897</div><p>Sládek Josef otevřel hostinec u kamenné kašny. Kašna i výčep stojí dodnes.</p></div>
+    <div class="cell"><div class="n" data-count>3<sup>dny</sup></div><p>Tak dlouho se u nás dělá svíčková. Omáčku nezahušťujeme moukou, jen zeleninou.</p></div>
+    <div class="cell"><div class="n" data-count>4<sup>°C</sup></div><p>Teplota tankového piva. Ani o stupeň víc, ani o stupeň míň.</p></div>
   </div>
 </section>
 
@@ -204,7 +204,7 @@
   <div class="wrap">
     <div class="rv">
       <p class="tag">Salonek</p>
-      <h2 style="margin-top:16px">Oslava, schůze, <em>nebo jen stůl.</em></h2>
+      <h2 style="margin-top:16px" data-split="words">Oslava, schůze, <em>nebo jen stůl.</em></h2>
       <p style="margin-top:20px;max-width:440px">Oddělená místnost s vlastním výčepem. Domluvíme raut na míru a vy se staráte jen o hosty.</p>
       <ul class="facts">
         <li><span>Kapacita</span><span>až 30 osob</span></li>
@@ -226,6 +226,10 @@
 
 <footer><div class="wrap"><b>Na zdraví!</b><span>Fiktivní značka · návrh studia WebTix · ukázka bez kontaktních údajů</span></div></footer>
 
+<script src="../assets/vendor/gsap.min.js"></script>
+<script src="../assets/vendor/ScrollTrigger.min.js"></script>
+<script src="../assets/vendor/lenis.min.js"></script>
+<script src="../assets/motion.js"></script>
 <script>
   // Beer tab: tally marks the way a pub bill is kept
   const marks = document.getElementById('marks'), count = document.getElementById('count'), sum = document.getElementById('sum')
@@ -252,5 +256,16 @@
   document.getElementById('week').innerHTML = week.map((d, i) => `<article class="day rv${i === today ? ' today' : ''}" style="--d:${i * 0.07}s"><h3>${d[0]}</h3><p class="soup">${d[1]}</p>${d[2].map((m) => `<p>${m[0]}<b>${m[1]} Kč</b></p>`).join('')}</article>`).join('')
 </script>
 <script src="../assets/base.js"></script>
+<script>
+  nv.ready(() => {
+    // The beer mat rolls off as the hero scrolls away; another round splashes.
+    gsap.to('.mat', { rotation: 110, xPercent: 16, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.8 } })
+    nv.stagger('.board .beer', { y: 0, x: -26, stagger: 0.09 })
+    nv.stagger('.facts li', { y: 16, stagger: 0.06 })
+    nv.tilt('#week .day', 5)
+    nv.magnet('.btn, #plus', 0.25)
+    nv.spark({ target: '#plus', color: '#e6a92b', n: 10 })
+  })
+</script>
 </body>
 </html>

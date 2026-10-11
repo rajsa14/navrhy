@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="cs">
+<html lang="cs" data-nv-in="rise">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -132,7 +132,7 @@
   <main class="front">
     <aside class="side rv" id="cep">
       <span class="caps kicker">Výčep</span>
-      <h3>Na čepu</h3>
+      <h3 data-scramble>Na čepu</h3>
       <div class="tap"><span>Plzeňský ležák 12°</span><b>62,–</b></div>
       <div class="tap"><span>Světlá jedenáctka</span><b>52,–</b></div>
       <div class="tap"><span>Černé pivo</span><b>52,–</b></div>
@@ -148,7 +148,7 @@
     <article class="rv" id="menu" style="--d:.1s">
       <span class="caps kicker">Hlavní zpráva dne</span>
       <h2>Dnes vaříme: <span id="headline">kuře na divoko</span></h2>
-      <p class="lead">Polední menu se u nás píše každé ráno a platí od jedenácti do tří. Polévka je k tomu, pivo za rohem a místo u okna, když přijdete včas.</p>
+      <p class="lead" data-scrub>Polední menu se u nás píše každé ráno a platí od jedenácti do tří. Polévka je k tomu, pivo za rohem a místo u okna, když přijdete včas.</p>
       <div class="days caps" role="group" aria-label="Den v týdnu">
         <button data-d="0">Po</button><button data-d="1">Út</button><button data-d="2">St</button><button data-d="3">Čt</button><button data-d="4">Pá</button>
       </div>
@@ -161,7 +161,7 @@
 
     <aside class="side rv" style="--d:.2s">
       <span class="caps kicker">Sport</span>
-      <h3>Přenosy</h3>
+      <h3 data-scramble>Přenosy</h3>
       <table class="fixt">
         <tr><td>Fotbal, liga</td><td>so 18:00</td></tr>
         <tr><td>Hokej, extraliga</td><td>ne 17:00</td></tr>
@@ -180,10 +180,10 @@
   </main>
 
   <section class="band rv">
-    <div><div class="n">1911</div><p>rok, kdy se tu poprvé načepovalo</p></div>
-    <div><div class="n">30</div><p>hostů se vejde do salonku</p></div>
+    <div><div class="n" data-count="1850">1911</div><p>rok, kdy se tu poprvé načepovalo</p></div>
+    <div><div class="n" data-count>30</div><p>hostů se vejde do salonku</p></div>
     <div><div class="n">11–15</div><p>polední menu každý všední den</p></div>
-    <div><div class="n">2</div><p>plátna na sportovní přenosy</p></div>
+    <div><div class="n" data-count>2</div><p>plátna na sportovní přenosy</p></div>
   </section>
 
   <section class="ads">
@@ -202,7 +202,7 @@
     </div>
     <div class="coupon rv" id="rezervace" style="--d:.1s">
       <span class="caps kicker">Kupón k vystřižení</span>
-      <h3>Rezervace stolu</h3>
+      <h3 data-scramble>Rezervace stolu</h3>
       <form data-demo="Ukázka návrhu. Kupón se neodesílá.">
         <label class="caps">Den<input type="date" required /></label>
         <label class="caps">Hodina<select><option>11:30</option><option>12:30</option><option>18:00</option><option>19:00</option><option>20:00</option></select></label>
@@ -217,6 +217,10 @@
   <footer class="caps"><span>Restaurace Merkur · denní list</span><span>Návrh webu · studio WebTix · ukázka bez kontaktních údajů</span></footer>
 </div>
 
+<script src="../assets/vendor/gsap.min.js"></script>
+<script src="../assets/vendor/ScrollTrigger.min.js"></script>
+<script src="../assets/vendor/lenis.min.js"></script>
+<script src="../assets/motion.js"></script>
 <script src="../assets/base.js"></script>
 <script>
   document.getElementById('title').innerHTML = [...'Merkur'].map((c, i) => `<span style="--i:${i}">${c}</span>`).join('')
@@ -239,15 +243,26 @@
   function show(d) {
     list.style.opacity = 0
     setTimeout(() => {
-      head.textContent = menus[d][0]
+      head.textContent = menus[d][0]; nv.scramble(head)
       list.innerHTML = menus[d][1].map((m, i) => `<div class="dish${i ? '' : ' soup'}"><i>${m[0]}</i><span>${m[1]}</span><b>${m[2]}</b></div>`).join('')
-      list.style.opacity = 1
+      list.style.opacity = 1; nv.pop(list.children, { y: 16, duration: 0.6, stagger: 0.06 })
     }, 200)
     btns.forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.d === d)))
   }
   btns.forEach((b) => b.addEventListener('click', () => show(+b.dataset.d)))
   const wd = (now.getDay() + 6) % 7
   show(wd < 5 ? wd : 0)
+</script>
+<script>
+  nv.ready(() => {
+    // The ticker runs with the scroll, the stamp turns, and the outer columns drift like loose sheets.
+    nv.velocity(document.getElementById('tick'), { speed: 46 })
+    gsap.to('.stamp', { rotation: 300, ease: 'none', scrollTrigger: { trigger: '.ad', start: 'top bottom', end: 'bottom top', scrub: 1 } })
+    nv.stagger('.tap', { y: 0, x: -24, stagger: 0.06 })
+    nv.stagger('.fixt tr', { y: 0, x: 24, stagger: 0.06 })
+    nv.stagger('.ad li', { y: 18, stagger: 0.05 })
+    gsap.matchMedia().add('(min-width: 1000px)', () => nv.par('.side', 30))
+  })
 </script>
 </body>
 </html>

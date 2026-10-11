@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="cs">
+<html lang="cs" data-nv-in="rise">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -123,7 +123,7 @@
   <section class="wrap hero">
     <div>
       <p class="lab rv" id="oven-text" style="color:var(--glow)">Pec zapalujeme ve 4:00</p>
-      <h1 class="rv" style="--d:.08s;margin-top:22px">Chleba, který <em>čeká</em> 48 hodin.</h1>
+      <h1 class="rv" style="--d:.08s;margin-top:22px" data-split="words">Chleba, který <em>čeká</em> 48 hodin.</h1>
       <p class="rv" style="--d:.16s">Kvas, mouka z mlýna, voda a sůl. Nic víc. Zatímco spíte, my pečeme, a tahle stránka se s námi probouzí.</p>
       <div class="cta rv" style="--d:.24s"><a class="btn" href="#objednat">Objednat na zítra →</a><a class="btn line" href="#pec">Projít ránem</a></div>
     </div>
@@ -132,7 +132,7 @@
 
   <section class="oven" id="pec">
     <div class="wrap">
-      <div class="oven-head"><p class="lab rv">Dnešní pec</p><h2 class="rv" style="margin-top:18px">Od tmy <em>do oběda</em></h2></div>
+      <div class="oven-head"><p class="lab rv">Dnešní pec</p><h2 class="rv" style="margin-top:18px" data-split="words">Od tmy <em>do oběda</em></h2></div>
       <div class="tl" id="tl"></div>
     </div>
     <div class="sun" aria-hidden="true"></div>
@@ -142,7 +142,7 @@
 <section class="day" id="pecivo">
   <div class="wrap">
     <div class="bread-head">
-      <div class="rv"><p class="lab" style="color:var(--crust)">Pečivo</p><h2 style="margin-top:18px">Každý den <em>stejně dobré</em></h2></div>
+      <div class="rv"><p class="lab" style="color:var(--crust)">Pečivo</p><h2 style="margin-top:18px" data-split="words">Každý den <em>stejně dobré</em></h2></div>
       <p class="rv" style="max-width:340px;color:var(--soft)">Chleba z dlouhého kynutí vydrží čerstvý celý týden. Plusem si ho odložíte na zítřejší ráno.</p>
     </div>
     <div class="breads rv" id="breads"></div>
@@ -154,7 +154,7 @@
     <form class="pre rv" data-demo="Ukázka návrhu. Objednávka se neodesílá.">
       <div>
         <p class="lab" style="color:var(--glow)">Předobjednávka</p>
-        <h2 style="margin-top:18px">Váš chleba <em>vás počká.</em></h2>
+        <h2 style="margin-top:18px" data-split="words">Váš chleba <em>vás počká.</em></h2>
         <p>Objednejte do šesti večer a ráno máte odložený bochník se svým jménem. Platíte až při vyzvednutí, bez fronty u okénka.</p>
       </div>
       <div>
@@ -167,6 +167,10 @@
 </section>
 <footer>Fiktivní značka · návrh studia WebTix · ukázka bez kontaktních údajů</footer>
 
+<script src="../assets/vendor/gsap.min.js"></script>
+<script src="../assets/vendor/ScrollTrigger.min.js"></script>
+<script src="../assets/vendor/lenis.min.js"></script>
+<script src="../assets/motion.js"></script>
 <script>
   const slots = [[4, 'Žitný kvas', 'První bochníky jdou do pece.', ['Kvasový chleba', 'Celožitný']], [6, 'Rohlíky', 'Ranní pečivo pro okénko.', ['Rohlíky', 'Bagety']], [7, 'Croissanty', 'Máslové a mandlové.', ['Croissant', 'Pain au chocolat']], [9, 'Koláče', 'Sladké z kynutého těsta.', ['Švestkový', 'Tvarohový']], [11, 'Focaccia', 'K obědu, s rozmarýnem.', ['Focaccia', 'Pizza bianca']], [14, 'Druhá várka', 'Chleba na odpoledne.', ['Kvasový chleba']]]
   const d = new Date(), h = d.getHours()
@@ -195,5 +199,18 @@
   tb.forEach((b) => b.addEventListener('click', () => tb.forEach((x) => x.setAttribute('aria-pressed', String(x === b)))))
 </script>
 <script src="../assets/base.js"></script>
+<script>
+  nv.ready(() => {
+    // Dawn: the stars fade, the sun climbs over the horizon behind the timeline, the big hours drift.
+    document.querySelector('.sky').style.overflow = 'clip'
+    gsap.to('.stars', { opacity: 0, ease: 'none', scrollTrigger: { trigger: '.sky', start: 'top top', end: '45% top', scrub: true } })
+    gsap.fromTo('.sun', { y: 300, scale: 0.6 }, { y: 0, scale: 1, ease: 'none', scrollTrigger: { trigger: '.oven', start: 'center bottom', end: 'bottom bottom', scrub: 1 } })
+    nv.par('.slot .t', 34)
+    nv.par('.window', 70, true)
+    nv.spot('.slot .c', 'rgb(255 195 92 / .35)')
+    nv.stagger('#breads .bread', { y: 50, stagger: 0.08 })
+    nv.magnet('.btn, .add', 0.3)
+  })
+</script>
 </body>
 </html>
