@@ -68,6 +68,7 @@
     .pill { gap: 10px; padding-left: 14px; } .pill button { padding: 8px 10px; font-size: 13px; }
     .shot .open { translate: 0 0; padding: 9px 13px; font-size: 12px; } .feat .shot { aspect-ratio: 4 / 3; border-radius: 22px; }
   }
+  @media (max-width: 440px) { .pill { gap: 6px; padding-left: 12px; } .pill .w { font-size: 20px; } .pill button { padding: 8px 7px; font-size: 12px; } }
   @media (prefers-reduced-motion: reduce) { h1 .l > span { animation: none; transform: none; } .dots i { animation: none; } }
 </style>
 </head>
@@ -76,14 +77,14 @@
   <div class="pill">
     <span class="w">Návrhy</span>
     <nav id="filter" aria-label="Filtr">
-      <button data-f="vse" aria-pressed="true">Vše</button><button data-f="obchod" aria-pressed="false">E‑shop</button><button data-f="podnik" aria-pressed="false">Podniky</button><button data-f="portfolio" aria-pressed="false">Portfolia</button>
+      <button data-f="vse" aria-pressed="true">Vše</button><button data-f="obchod" aria-pressed="false">E‑shop</button><button data-f="podnik" aria-pressed="false">Podniky</button><button data-f="portfolio" aria-pressed="false">Portfolia</button><button data-f="ukazka" aria-pressed="false">Ukázky</button>
     </nav>
   </div>
 </header>
 
 <section class="hero">
   <div class="wrap">
-    <h1><span class="l"><span style="--i:0">Dvanáct webů.</span></span><span class="l"><span style="--i:1">Žádný <em>stejný.</em></span></span></h1>
+    <h1><span class="l"><span style="--i:0">Třináct webů.</span></span><span class="l"><span style="--i:1">Žádný <em>stejný.</em></span></span></h1>
     <p>Každý návrh má vlastní písmo, barvy i nápad, na který se dá sáhnout. Ukázky jsou bez telefonů, adres a dalších kontaktů.</p>
     <div class="dots" id="dots" aria-hidden="true"></div>
   </div>
@@ -113,6 +114,7 @@
     ['adastra', 'Café AdAstra', 'podnik', 'Kavárna a bistro', 'Souhvězdí místo fotky, přepínač dne a večera a klavír, na který se dá opravdu zahrát.', ['#f4efe4', '#15163f', '#2b3bff'], ['Instrument Serif', 'Instrument Sans']],
     ['richard-buchnicek', 'Richard Buchníček', 'portfolio', 'Portfolio', 'Štítek z krabice od tenisek: věk jako velikost, čárový kód ze jména a visačky s citáty.', ['#c8a37b', '#131211', '#ef3b1c'], ['Big Shoulders Display', 'Archivo']],
     ['daniel-sveda', 'Daniel Švéda', 'portfolio', 'Portfolio', 'Technický výkres: organizační schéma jednoho člověka. Větve se dají sbalit a seznam úkolů se odškrtá sám.', ['#1a45c6', '#f4f7ff', '#ffe24a'], ['Azeret Mono']],
+    ['tri-nastroje', 'Tři nástroje', 'ukazka', 'Pohybová ukázka', 'Stěna webů, která zrychluje se scrollem, připnuté scény a živý graf plynulého posunu. Běží na GSAP a Lenis.', ['#0b0c0a', '#c8f25a', '#ecebe4'], ['Cabinet Grotesk', 'Satoshi']],
   ]
   document.getElementById('grid').innerHTML = sites.map((s, i) => `
     <a class="card rv" href="${s[0]}/index.html" data-k="${s[2]}">

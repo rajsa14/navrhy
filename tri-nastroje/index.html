@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Three Tools. No Slop.</title>
+<meta name="description" content="A live, scroll-built recreation of a reel about GSAP, Lenis and React Bits.">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700,800&f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0b0c0a;
+    --ink-2: #131411;
+    --ink-3: #1c1e1a;
+    --paper: #ecebe4;
+    --mute: #9a9b92;
+    --line: rgba(236, 235, 228, .12);
+    --lime: #c8f25a;
+    --warn: #ff6a57;
+    --r: 16px;
+    --display: "Cabinet Grotesk", "Satoshi", system-ui, sans-serif;
+    --body: "Satoshi", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+    --ease: cubic-bezier(.16, 1, .3, 1);
+    /* z scale: 1 content overlays, 10 nav, 20 grain */
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { background: var(--ink); color-scheme: dark; }
+  body { margin: 0; font-family: var(--body); color: var(--paper); background: var(--ink); line-height: 1.55; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; }
+  h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: -.035em; line-height: .95; margin: 0; }
+  h2 { font-size: clamp(2.4rem, 6vw, 5.2rem); max-width: 14ch; }
+  p { margin: 0; }
+  .lede { color: var(--mute); font-size: clamp(1rem, 1.4vw, 1.2rem); max-width: 46ch; margin-top: 1.4rem; }
+  .wrap { width: min(1280px, 100% - 2.5rem); margin-inline: auto; }
+  section { position: relative; }
+  .pad { padding-block: clamp(5rem, 12vw, 10rem); }
+  :focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
+
+  /* grain sits on a fixed layer so it never repaints with scroll */
+  body::after { content: ""; position: fixed; inset: 0; z-index: 20; pointer-events: none; opacity: .07;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+  .btn { display: inline-flex; align-items: center; gap: .6rem; padding: .9rem 1.5rem; border-radius: 999px; border: 0; background: var(--lime); color: var(--ink); font: 700 1rem var(--body); text-decoration: none; cursor: pointer; white-space: nowrap; transition: transform .3s var(--ease); }
+  .btn:hover { transform: translateY(-2px); }
+  .btn:active { transform: scale(.97); }
+  .btn.ghost { background: transparent; color: var(--paper); box-shadow: inset 0 0 0 1px var(--line); }
+
+  /* nav */
+  .nav { position: fixed; inset: 0 0 auto 0; z-index: 10; height: 64px; display: flex; align-items: center; justify-content: space-between; padding-inline: clamp(1.25rem, 3vw, 2.5rem); }
+  .nav b { font: 800 1.05rem var(--display); letter-spacing: -.02em; padding: .65rem 1.1rem; }
+  .nav b, .nav ul { border-radius: 999px; background: rgba(19, 20, 17, .7); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: inset 0 0 0 1px var(--line); }
+  .nav ul { display: flex; gap: .25rem; list-style: none; margin: 0; padding: .3rem; }
+  .nav a { display: block; padding: .45rem .9rem; border-radius: 999px; font-size: .9rem; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background .3s, color .3s; }
+  .nav li a:hover { background: var(--paper); color: var(--ink); }
+
+  /* hero */
+  .hero { height: 100dvh; min-height: 560px; overflow: hidden; }
+  .wall { position: absolute; inset: 0; }
+  .wall-inner { position: absolute; left: -25vw; top: -35vh; width: 150vw; display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; transform: rotate(-9deg); }
+  .tile { margin-bottom: 18px; aspect-ratio: 4 / 3; border-radius: var(--r); overflow: hidden; background: var(--ink-3); display: grid; place-items: center; }
+  .tile img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.08) brightness(.9); }
+  .tile span { font-family: var(--display); font-weight: 800; letter-spacing: -.04em; line-height: .9; font-size: clamp(1.2rem, 3.4vw, 3.4rem); text-align: center; padding: .5rem; }
+  .tile.paper { background: var(--paper); color: var(--ink); }
+  .tile.lime { background: var(--lime); color: var(--ink); }
+  .tile.dark { background: var(--ink-2); color: var(--paper); box-shadow: inset 0 0 0 1px var(--line); }
+  .hero-scrim { position: absolute; inset: 0; background: linear-gradient(rgba(11, 12, 10, .85), rgba(11, 12, 10, 0) 22%), radial-gradient(120% 90% at 0% 100%, rgba(11, 12, 10, .96) 0%, rgba(11, 12, 10, .78) 38%, rgba(11, 12, 10, .1) 72%); }
+  .hero-copy { position: absolute; left: clamp(1.25rem, 3vw, 2.5rem); right: clamp(1.25rem, 3vw, 2.5rem); bottom: clamp(4.25rem, 9vh, 5.5rem); z-index: 1; max-width: 760px; }
+  .hero-copy h1 { font-size: clamp(2.9rem, 8vw, 7rem); }
+  .hero-copy h1 em { font-style: normal; color: var(--lime); white-space: nowrap; }
+  .hero-copy .lede { color: var(--paper); opacity: .82; margin-bottom: 2rem; }
+  .plates { position: absolute; inset: 0; z-index: 1; display: grid; place-content: center; gap: 14px; pointer-events: none; }
+  .plate { width: min(560px, 86vw); padding: 1.6rem 1.75rem; border-radius: var(--r); background: rgba(13, 14, 12, .92); box-shadow: inset 0 0 0 1px var(--line), 0 30px 60px -30px rgba(0, 0, 0, .8); display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; text-decoration: none; pointer-events: auto; visibility: hidden; }
+  .plate strong { font: 700 clamp(1.5rem, 4.4vw, 2.5rem) var(--mono); letter-spacing: .1em; white-space: nowrap; }
+  .plate small { font-size: .95rem; color: var(--mute); white-space: nowrap; opacity: 0; }
+  .plate:hover strong { color: var(--lime); }
+
+  /* slop */
+  .slop-grid { display: grid; grid-template-columns: 5fr 6fr; gap: clamp(2rem, 6vw, 6rem); align-items: center; }
+  .chips { display: grid; gap: .75rem; margin-top: 2.5rem; justify-items: start; }
+  .chip { display: flex; align-items: center; gap: .9rem; padding: .7rem 1.1rem; border-radius: var(--r); background: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line); font-weight: 500; }
+  .chip i { font-style: normal; letter-spacing: .1em; color: var(--ink-3); }
+  .chip i b { color: var(--warn); font-weight: 400; }
+  .browser { position: relative; border-radius: var(--r); background: #f4f4f1; color: #1d1d22; box-shadow: 0 50px 90px -40px rgba(0, 0, 0, .9); }
+  .bar { display: flex; align-items: center; gap: 6px; padding: .7rem .9rem; font: 500 .75rem var(--mono); color: #77776f; }
+  .bar i { width: 9px; height: 9px; border-radius: 50%; background: #cfcfc8; }
+  .bar span { margin-inline: auto; padding: .15rem 1.5rem; border-radius: 999px; background: #e7e7e1; }
+  /* the mock below is deliberately generic: it is the "before" picture */
+  .slop { border-radius: 0 0 var(--r) var(--r); overflow: hidden; font-family: system-ui, sans-serif; text-align: center; }
+  .slop-hero { padding: 3rem 1.5rem; color: #fff; background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+  .slop-hero b { display: block; font-size: clamp(1.2rem, 2.4vw, 1.9rem); line-height: 1.2; max-width: 16ch; margin-inline: auto; }
+  .slop-hero p { font-size: .8rem; opacity: .85; margin: .8rem auto 1.2rem; max-width: 40ch; }
+  .slop-hero span { display: inline-block; font-size: .72rem; font-weight: 600; padding: .5rem .9rem; border-radius: 6px; background: #fff; color: #4f46e5; margin: 0 .2rem; }
+  .slop-hero span + span { background: transparent; color: #fff; box-shadow: inset 0 0 0 1px #fff; }
+  .slop-cards { padding: 1.75rem 1.25rem 2rem; background: #fff; }
+  .slop-cards b { font-size: 1rem; }
+  .slop-cards div { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; margin-top: 1.1rem; }
+  .slop-cards u { display: block; height: 64px; border-radius: 8px; background: #f1f1f5; box-shadow: inset 0 0 0 1px #e4e4ec; }
+  .ring-mark { position: absolute; inset: -5% 1%; width: 98%; height: 110%; pointer-events: none; overflow: visible; }
+  .ring-mark ellipse { fill: none; stroke: var(--warn); stroke-width: 5; stroke-linecap: round; }
+
+  /* gsap lab */
+  .lab { margin-top: clamp(2.5rem, 6vw, 5rem); border-radius: var(--r); background: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
+  .lab-top { display: grid; grid-template-columns: 1.1fr 1fr; }
+  .code { margin: 0; padding: clamp(1.25rem, 3vw, 2.25rem); font: 500 clamp(.85rem, 1.25vw, 1.05rem)/1.75 var(--mono); color: var(--paper); white-space: pre; overflow-x: auto; }
+  .code .k { color: var(--lime); }
+  .code .s { color: #e6d9a3; }
+  .code .c { color: var(--mute); }
+  .curve-box { border-left: 1px solid var(--line); padding: clamp(1.25rem, 3vw, 2.25rem); display: grid; align-content: space-between; gap: 1.25rem; }
+  .curve-box svg { width: 100%; height: auto; overflow: visible; }
+  .curve-box .axis { stroke: var(--line); stroke-width: 1; }
+  .curve-box path { fill: none; stroke: var(--lime); stroke-width: 2.5; stroke-linecap: round; }
+  .curve-box circle { fill: var(--paper); }
+  .pills { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .pill { padding: .45rem .85rem; border-radius: 999px; border: 0; background: var(--ink-3); color: var(--paper); font: 500 .85rem var(--mono); cursor: pointer; transition: background .25s, color .25s; }
+  .pill:hover { background: #2a2d27; }
+  .pill[aria-pressed="true"] { background: var(--paper); color: var(--ink); }
+  .stage { border-top: 1px solid var(--line); padding: clamp(1.25rem, 3vw, 2.25rem); display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: center; }
+  .track { position: relative; height: clamp(84px, 11vw, 132px); border-radius: var(--r); background: repeating-linear-gradient(90deg, transparent 0 39px, var(--line) 39px 40px); }
+  .card { position: absolute; left: 0; top: 0; height: 100%; aspect-ratio: 1; border-radius: var(--r); overflow: hidden; box-shadow: 0 0 0 2px var(--lime); will-change: transform; }
+  .card img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* lenis */
+  .lenis-head { display: flex; align-items: end; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+  .switch { display: inline-flex; align-items: center; gap: .9rem; padding: .55rem .6rem .55rem 1.2rem; border-radius: 999px; border: 0; background: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line); color: var(--paper); font: 500 1rem var(--body); cursor: pointer; white-space: nowrap; }
+  .switch i { width: 46px; height: 26px; border-radius: 999px; background: var(--ink-3); position: relative; transition: background .3s; }
+  .switch i::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--paper); transition: transform .4s var(--ease); }
+  .switch[aria-pressed="true"] i { background: var(--lime); }
+  .switch[aria-pressed="true"] i::after { transform: translateX(20px); background: var(--ink); }
+  .scope { margin-top: clamp(2rem, 5vw, 4rem); border-radius: var(--r); background: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line); padding: 1.25rem; }
+  .scope canvas { display: block; width: 100%; height: clamp(180px, 26vw, 320px); }
+  .legend { display: flex; flex-wrap: wrap; gap: 1.5rem; padding-top: 1rem; color: var(--mute); font-size: .95rem; }
+  .legend span::before { content: ""; display: inline-block; width: 22px; height: 3px; border-radius: 2px; margin-right: .6rem; vertical-align: middle; background: var(--mute); }
+  .legend span.live::before { background: var(--lime); }
+
+  /* horizontal pan */
+  .pan { overflow: hidden; }
+  .pan-track { display: flex; align-items: center; gap: clamp(1.5rem, 4vw, 4rem); height: 100dvh; padding-inline: clamp(1.25rem, 6vw, 6rem); width: max-content; }
+  .pan-title { font: 800 clamp(3rem, 9vw, 8.5rem)/.9 var(--display); letter-spacing: -.04em; width: min(70vw, 900px); flex: none; }
+  .pan-title em { font-style: normal; color: var(--lime); }
+  .pan figure { margin: 0; flex: none; border-radius: var(--r); overflow: hidden; width: clamp(240px, 30vw, 460px); aspect-ratio: 4 / 5; background: var(--ink-3); }
+  .pan figure:nth-of-type(even) { width: clamp(300px, 42vw, 640px); aspect-ratio: 16 / 11; align-self: flex-end; margin-bottom: 12vh; }
+  .pan figure:nth-of-type(3n) { align-self: flex-start; margin-top: 14vh; }
+  .pan img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.05); }
+
+  /* bits */
+  .bento { margin-top: clamp(2.5rem, 6vw, 5rem); display: grid; grid-template-columns: repeat(12, 1fr); grid-auto-rows: minmax(190px, auto); gap: 14px; }
+  .cell { position: relative; border-radius: var(--r); overflow: hidden; background: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line); }
+  .c-silk { grid-column: span 7; grid-row: span 2; min-height: 400px; }
+  .c-silk canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .c-code { grid-column: span 5; grid-row: span 2; display: grid; grid-template-rows: auto 1fr auto; }
+  .c-loop { grid-column: span 5; display: grid; place-items: center; }
+  .c-logos { grid-column: span 4; display: grid; align-items: center; }
+  .c-ring { grid-column: span 3; display: grid; place-items: center; }
+  .code-head { display: flex; align-items: center; justify-content: space-between; padding: .9rem 1rem .9rem 1.5rem; border-bottom: 1px solid var(--line); font: 500 .85rem var(--mono); color: var(--mute); }
+  .copy { padding: .4rem .9rem; border-radius: 999px; border: 0; background: var(--ink-3); color: var(--paper); font: 500 .8rem var(--mono); cursor: pointer; min-width: 5.5rem; transition: background .25s, color .25s; }
+  .copy.done { background: var(--lime); color: var(--ink); }
+  .knobs { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; padding: 1.25rem 1.5rem 1.5rem; border-top: 1px solid var(--line); }
+  .knobs label { display: grid; gap: .5rem; font-size: .9rem; color: var(--mute); }
+  input[type=range] { width: 100%; accent-color: var(--lime); }
+  .c-loop svg { width: 118%; height: auto; flex: none; }
+  .c-loop text { font: 800 54px var(--display); fill: var(--paper); letter-spacing: .02em; }
+  .logos { display: flex; width: max-content; animation: slide 22s linear infinite; }
+  .logos img { width: 38px; height: 38px; margin-inline: 1.6rem; opacity: .9; }
+  .c-logos::after { content: ""; position: absolute; inset: 1px; border-radius: inherit; pointer-events: none; background: linear-gradient(90deg, var(--ink-2), transparent 22%, transparent 78%, var(--ink-2)); }
+  .orbit { width: min(150px, 60%); aspect-ratio: 1; border-radius: 50%; background: conic-gradient(from 0deg, transparent 0 35%, var(--lime) 70%, var(--paper) 100%); -webkit-mask: radial-gradient(closest-side, transparent 86%, #000 88%); mask: radial-gradient(closest-side, transparent 86%, #000 88%); animation: spin 3.2s linear infinite; }
+  @keyframes slide { to { transform: translateX(-50%); } }
+  @keyframes spin { to { transform: rotate(1turn); } }
+  .note { margin-top: 1.25rem; color: var(--mute); font-size: .95rem; }
+
+  /* outro */
+  .rows { margin-top: clamp(2.5rem, 6vw, 5rem); border-top: 1px solid var(--line); }
+  .row { display: grid; grid-template-columns: 1.4fr 1fr 1fr auto; align-items: center; gap: 1.5rem; padding: clamp(1.1rem, 2.4vw, 2rem) clamp(.75rem, 1.5vw, 1.5rem); border-bottom: 1px solid var(--line); text-decoration: none; transition: background .35s var(--ease), color .35s var(--ease), padding .45s var(--ease); }
+  .row strong { font: 800 clamp(1.8rem, 4.6vw, 4rem)/1 var(--display); letter-spacing: -.035em; }
+  .row span { color: var(--mute); transition: color .35s; }
+  .row b { font: 500 1.6rem var(--body); transition: transform .45s var(--ease); }
+  .row:hover { background: var(--lime); color: var(--ink); padding-inline: clamp(1.25rem, 3vw, 3rem); }
+  .row:hover span { color: var(--ink); }
+  .row:hover b { transform: translate(4px, -4px); }
+  footer { padding: 2.5rem 0 3rem; color: var(--mute); font-size: .95rem; }
+
+  @media (max-width: 767px) {
+    .nav { justify-content: center; }
+    .nav b { display: none; }
+    .hero-scrim { background: linear-gradient(rgba(11, 12, 10, .85), rgba(11, 12, 10, 0) 18%), linear-gradient(0deg, rgba(11, 12, 10, .97) 0%, rgba(11, 12, 10, .85) 34%, rgba(11, 12, 10, 0) 62%); }
+    .wall-inner { grid-template-columns: repeat(3, 1fr); width: 170vw; left: -35vw; gap: 12px; }
+    .wall-inner .col:nth-child(n+4) { display: none; }
+    .tile { margin-bottom: 12px; }
+    .slop-grid, .lab-top, .stage { grid-template-columns: 1fr; }
+    .curve-box { border-left: 0; border-top: 1px solid var(--line); }
+    .bento { grid-template-columns: 1fr; }
+    .bento .cell { grid-column: auto; grid-row: auto; }
+    .c-silk { min-height: 300px; }
+    .c-loop, .c-logos, .c-ring { min-height: 190px; }
+    .row { grid-template-columns: 1fr auto; }
+    .row span:nth-of-type(2) { display: none; }
+    .pan { overflow-x: auto; }
+    .pan-track { height: auto; padding-block: 4rem; align-items: flex-start; }
+    .pan figure, .pan figure:nth-of-type(even), .pan figure:nth-of-type(3n) { align-self: flex-start; margin: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .logos, .orbit { animation: none; }
+    .plate { visibility: visible; }
+    .plate small { opacity: 1; }
+    .hero-copy { display: none; }
+    .wall { opacity: .3; }
+    .pan { overflow-x: auto; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Main">
+  <b>Three Tools</b>
+  <ul>
+    <li><a href="#gsap">GSAP</a></li>
+    <li><a href="#lenis">Lenis</a></li>
+    <li><a href="#bits">React Bits</a></li>
+  </ul>
+</nav>
+
+<main>
+  <section class="hero" id="top">
+    <div class="wall" aria-hidden="true"><div class="wall-inner" id="wall"></div></div>
+    <div class="hero-scrim"></div>
+    <div class="hero-copy">
+      <h1>Your site looks like <em>AI slop.</em></h1>
+      <p class="lede">Unless you give it three tools. Keep scrolling and watch each one do its job.</p>
+      <a class="btn" href="#slop" id="go">Show me the three</a>
+    </div>
+    <div class="plates">
+      <a class="plate" href="#gsap"><strong data-name="GSAP">GSAP</strong><small>animation</small></a>
+      <a class="plate" href="#lenis"><strong data-name="LENIS">LENIS</strong><small>smooth scroll</small></a>
+      <a class="plate" href="#bits"><strong data-name="REACT BITS">REACT BITS</strong><small>components</small></a>
+    </div>
+  </section>
+
+  <section class="pad" id="slop">
+    <div class="wrap slop-grid">
+      <div>
+        <h2>This is what slop looks like.</h2>
+        <p class="lede">Purple gradient, centered headline, three equal cards. People have seen it a thousand times, so they leave.</p>
+        <div class="chips">
+          <div class="chip"><i><b>★</b>★★★★</i>Looks like every AI site.</div>
+          <div class="chip"><i><b>★★</b>★★★</i>Generic. Closed the tab.</div>
+          <div class="chip"><i><b>★</b>★★★★</i>Why is it so boring?</div>
+        </div>
+      </div>
+      <div class="browser">
+        <div class="bar"><i></i><i></i><i></i><span>my-website.app</span></div>
+        <div class="slop">
+          <div class="slop-hero">
+            <b>Project Management Made Simple</b>
+            <p>Collaborate seamlessly, track progress effortlessly, and deliver projects on time.</p>
+            <span>Start Free Trial</span><span>Watch Demo</span>
+          </div>
+          <div class="slop-cards"><b>Everything You Need to Succeed</b><div><u></u><u></u><u></u></div></div>
+        </div>
+        <svg class="ring-mark" viewBox="0 0 440 400" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="220" cy="200" rx="206" ry="186" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" transform="rotate(-6 220 200)"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="pad" id="gsap">
+    <div class="wrap">
+      <h2>GSAP animates anything.</h2>
+      <p class="lede">The animation library professionals use. One call moves, spins and eases any element. Pick an ease and run it.</p>
+      <div class="lab">
+        <div class="lab-top">
+          <pre class="code" id="gsapCode"></pre>
+          <div class="curve-box">
+            <svg viewBox="0 0 300 130" role="img" aria-label="Ease curve">
+              <line class="axis" x1="20" y1="100" x2="280" y2="100"/>
+              <line class="axis" x1="20" y1="30" x2="280" y2="30"/>
+              <path id="curve"/>
+              <circle id="dot" r="5" cx="20" cy="100"/>
+            </svg>
+            <div class="pills" id="eases"></div>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="track" id="track"><div class="card"><img src="https://picsum.photos/seed/snow-dome/320/320" alt=""></div></div>
+          <button class="btn" id="run" type="button">Run it</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pad" id="lenis">
+    <div class="wrap">
+      <div class="lenis-head">
+        <div>
+          <h2>Lenis makes scrolling smooth.</h2>
+          <p class="lede">A mouse wheel moves the page in hard steps. Lenis eases between them, and that glide is why a site feels expensive.</p>
+        </div>
+        <button class="switch" id="smooth" type="button" aria-pressed="true">Smooth scroll<i></i></button>
+      </div>
+      <div class="scope">
+        <canvas id="scope" aria-label="Live graph of scroll position"></canvas>
+        <div class="legend"><span>Where the wheel wants to go</span><span class="live">Where the page actually is</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pan" id="pan" aria-label="Gallery">
+    <div class="pan-track">
+      <div class="pan-title">Everything feels <em>expensive.</em></div>
+      <figure><img src="https://picsum.photos/seed/glass-tower/720/900" alt="" loading="lazy"></figure>
+      <figure><img src="https://picsum.photos/seed/soft-dune/1100/760" alt="" loading="lazy"></figure>
+      <figure><img src="https://picsum.photos/seed/studio-light/720/900" alt="" loading="lazy"></figure>
+      <figure><img src="https://picsum.photos/seed/quiet-coast/1100/760" alt="" loading="lazy"></figure>
+      <figure><img src="https://picsum.photos/seed/concrete-stair/720/900" alt="" loading="lazy"></figure>
+    </div>
+  </section>
+
+  <section class="pad" id="bits">
+    <div class="wrap">
+      <h2>React Bits is copy and paste.</h2>
+      <p class="lede">A library of animated components and moving backgrounds. Copy the snippet, change the props, done.</p>
+      <div class="bento">
+        <div class="cell c-silk"><canvas id="silk" aria-label="Animated silk background"></canvas></div>
+        <div class="cell c-code">
+          <div class="code-head">App.jsx<button class="copy" id="copy" type="button">Copy</button></div>
+          <pre class="code" id="silkCode"></pre>
+          <div class="knobs">
+            <label>Speed<input id="speed" type="range" min="1" max="10" step="1" value="5"></label>
+            <label>Scale<input id="scale" type="range" min="0.5" max="3" step="0.5" value="1"></label>
+          </div>
+        </div>
+        <div class="cell c-loop">
+          <svg viewBox="0 0 1000 200" aria-hidden="true">
+            <path id="arc" d="M-60,150 Q500,10 1060,150" fill="none"/>
+            <text><textPath href="#arc" id="arcText"></textPath></text>
+          </svg>
+        </div>
+        <div class="cell c-logos"><div class="logos" id="logos"></div></div>
+        <div class="cell c-ring"><div class="orbit"></div></div>
+      </div>
+      <p class="note">This page has no React build, so the effects above are plain JavaScript versions of the same ideas.</p>
+    </div>
+  </section>
+
+  <section class="pad" id="links">
+    <div class="wrap">
+      <h2>Three tools. No slop.</h2>
+      <div class="rows">
+        <a class="row" href="https://gsap.com" target="_blank" rel="noopener"><strong>GSAP</strong><span>Animation</span><span>gsap.com</span><b aria-hidden="true">↗</b></a>
+        <a class="row" href="https://lenis.darkroom.engineering" target="_blank" rel="noopener"><strong>Lenis</strong><span>Smooth scroll</span><span>lenis.darkroom.engineering</span><b aria-hidden="true">↗</b></a>
+        <a class="row" href="https://reactbits.dev" target="_blank" rel="noopener"><strong>React Bits</strong><span>Components</span><span>reactbits.dev</span><b aria-hidden="true">↗</b></a>
+        <a class="row" href="https://21st.dev" target="_blank" rel="noopener"><strong>21st.dev</strong><span>Bonus library</span><span>21st.dev</span><b aria-hidden="true">↗</b></a>
+      </div>
+      <footer>A scroll-built recreation of a reel by @jackroberts___. Running on GSAP, ScrollTrigger and Lenis.</footer>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(() => {
+  const $ = (s, el = document) => el.querySelector(s);
+  const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hasGsap = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined';
+  if (hasGsap) gsap.registerPlugin(ScrollTrigger);
+
+  /* ---------- hero wall ---------- */
+  const pic = (seed) => ({ img: seed });
+  const word = (text, tone) => ({ text, tone });
+  const columns = [
+    [pic('ridge-fog'), word('halden', 'dark'), pic('blue-glass'), pic('paper-fold'), word('NORTHING', 'paper')],
+    [word('obra', 'lime'), pic('night-arch'), pic('white-peak'), word('Made in motion', 'dark'), pic('desk-lamp')],
+    [pic('steel-curve'), pic('portrait-wall'), word('kiln', 'paper'), pic('mono-city'), word('soft/ware', 'dark')],
+    [word('WHERE THINGS GET MADE', 'dark'), pic('ice-lake'), pic('lens-flare'), word('ovo', 'lime'), pic('hall-light')],
+    [pic('sand-wave'), word('atelier 9', 'paper'), pic('dark-leaf'), pic('roof-line'), word('mono', 'dark')],
+  ];
+  const wall = $('#wall');
+  const SETS = 3; // three copies so the loop never shows a gap on tall phones
+  columns.forEach((items) => {
+    const col = document.createElement('div');
+    col.className = 'col';
+    const track = document.createElement('div');
+    for (let s = 0; s < SETS; s++) items.forEach((it) => {
+      const tile = document.createElement('div');
+      tile.className = 'tile ' + (it.tone || '');
+      tile.innerHTML = it.img
+        ? `<img src="https://picsum.photos/seed/${it.img}/640/480" alt="" decoding="async">`
+        : `<span>${it.text}</span>`;
+      track.appendChild(tile);
+    });
+    col.appendChild(track);
+    wall.appendChild(col);
+  });
+
+  /* ---------- static content that needs no motion library ---------- */
+  const unit = 'REACT ✦ BITS ✦ BE ✦ CREATIVE ✦ ';
+  $('#arcText').textContent = unit.repeat(10);
+  const logoSlugs = ['vercel', 'github', 'docker', 'prisma', 'supabase', 'react', 'figma', 'framer'];
+  $('#logos').innerHTML = [...logoSlugs, ...logoSlugs]
+    .map((s) => `<img src="https://cdn.simpleicons.org/${s}/ecebe4" alt="" onerror="this.remove()">`).join('');
+
+  // Silk props: code panel, sliders and copy button
+  const silk = { speed: 5, scale: 1, color: '#7B7481' };
+  const silkSnippet = () => `import Silk from './Silk';\n\n<Silk\n  speed={${silk.speed}}\n  scale={${silk.scale}}\n  color="${silk.color}"\n/>`;
+  const paintSilkCode = () => {
+    $('#silkCode').innerHTML =
+      `<span class="k">import</span> Silk <span class="k">from</span> <span class="s">'./Silk'</span>;\n\n&lt;<span class="k">Silk</span>\n  speed={<span class="s">${silk.speed}</span>}\n  scale={<span class="s">${silk.scale}</span>}\n  color=<span class="s">"${silk.color}"</span>\n/&gt;`;
+  };
+  paintSilkCode();
+  $('#speed').addEventListener('input', (e) => { silk.speed = +e.target.value; paintSilkCode(); });
+  $('#scale').addEventListener('input', (e) => { silk.scale = +e.target.value; paintSilkCode(); });
+  $('#copy').addEventListener('click', async (e) => {
+    const btn = e.currentTarget;
+    try { await navigator.clipboard.writeText(silkSnippet()); btn.textContent = 'Copied'; }
+    catch { btn.textContent = 'Press Ctrl+C'; }
+    btn.classList.add('done');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1600);
+  });
+
+  /* ---------- silk background (WebGL) ---------- */
+  (() => {
+    const canvas = $('#silk');
+    const gl = canvas.getContext('webgl', { antialias: false });
+    if (!gl) { canvas.parentElement.style.background = 'linear-gradient(120deg,#2c2a2e,#7B7481)'; return; }
+    const compile = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
+    const prog = gl.createProgram();
+    gl.attachShader(prog, compile(gl.VERTEX_SHADER, 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'));
+    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, `
+      precision mediump float;
+      uniform float uTime; uniform vec2 uRes; uniform vec3 uColor; uniform float uScale;
+      float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+      void main(){
+        vec2 uv = gl_FragCoord.xy / uRes.y * uScale;
+        uv.y += 0.03 * sin(8.0 * uv.x - uTime);
+        float fold = uv.x + uv.y + cos(3.0 * uv.x + 5.0 * uv.y) + 0.02 * uTime;
+        float sheen = 0.6 + 0.4 * sin(5.0 * fold + sin(20.0 * (uv.x + uv.y - 0.1 * uTime)));
+        gl_FragColor = vec4(uColor * sheen - hash(gl_FragCoord.xy) * 0.07, 1.0);
+      }`));
+    gl.linkProgram(prog); gl.useProgram(prog);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog, 'p');
+    gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    const u = (n) => gl.getUniformLocation(prog, n);
+    const [r, g, b] = [1, 3, 5].map((i) => parseInt(silk.color.slice(i, i + 2), 16) / 255);
+    gl.uniform3f(u('uColor'), r, g, b);
+    const size = () => {
+      const dpr = Math.min(devicePixelRatio, 1.5);
+      canvas.width = canvas.clientWidth * dpr; canvas.height = canvas.clientHeight * dpr;
+      gl.viewport(0, 0, canvas.width, canvas.height); gl.uniform2f(u('uRes'), canvas.width, canvas.height);
+    };
+    new ResizeObserver(size).observe(canvas);
+    let t = 0, last = 0, visible = false, raf = 0;
+    const frame = (now) => {
+      t += Math.min((now - last) / 1000, .05) * silk.speed * .35; last = now;
+      gl.uniform1f(u('uTime'), t); gl.uniform1f(u('uScale'), silk.scale);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      if (visible && !reduce) raf = requestAnimationFrame(frame);
+    };
+    new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting; cancelAnimationFrame(raf);
+      if (visible) { last = performance.now(); raf = requestAnimationFrame(frame); }
+    }).observe(canvas);
+    // reduced motion still repaints when a slider moves
+    if (reduce) $$('#speed, #scale').forEach((el) => el.addEventListener('input', () => requestAnimationFrame(frame)));
+  })();
+
+  if (!hasGsap) return; // CDN blocked: the page stays readable, just without motion
+
+  /* ---------- gsap lab (runs on demand, so it works with reduced motion too) ---------- */
+  const easeNames = ['power4.out', 'back.out(2)', 'elastic.out(1, 0.4)', 'bounce.out', 'expo.inOut'];
+  let easeName = easeNames[0];
+  const track = $('#track'), card = $('.card'), dot = $('#dot'), curve = $('#curve');
+  const cx = (t) => 20 + t * 260, cy = (v) => 100 - v * 70;
+  const dist = () => Math.max(0, Math.round(track.clientWidth - card.clientWidth));
+  const paintGsapCode = () => {
+    $('#gsapCode').innerHTML =
+      `<span class="k">gsap</span>.to(<span class="s">".card"</span>, {\n  x: <span class="s">${dist()}</span>,\n  rotation: <span class="s">360</span>,\n  duration: <span class="s">1.2</span>,\n  ease: <span class="s">"${easeName}"</span>\n});`;
+  };
+  const paintCurve = () => {
+    const fn = gsap.parseEase(easeName);
+    let d = '';
+    for (let i = 0; i <= 90; i++) { const t = i / 90; d += `${i ? 'L' : 'M'}${cx(t).toFixed(1)},${cy(fn(t)).toFixed(1)}`; }
+    curve.setAttribute('d', d);
+  };
+  const run = () => {
+    const fn = gsap.parseEase(easeName), state = { t: 0 };
+    gsap.killTweensOf([card, state]);
+    gsap.fromTo(card, { x: 0, rotation: 0 }, { x: dist(), rotation: 360, duration: 1.2, ease: easeName });
+    gsap.to(state, { t: 1, duration: 1.2, ease: 'none', onUpdate: () => {
+      dot.setAttribute('cx', cx(state.t)); dot.setAttribute('cy', cy(fn(state.t)));
+    } });
+  };
+  $('#eases').innerHTML = easeNames.map((n, i) => `<button class="pill" type="button" aria-pressed="${!i}">${n}</button>`).join('');
+  $$('#eases .pill').forEach((btn) => btn.addEventListener('click', () => {
+    easeName = btn.textContent;
+    $$('#eases .pill').forEach((b) => b.setAttribute('aria-pressed', b === btn));
+    paintGsapCode(); paintCurve(); run();
+  }));
+  $('#run').addEventListener('click', run);
+  paintGsapCode(); paintCurve();
+  addEventListener('resize', () => { gsap.set(card, { x: 0, rotation: 0 }); paintGsapCode(); });
+
+  if (reduce) return;
+
+  /* ---------- lenis + scrolltrigger ---------- */
+  const lenis = new Lenis({ lerp: 0.085 });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add((time) => lenis.raf(time * 1000));
+  gsap.ticker.lagSmoothing(0);
+  $$('a[href^="#"]').forEach((a) => a.addEventListener('click', (e) => {
+    const target = $(a.getAttribute('href'));
+    if (!target) return;
+    e.preventDefault();
+    lenis.scrollTo(target, { duration: 1.6 });
+  }));
+
+  // hero: the wall drifts on its own and speeds up with scroll velocity
+  const loops = $$('.col > div').map((el, i) => gsap.fromTo(el,
+    { yPercent: i % 2 ? -100 / SETS : 0 },
+    { yPercent: i % 2 ? 0 : -100 / SETS, duration: 38 + i * 5, ease: 'none', repeat: -1 }));
+  let boost = 1;
+  const drive = () => {
+    boost += (1 + Math.min(Math.abs(lenis.velocity) / 6, 7) - boost) * .08;
+    loops.forEach((l) => l.timeScale(boost));
+  };
+
+  // hero: pinned reveal of the three tools, names decode as you scroll
+  const glyphs = '▚▞▙▟▛▜█▄▀';
+  const names = $$('.plate strong');
+  const dec = { p: 0 };
+  const scramble = () => names.forEach((el, i) => {
+    const name = el.dataset.name;
+    const local = gsap.utils.clamp(0, 1, dec.p * 1.5 - i * .25);
+    const shown = Math.floor(local * name.length);
+    el.textContent = name.slice(0, shown) + [...name.slice(shown)]
+      .map((ch) => ch === ' ' ? ' ' : glyphs[Math.floor(Math.random() * glyphs.length)]).join('');
+  });
+  scramble();
+  gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: '+=170%', pin: true, scrub: .6,
+      onToggle: (self) => { loops.forEach((l) => l.paused(!self.isActive)); gsap.ticker[self.isActive ? 'add' : 'remove'](drive); } } })
+    .to('.hero-copy', { autoAlpha: 0, y: -50, duration: .22 }, 0)
+    .to('.wall', { opacity: .3, scale: 1.08, duration: .4 }, 0)
+    .fromTo('.plate', { autoAlpha: 0, y: 90, scale: .92 }, { autoAlpha: 1, y: 0, scale: 1, stagger: .1, duration: .28 }, .14)
+    .to(dec, { p: 1, duration: .42, ease: 'none', onUpdate: scramble }, .3)
+    .to('.plate small', { opacity: 1, stagger: .05, duration: .12 }, .72)
+    .to({}, { duration: .12 });
+  gsap.ticker.add(drive);
+
+  // slop: the red ring draws itself around the generic site, reviews land after
+  gsap.to('.ring-mark ellipse', { strokeDashoffset: 0, ease: 'none',
+    scrollTrigger: { trigger: '.browser', start: 'top 75%', end: 'center 45%', scrub: .5 } });
+  gsap.from('.chip', { autoAlpha: 0, x: -30, stagger: .12, duration: .8, ease: 'power3.out',
+    scrollTrigger: { trigger: '.chips', start: 'top 85%' } });
+
+  // section headings rise in once
+  $$('.pad h2').forEach((h) => gsap.from([h, h.nextElementSibling].filter(Boolean), {
+    autoAlpha: 0, y: 46, duration: 1, stagger: .08, ease: 'power4.out', scrollTrigger: { trigger: h, start: 'top 88%' } }));
+
+  ScrollTrigger.create({ trigger: '.lab', start: 'top 65%', once: true, onEnter: run });
+
+  // lenis: live scope of wheel target vs eased position
+  (() => {
+    const canvas = $('#scope'), ctx = canvas.getContext('2d');
+    const N = 280, target = [], actual = [];
+    let w = 0, h = 0;
+    new ResizeObserver(() => {
+      const dpr = Math.min(devicePixelRatio, 2);
+      w = canvas.clientWidth; h = canvas.clientHeight;
+      canvas.width = w * dpr; canvas.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }).observe(canvas);
+    const css = getComputedStyle(document.documentElement);
+    const mute = css.getPropertyValue('--mute'), lime = css.getPropertyValue('--lime');
+    const plot = (data, lo, span, color, width) => {
+      ctx.beginPath();
+      data.forEach((v, i) => {
+        const x = (i / (N - 1)) * w, y = 14 + ((v - lo) / span) * (h - 28);
+        i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+      });
+      ctx.strokeStyle = color; ctx.lineWidth = width; ctx.lineJoin = 'round'; ctx.stroke();
+    };
+    const tick = () => {
+      // start with a full, flat buffer so the trace always enters from the right edge
+      while (target.length < N) { target.push(lenis.animatedScroll); actual.push(lenis.animatedScroll); }
+      target.push(lenis.targetScroll); actual.push(lenis.animatedScroll);
+      target.shift(); actual.shift();
+      const lo = Math.min(...target, ...actual), span = Math.max(Math.max(...target, ...actual) - lo, 240);
+      ctx.clearRect(0, 0, w, h);
+      plot(target, lo, span, mute, 1.5);
+      plot(actual, lo, span, lime, 2.5);
+    };
+    ScrollTrigger.create({ trigger: canvas, start: 'top bottom', end: 'bottom top',
+      onToggle: (self) => gsap.ticker[self.isActive ? 'add' : 'remove'](tick) });
+    $('#smooth').addEventListener('click', (e) => {
+      const on = e.currentTarget.getAttribute('aria-pressed') !== 'true';
+      e.currentTarget.setAttribute('aria-pressed', on);
+      lenis.options.smoothWheel = on;
+    });
+  })();
+
+  // horizontal pan: pinned at the top, vertical scroll drives the track sideways
+  gsap.matchMedia().add('(min-width: 768px)', () => {
+    const track = $('.pan-track');
+    const distance = () => track.scrollWidth - innerWidth;
+    gsap.to(track, { x: () => -distance(), ease: 'none',
+      scrollTrigger: { trigger: '.pan', start: 'top top', end: () => '+=' + distance(), pin: true, scrub: 1, invalidateOnRefresh: true } });
+  });
+
+  // react bits: curved text loop travels along its arc
+  const arcText = $('#arcText');
+  document.fonts.ready.then(() => {
+    const unitLen = arcText.getComputedTextLength() / 10;
+    const off = { v: 0 };
+    gsap.to(off, { v: -unitLen, duration: 9, ease: 'none', repeat: -1,
+      onUpdate: () => arcText.setAttribute('startOffset', off.v),
+      scrollTrigger: { trigger: '.c-loop', start: 'top bottom', end: 'bottom top', toggleActions: 'play pause resume pause' } });
+  });
+  gsap.from('.bento .cell', { autoAlpha: 0, y: 50, duration: .9, stagger: .07, ease: 'power3.out',
+    scrollTrigger: { trigger: '.bento', start: 'top 82%' } });
+  gsap.from('.row', { autoAlpha: 0, y: 30, duration: .8, stagger: .08, ease: 'power3.out',
+    scrollTrigger: { trigger: '.rows', start: 'top 85%' } });
+
+  addEventListener('load', () => ScrollTrigger.refresh());
+})();
+</script>
+<script src="../assets/base.js"></script>
+</body>
+</html>

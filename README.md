@@ -1,6 +1,6 @@
 # Návrhy
 
-Dvanáct návrhů webů od studia WebTix. Vycházejí z referencí na webtix.cz, ale každý má nový vzhled a žádný neobsahuje telefon, adresu ani jiný kontakt. Formuláře nic neodesílají.
+Třináct návrhů webů od studia WebTix. Vycházejí z referencí na webtix.cz, ale každý má nový vzhled a žádný neobsahuje telefon, adresu ani jiný kontakt. Formuláře nic neodesílají.
 
 Čisté HTML, CSS a JavaScript, bez buildu. Stačí otevřít `index.html`, nebo složku nasadit jako statický web (GitHub Pages, Netlify, Cloudflare Pages).
 
@@ -18,6 +18,7 @@ Dvanáct návrhů webů od studia WebTix. Vycházejí z referencí na webtix.cz,
 | `vyska/` | Výška Boulder | Unbounded, DM Sans |
 | `daniel-sveda/` | Portfolio jako technický výkres (obsah z Danielova webu) | Azeret Mono |
 | `richard-buchnicek/` | Portfolio jako štítek z krabice (obsah z Richardova webu) | Big Shoulders Display, Archivo |
+| `tri-nastroje/` | Tři nástroje, pohybová ukázka (GSAP, Lenis, nápady z React Bits) | Cabinet Grotesk, Satoshi |
 
 ## jádro
 
@@ -31,4 +32,5 @@ Ukázkový obchod se šesti kategoriemi (iPhone, MacBook, iPad, Apple Watch, Air
 
 - `assets/base.js` je společný pro všechny stránky: odhalování při scrollu, odkaz zpět na přehled a hláška u ukázkových formulářů.
 - `fonts/` obsahuje písma (licence SIL OFL, z balíčků Fontsource), aby se nic nenačítalo z cizích serverů.
+- Výjimka je `tri-nastroje/`: GSAP, Lenis, písma (Fontshare), ikony (Simple Icons) a fotky (Picsum) si načítá z CDN, takže bez připojení se nezobrazí celá.
 - `nahledy/` jsou snímky úvodních obrazovek pro přehled.
