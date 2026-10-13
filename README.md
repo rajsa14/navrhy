@@ -8,7 +8,7 @@ Jedenáct návrhů webů od studia WebTix. Vycházejí z referencí na webtix.cz
 | --- | --- | --- |
 | `jadro/` | **jádro, e‑shop s celým sortimentem Apple (hlavní návrh)** | Geist, Geist Mono |
 | `tri-nastroje/` | Tři nástroje, pohybová ukázka (GSAP, Lenis, nápady z React Bits) | Cabinet Grotesk, Satoshi |
-| `adastra/` | Café AdAstra, kavárna | Instrument Serif, Instrument Sans |
+| `adastra/` | Café AdAstra, kavárna (kopie adastra.webtix.cz) | Yeseva One, Cormorant Garamond |
 | `merkur/` | Restaurace Merkur | Bodoni Moda, Newsreader |
 | `hostinec/` | Hostinec U Kamenné kašny | Zilla Slab, Caveat |
 | `sklipek/` | Vinárna Sklípek 14 | Cormorant Garamond, Jost |
